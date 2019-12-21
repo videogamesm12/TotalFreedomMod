@@ -45,6 +45,7 @@ public class Groups
 
     public static final List<EntityType> MOB_TYPES = Arrays.asList(
             EntityType.BAT,
+            EntityType.BEE,
             EntityType.BLAZE,
             EntityType.CAVE_SPIDER,
             EntityType.CHICKEN,
@@ -101,6 +102,7 @@ public class Groups
 
     public static final List<Material> SPAWN_EGGS = Arrays.asList(
             Material.BAT_SPAWN_EGG,
+            Material.BEE_SPAWN_EGG,
             Material.BLAZE_SPAWN_EGG,
             Material.CAVE_SPIDER_SPAWN_EGG,
             Material.CHICKEN_SPAWN_EGG,
@@ -158,4 +160,14 @@ public class Groups
             Material.ZOMBIE_HORSE_SPAWN_EGG,
             Material.ZOMBIE_PIGMAN_SPAWN_EGG,
             Material.ZOMBIE_VILLAGER_SPAWN_EGG);
+
+    public static final List<Material> HEADS = Arrays.asList(
+            Material.CREEPER_HEAD,
+            Material.CREEPER_WALL_HEAD,
+            Material.DRAGON_HEAD,
+            Material.DRAGON_WALL_HEAD,
+            Material.PLAYER_HEAD,
+            Material.PLAYER_WALL_HEAD,
+            Material.ZOMBIE_HEAD,
+            Material.ZOMBIE_WALL_HEAD);
 }
