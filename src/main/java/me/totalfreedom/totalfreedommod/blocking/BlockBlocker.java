@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 public class BlockBlocker extends FreedomService
 {
@@ -136,6 +137,24 @@ public class BlockBlocker extends FreedomService
                     player.sendMessage(ChatColor.GRAY + "Spawners are disabled.");
                     player.getInventory().setItem(player.getInventory().getHeldItemSlot(), new ItemStack(Material.COOKIE, 1));
                     event.setCancelled(true);
+                }
+                break;
+            }
+            case PLAYER_HEAD:
+            case PLAYER_WALL_HEAD:
+            {
+                SkullMeta meta = (SkullMeta) event.getItemInHand().getItemMeta();
+                if (meta != null)
+                {
+                    if (meta.hasOwner())
+                    {
+                        if (meta.getOwner().length() > 100)
+                        {
+                            player.sendMessage(ChatColor.GRAY + "Instead of using Pi to crash a server, how about you use it to impress nerds like yourself?");
+                            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), new ItemStack(Material.COOKIE, 1));
+                            event.setCancelled(true);
+                        }
+                    }
                 }
                 break;
             }
