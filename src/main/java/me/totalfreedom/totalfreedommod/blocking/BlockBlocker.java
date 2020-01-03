@@ -7,11 +7,13 @@ import me.totalfreedom.totalfreedommod.util.FLog;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 public class BlockBlocker extends FreedomService
@@ -143,16 +145,32 @@ public class BlockBlocker extends FreedomService
             case PLAYER_HEAD:
             case PLAYER_WALL_HEAD:
             {
-                SkullMeta meta = (SkullMeta) event.getItemInHand().getItemMeta();
-                if (meta != null)
+                Skull skull = (Skull) event.getBlockPlaced().getState();
+                if (skull.hasOwner())
                 {
-                    if (meta.hasOwner())
+                    if (skull.getOwner().contains("§"))
                     {
-                        if (meta.getOwner().length() > 100)
+                        skull.setOwner(skull.getOwner().replace("§", ""));
+                        SkullMeta meta = (SkullMeta) event.getItemInHand().getItemMeta();
+                        if (meta != null)
                         {
-                            player.sendMessage(ChatColor.GRAY + "Instead of using Pi to crash a server, how about you use it to impress nerds like yourself?");
-                            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), new ItemStack(Material.COOKIE, 1));
+                            ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
+                            ItemMeta headMeta = newHead.getItemMeta();
+                            headMeta.setDisplayName(ChatColor.YELLOW + "C-sectioned Head");
+                            newHead.setItemMeta(headMeta);
+                            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), newHead);
+                            player.sendMessage(ChatColor.GRAY + "The player head you are attempting to place has a section symbol. Your player head has been C-sectioned.");
                             event.setCancelled(true);
+                        }
+                    }
+                    if (skull.getOwner().length() > 16)
+                    {
+                        skull.setOwner(skull.getOwner().substring(0, 16));
+                        SkullMeta meta = (SkullMeta)event.getItemInHand().getItemMeta();
+                        if (meta != null)
+                        {
+                            meta.setOwner(meta.getOwner().substring(0, 16));
+                            event.getItemInHand().setItemMeta(meta);
                         }
                     }
                 }
