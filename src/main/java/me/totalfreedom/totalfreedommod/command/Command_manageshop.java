@@ -1,16 +1,16 @@
 package me.totalfreedom.totalfreedommod.command;
 
-import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.player.PlayerData;
 import me.totalfreedom.totalfreedommod.rank.Rank;
 import me.totalfreedom.totalfreedommod.shop.ShopItem;
+import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandPermissions(level = Rank.ADMIN, source = SourceType.ONLY_CONSOLE)
+@CommandPermissions(level = Rank.SENIOR_ADMIN, source = SourceType.ONLY_CONSOLE)
 @CommandParameters(description = "Manage the shop", usage = "/<command> <coins: <add | set | remove> <amount> <player | all> | items: <give | take> <item> <player>", aliases = "ms")
 public class Command_manageshop extends FreedomCommand
 {
@@ -18,7 +18,7 @@ public class Command_manageshop extends FreedomCommand
     public boolean run(final CommandSender sender, final Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
 
-        if (!ConfigEntry.SERVER_OWNERS.getStringList().contains(sender.getName()))
+        if (!FUtil.isExecutive(sender.getName()))
         {
             return noPerms();
         }

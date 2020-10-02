@@ -63,7 +63,7 @@ public class Command_whitelist extends FreedomCommand
         }
 
         // Commands below are restricted to staff
-        checkRank(Rank.MOD);
+        checkRank(Rank.ADMIN);
 
         // on
         if (args[0].equalsIgnoreCase("on"))
@@ -153,7 +153,7 @@ public class Command_whitelist extends FreedomCommand
 
         // Telnet only
         checkConsole();
-        checkRank(Rank.MOD);
+        checkRank(Rank.ADMIN);
 
         // purge
         if (args[0].equalsIgnoreCase("purge"))

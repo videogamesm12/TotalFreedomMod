@@ -1,6 +1,5 @@
 package me.totalfreedom.totalfreedommod.rank;
 
-import me.libraryaddict.disguise.DisguiseAPI;
 import me.totalfreedom.totalfreedommod.FreedomService;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.player.FPlayer;
@@ -20,7 +19,6 @@ import org.bukkit.scoreboard.Team;
 
 public class RankManager extends FreedomService
 {
-
     @Override
     public void onStart()
     {
@@ -109,7 +107,7 @@ public class RankManager extends FreedomService
         // CONSOLE?
         if (sender.getName().equals("CONSOLE"))
         {
-            return ConfigEntry.STAFFLIST_CONSOLE_IS_ADMIN.getBoolean() ? Rank.ADMIN_CONSOLE : Rank.MOD_CONSOLE;
+            return ConfigEntry.STAFFLIST_CONSOLE_IS_ADMIN.getBoolean() ? Rank.SENIOR_CONSOLE : Rank.ADMIN_CONSOLE;
         }
 
         // Console admin, get by name
@@ -118,7 +116,7 @@ public class RankManager extends FreedomService
         // Unknown console: RCON?
         if (staffMember == null)
         {
-            return Rank.ADMIN_CONSOLE;
+            return Rank.SENIOR_CONSOLE;
         }
 
         Rank rank = staffMember.getRank();
