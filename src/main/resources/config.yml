@@ -146,6 +146,25 @@ shop:
     # How long is the random string (in characters)?
     string_length: 10
 
+  # Login messages. Use %name% for usernames, and %rank% for ranks/titles
+  login_messages:
+    - '%name% is a terrible %coloredrank%'
+    - 'that %name% dude is a shitty %coloredrank%'
+    - 'Hi, my name is %name% and I''m %art% %coloredrank%&b that wasted coins on this login message.'
+    - '&aDo not fear, %coloredrank% &b%name% &ais here!'
+    - '%name% is %art% %coloredrank%&b, say hi to them before they gets banned for doing something stupid'
+    - 'Oh. It''s &l%name%&r&b the %coloredrank%&b again. Great.'
+    - 'Make way for %name% the %coloredrank%&b!'
+    - 'It''s a bird! It''s a plane! No, it''s %art% %rank%! It''s %name%'
+    - '%rank% %name%'
+    - '%coloredrank%&b %name%'
+    - 'A wild %name%, %art% %coloredrank%&b, appeared!'
+    - 'All in all, the %rank% %name% is just another brick in the wall'
+    - '&a%name% &bis a a geeky &6%rank%'
+    - '%name% is the %rank% who just exists'
+    - '%name% based cringe poggers based based %rank%'
+    - '%name% thinks that &dWindows Server 2019 &bis the best server OS'
+
   # Item prices
   prices:
     grappling_hook: 100
@@ -154,6 +173,7 @@ shop:
     rideable_pearl: 700
     stacking_potato: 300
     clown_fish: 1500
+    login_messages: 5000
 
 # Staff list
 stafflist:
@@ -189,12 +209,6 @@ social_links:
   Forum: 'https://forum.totalfreedom.me'
   Website: 'https://totalfreedom.me/'
   Discord: 'https://discordapp.com/invite/XXjmAmV/'
-
-donation:
-  proboards_url: ''
-  donator_group_id: ''
-  session_id: ''
-  csrf_token: ''
 
 # Blocking certain events
 allow:

@@ -5,6 +5,8 @@ import net.md_5.bungee.api.ChatColor;
 public interface Displayable
 {
 
+    public String getArticle();
+
     public String getName();
 
     public String getTag();
@@ -21,7 +23,8 @@ public interface Displayable
 
     public String getColoredLoginMessage();
 
-
     public boolean hasTeam();
+
+    public boolean hasDefaultLoginMessage();
 
 }
