@@ -10,7 +10,6 @@ import org.spigotmc.SpigotConfig;
 
 public class CommandBlockerEntry
 {
-
     @Getter
     private final CommandBlockerRank rank;
     @Getter

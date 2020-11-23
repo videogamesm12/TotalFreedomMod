@@ -23,11 +23,11 @@ public class Command_wipeuserdata extends FreedomCommand
             return true;
         }
 
-        FUtil.staffAction(sender.getName(), "Wiping Essentials and worlds playerdata", true);
+        FUtil.adminAction(sender.getName(), "Wiping Essentials and worlds playerdata", true);
 
         for (World w : Bukkit.getWorlds())
         {
-            if (w.getName().equals(plugin.wm.staffworld.getWorld().getName()))
+            if (w.getName().equals(plugin.wm.adminworld.getWorld().getName()))
             {
                 continue;
             }

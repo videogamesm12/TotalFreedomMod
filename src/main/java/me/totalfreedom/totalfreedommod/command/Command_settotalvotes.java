@@ -12,11 +12,9 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Set a player's total votes", usage = "/<command> <player> <votes>")
 public class Command_settotalvotes extends FreedomCommand
 {
-
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
-
         if (!ConfigEntry.SERVER_OWNERS.getStringList().contains(sender.getName()))
         {
             return noPerms();
@@ -57,7 +55,6 @@ public class Command_settotalvotes extends FreedomCommand
         {
             player.sendMessage(ChatColor.GREEN + sender.getName() + " has set your total votes to " + votes);
         }
-
         return true;
     }
 }

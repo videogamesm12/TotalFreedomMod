@@ -23,7 +23,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class MovementValidator extends FreedomService
 {
-
     public static final int MAX_XYZ_COORD = 29999998;
     public static final int MAX_DISTANCE_TRAVELED = 100;
 

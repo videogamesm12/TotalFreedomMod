@@ -148,11 +148,6 @@ public class EventBlocker extends FreedomService
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerDropItem(PlayerDropItemEvent event)
     {
-        if (!plugin.sl.isStaff(event.getPlayer()))
-        {
-            event.setCancelled(true);
-        }
-
         if (!ConfigEntry.AUTO_ENTITY_WIPE.getBoolean())
         {
             return;
@@ -213,7 +208,7 @@ public class EventBlocker extends FreedomService
     }
 
     // TODO: Revert back to old redstone block system when (or if) it is fixed in Bukkit, Spigot or Paper.
-    private ArrayList<Material> redstoneBlocks = new ArrayList<>(Arrays.asList(Material.REDSTONE, Material.DISPENSER, Material.DROPPER, Material.REDSTONE_LAMP));
+    private final ArrayList<Material> redstoneBlocks = new ArrayList<>(Arrays.asList(Material.REDSTONE, Material.DISPENSER, Material.DROPPER, Material.REDSTONE_LAMP));
 
     @EventHandler
     public void onBlockPhysics(BlockPhysicsEvent event)

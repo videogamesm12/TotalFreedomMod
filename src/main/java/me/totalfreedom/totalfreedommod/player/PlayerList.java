@@ -11,7 +11,7 @@ import lombok.Getter;
 import me.totalfreedom.totalfreedommod.FreedomService;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.rank.Rank;
-import me.totalfreedom.totalfreedommod.staff.StaffMember;
+import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.util.FLog;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.bukkit.OfflinePlayer;
@@ -19,7 +19,6 @@ import org.bukkit.entity.Player;
 
 public class PlayerList extends FreedomService
 {
-
     @Getter
     public final Map<String, FPlayer> playerMap = Maps.newHashMap(); // ip,dataMap
 
@@ -98,25 +97,16 @@ public class PlayerList extends FreedomService
     {
         PlayerData data = getData(name);
 
-        if ((!ConfigEntry.HOST_SENDER_NAMES.getStringList().contains(name.toLowerCase()) && data != null && !ConfigEntry.SERVER_OWNERS.getStringList().contains(data.getName()))
-                && !ConfigEntry.SERVER_EXECUTIVES.getStringList().contains(data.getName())
-                && !isTelnetMasterBuilder(data)
-                && !ConfigEntry.HOST_SENDER_NAMES.getStringList().contains(name.toLowerCase()))
-        {
-            return false;
-        }
-        return true;
+        return (ConfigEntry.HOST_SENDER_NAMES.getStringList().contains(name.toLowerCase()) || data == null || ConfigEntry.SERVER_OWNERS.getStringList().contains(data.getName()))
+                || ConfigEntry.SERVER_EXECUTIVES.getStringList().contains(data.getName())
+                || isAdminMasterBuilder(data)
+                || ConfigEntry.HOST_SENDER_NAMES.getStringList().contains(name.toLowerCase());
     }
 
-    public boolean isTelnetMasterBuilder(PlayerData playerData)
+    public boolean isAdminMasterBuilder(PlayerData playerData)
     {
-        StaffMember staffMember = plugin.sl.getEntryByName(playerData.getName());
-        if (staffMember != null && staffMember.getRank().isAtLeast(Rank.ADMIN) && playerData.isMasterBuilder())
-        {
-            return true;
-        }
-
-        return false;
+        Admin admin = plugin.al.getEntryByName(playerData.getName());
+        return admin != null && admin.getRank().isAtLeast(Rank.ADMIN) && playerData.isMasterBuilder();
     }
 
     // May not return null
@@ -157,14 +147,14 @@ public class PlayerList extends FreedomService
     {
         PlayerData playerData = getData(player);
         return plugin.dc.enabled
-                && !plugin.sl.isStaff(player)
-                && (playerData.hasVerification())
+                && !plugin.al.isAdmin(player)
+                && playerData.hasVerification()
                 && !playerData.getIps().contains(FUtil.getIp(player));
     }
 
     public boolean IsImpostor(Player player)
     {
-        return isPlayerImpostor(player) || plugin.sl.isStaffImpostor(player);
+        return isPlayerImpostor(player) || plugin.al.isAdminImpostor(player);
     }
 
     public void verify(Player player, String backupCode)
@@ -178,39 +168,37 @@ public class PlayerList extends FreedomService
         playerData.addIp(FUtil.getIp(player));
         save(playerData);
 
-        if (plugin.sl.isStaffImpostor(player))
+        if (plugin.al.isAdminImpostor(player))
         {
-            StaffMember staffMember = plugin.sl.getEntryByName(player.getName());
-            staffMember.setLastLogin(new Date());
-            staffMember.addIp(FUtil.getIp(player));
-            plugin.sl.updateTables();
-            plugin.sl.save(staffMember);
+            Admin admin = plugin.al.getEntryByName(player.getName());
+            admin.setLastLogin(new Date());
+            admin.addIp(FUtil.getIp(player));
+            plugin.al.updateTables();
+            plugin.al.save(admin);
         }
-
         plugin.rm.updateDisplay(player);
     }
 
-    public void syncIps(StaffMember staffMember)
+    public void syncIps(Admin admin)
     {
-        PlayerData playerData = getData(staffMember.getName());
+        PlayerData playerData = getData(admin.getName());
         playerData.clearIps();
-        playerData.addIps(staffMember.getIps());
+        playerData.addIps(admin.getIps());
         plugin.pl.save(playerData);
     }
 
     public void syncIps(PlayerData playerData)
     {
-        StaffMember staffMember = plugin.sl.getEntryByName(playerData.getName());
+        Admin admin = plugin.al.getEntryByName(playerData.getName());
 
-        if (staffMember != null && staffMember.isActive())
+        if (admin != null && admin.isActive())
         {
-            staffMember.clearIPs();
-            staffMember.addIps(playerData.getIps());
-            plugin.sl.updateTables();
-            plugin.sl.save(staffMember);
+            admin.clearIPs();
+            admin.addIps(playerData.getIps());
+            plugin.al.updateTables();
+            plugin.al.save(admin);
         }
     }
-
 
     public void save(PlayerData player)
     {

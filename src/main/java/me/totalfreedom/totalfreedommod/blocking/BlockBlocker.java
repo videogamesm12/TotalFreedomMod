@@ -181,6 +181,5 @@ public class BlockBlocker extends FreedomService
                 player.sendMessage(ChatColor.GRAY + "Your banner had too many patterns on it, so some were removed.");
             }
         }
-
     }
 }

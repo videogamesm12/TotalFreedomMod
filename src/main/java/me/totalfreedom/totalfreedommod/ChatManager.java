@@ -5,7 +5,7 @@ import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.player.FPlayer;
 import me.totalfreedom.totalfreedommod.player.PlayerData;
 import me.totalfreedom.totalfreedommod.rank.Displayable;
-import me.totalfreedom.totalfreedommod.staff.StaffMember;
+import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.util.FLog;
 import me.totalfreedom.totalfreedommod.util.FSync;
 import me.totalfreedom.totalfreedommod.util.FUtil;
@@ -65,7 +65,7 @@ public class ChatManager extends FreedomService
             return;
         }
 
-        if (!ConfigEntry.TOGGLE_CHAT.getBoolean() && !plugin.sl.isStaff(player))
+        if (!ConfigEntry.TOGGLE_CHAT.getBoolean() && !plugin.al.isAdmin(player))
         {
             event.setCancelled(true);
             playerMsg(player, "Chat is currently disabled.", org.bukkit.ChatColor.RED);
@@ -87,27 +87,12 @@ public class ChatManager extends FreedomService
             return;
         }
 
-        // Check for staffchat
-        if (fPlayer.inStaffChat())
+        // Check for adminchat
+        if (fPlayer.inAdminChat())
         {
-            FSync.staffChatMessage(player, message);
+            FSync.adminChatMessage(player, message);
             event.setCancelled(true);
             return;
-        }
-
-        // Check for 4chan trigger
-        Boolean green = ChatColor.stripColor(message).toLowerCase().startsWith(">");
-        Boolean orange = ChatColor.stripColor(message).toLowerCase().endsWith("<");
-        if (ConfigEntry.FOURCHAN_ENABLED.getBoolean())
-        {
-            if (green)
-            {
-                message = ChatColor.GREEN + message;
-            }
-            else if (orange)
-            {
-                message = ChatColor.GOLD + message;
-            }
         }
 
         // Finally, set message
@@ -123,7 +108,7 @@ public class ChatManager extends FreedomService
         }
 
         // Check for mentions
-        Boolean mentionEveryone = ChatColor.stripColor(message).toLowerCase().contains("@everyone") && plugin.sl.isStaff(player);
+        Boolean mentionEveryone = ChatColor.stripColor(message).toLowerCase().contains("@everyone") && plugin.al.isAdmin(player);
         for (Player p : server.getOnlinePlayers())
         {
             if (ChatColor.stripColor(message).toLowerCase().contains("@" + p.getName().toLowerCase()) || mentionEveryone)
@@ -135,8 +120,8 @@ public class ChatManager extends FreedomService
         // Set format
         event.setFormat(format);
 
-        // Send to discord
-        if (!ConfigEntry.STAFF_ONLY_MODE.getBoolean() && !Bukkit.hasWhitelist() && !plugin.pl.getPlayer(player).isMuted() && !plugin.tfg.inGuildChat(player))
+        // Send to Discord
+        if (!ConfigEntry.ADMIN_ONLY_MODE.getBoolean() && !Bukkit.hasWhitelist() && !plugin.pl.getPlayer(player).isMuted() && !plugin.tfg.inGuildChat(player))
         {
             plugin.dc.messageChatChannel(plugin.dc.deformat(player.getName()) + " \u00BB " + ChatColor.stripColor(message));
         }
@@ -144,8 +129,7 @@ public class ChatManager extends FreedomService
 
     public ChatColor getColor(Displayable display)
     {
-        ChatColor color = display.getColor();
-        return color;
+        return display.getColor();
     }
 
     public String getColoredTag(Displayable display)
@@ -154,27 +138,27 @@ public class ChatManager extends FreedomService
         return color + display.getAbbr();
     }
 
-    public void staffChat(CommandSender sender, String message)
+    public void adminChat(CommandSender sender, String message)
     {
         Displayable display = plugin.rm.getDisplay(sender);
-        FLog.info("[STAFF] " + sender.getName() + " " + display.getTag() + ": " + message, true);
+        FLog.info("[ADMIN] " + sender.getName() + " " + display.getTag() + ": " + message, true);
         plugin.dc.messageAdminChatChannel(sender.getName() + " \u00BB " + message);
 
         for (Player player : server.getOnlinePlayers())
         {
-            if (plugin.sl.isStaff(player))
+            if (plugin.al.isAdmin(player))
             {
-                StaffMember staffMember = plugin.sl.getAdmin(player);
-                if (!Strings.isNullOrEmpty(staffMember.getAcFormat()))
+                Admin admin = plugin.al.getAdmin(player);
+                if (!Strings.isNullOrEmpty(admin.getAcFormat()))
                 {
-                    String format = staffMember.getAcFormat();
+                    String format = admin.getAcFormat();
                     ChatColor color = getColor(display);
                     String msg = format.replace("%name%", sender.getName()).replace("%rank%", display.getAbbr()).replace("%rankcolor%", color.toString()).replace("%msg%", message);
                     player.sendMessage(FUtil.colorize(msg));
                 }
                 else
                 {
-                    player.sendMessage("[" + ChatColor.AQUA + "STAFF" + ChatColor.WHITE + "] " + ChatColor.DARK_RED + sender.getName() + ChatColor.DARK_GRAY + " [" + getColoredTag(display) + ChatColor.DARK_GRAY + "]" + ChatColor.WHITE + ": " + ChatColor.GOLD + FUtil.colorize(message));
+                    player.sendMessage("[" + ChatColor.AQUA + "ADMIN" + ChatColor.WHITE + "] " + ChatColor.DARK_RED + sender.getName() + ChatColor.DARK_GRAY + " [" + getColoredTag(display) + ChatColor.DARK_GRAY + "]" + ChatColor.WHITE + ": " + ChatColor.GOLD + FUtil.colorize(message));
                 }
             }
         }
@@ -184,7 +168,7 @@ public class ChatManager extends FreedomService
     {
         for (Player player : server.getOnlinePlayers())
         {
-            if (plugin.sl.isStaff(player))
+            if (plugin.al.isAdmin(player))
             {
                 playerMsg(player, ChatColor.RED + "[REPORTS] " + ChatColor.GOLD + reporter.getName() + " has reported " + reported.getName() + " for " + report);
             }

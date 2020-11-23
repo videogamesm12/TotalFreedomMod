@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import me.totalfreedom.totalfreedommod.player.PlayerData;
 import me.totalfreedom.totalfreedommod.rank.Rank;
-import me.totalfreedom.totalfreedommod.staff.StaffMember;
+import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -44,9 +44,9 @@ public class Command_panel extends FreedomCommand
         if (args[0].equals("create"))
         {
             msg("Creating your Pterodactyl account...", ChatColor.GREEN);
-            StaffMember staffMember = getStaffMember(playerSender);
+            Admin admin = getAdmin(playerSender);
 
-            if (staffMember.getPteroID() != null)
+            if (admin.getPteroID() != null)
             {
                 msg("You already have a Pterodactyl account.", ChatColor.RED);
                 return true;
@@ -64,9 +64,9 @@ public class Command_panel extends FreedomCommand
 
             plugin.ptero.addAccountToServer(id);
 
-            staffMember.setPteroID(id);
-            plugin.sl.save(staffMember);
-            plugin.sl.updateTables();
+            admin.setPteroID(id);
+            plugin.al.save(admin);
+            plugin.al.updateTables();
 
             plugin.dc.sendPteroInfo(playerData, username, password);
             msg("Successfully created your Pterodactyl account. Check your DMs from " + plugin.dc.formatBotTag() + " on discord to get your credentials.", ChatColor.GREEN);
@@ -75,15 +75,15 @@ public class Command_panel extends FreedomCommand
         else if (args[0].equals("delete"))
         {
             msg("Deleting your Pterodactyl account...", ChatColor.GREEN);
-            StaffMember staffMember = getStaffMember(playerSender);
+            Admin admin = getAdmin(playerSender);
 
-            if (staffMember.getPteroID() == null)
+            if (admin.getPteroID() == null)
             {
                 msg("You do not have a Pterodactyl account.", ChatColor.RED);
                 return true;
             }
 
-            boolean deleted = plugin.ptero.deleteAccount(staffMember.getPteroID());
+            boolean deleted = plugin.ptero.deleteAccount(admin.getPteroID());
 
             if (!deleted)
             {
@@ -91,33 +91,13 @@ public class Command_panel extends FreedomCommand
                 return true;
             }
 
-            staffMember.setPteroID(null);
-            plugin.sl.save(staffMember);
-            plugin.sl.updateTables();
+            admin.setPteroID(null);
+            plugin.al.save(admin);
+            plugin.al.updateTables();
 
             msg("Successfully deleted your Pterodactyl account.", ChatColor.GREEN);
             return true;
         }
-        /*else if (args[0].equals("resetpassword"))
-        {
-            StaffMember staffMember = getAdmin(playerSender);
-
-            if (staffMember.getAmpUsername() == null)
-            {
-                msg("You do not have a Pterodactyl account.", ChatColor.RED);
-                return true;
-            }
-
-            msg("Resetting your password...", ChatColor.GREEN);
-
-            String id = staffMember.getPteroID();
-            String password = FUtil.randomString(30);
-            plugin.ptero.setPassword(id, password);
-            plugin.dc.sendPteroInfo(playerData, null, password);
-
-            msg("Successfully reset your AMP account password. Check your DMs from " + plugin.dc.formatBotTag() + " on discord to get your credentials.", ChatColor.GREEN);
-            return true;
-        }*/
 
         return false;
     }
@@ -125,7 +105,7 @@ public class Command_panel extends FreedomCommand
     @Override
     public List<String> getTabCompleteOptions(CommandSender sender, Command command, String alias, String[] args)
     {
-        if (args.length == 1 && plugin.sl.isAdmin(sender))
+        if (args.length == 1 && plugin.al.isSeniorAdmin(sender))
         {
             return Arrays.asList("create", "delete");
         }

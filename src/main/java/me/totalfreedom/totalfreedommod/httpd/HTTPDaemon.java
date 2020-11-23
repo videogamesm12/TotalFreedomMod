@@ -23,7 +23,6 @@ import me.totalfreedom.totalfreedommod.httpd.module.Module_logs;
 import me.totalfreedom.totalfreedommod.httpd.module.Module_players;
 import me.totalfreedom.totalfreedommod.httpd.module.Module_punishments;
 import me.totalfreedom.totalfreedommod.httpd.module.Module_schematic;
-import me.totalfreedom.totalfreedommod.httpd.module.Module_staff;
 import me.totalfreedom.totalfreedommod.util.FLog;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -31,7 +30,6 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 public class HTTPDaemon extends FreedomService
 {
-
     public static String MIME_DEFAULT_BINARY = "application/octet-stream";
     private static final Pattern EXT_REGEX = Pattern.compile("\\.([^\\.\\s]+)$");
     //
@@ -53,7 +51,6 @@ public class HTTPDaemon extends FreedomService
         // Modules
         modules.clear();
         module("activitylog", Module_activitylog.class, true);
-        module("staff", Module_staff.class, true);
         module("bans", Module_bans.class, true);
         module("help", Module_help.class, false);
         module("list", Module_list.class, false);

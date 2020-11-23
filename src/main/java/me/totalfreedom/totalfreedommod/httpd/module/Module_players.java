@@ -3,7 +3,7 @@ package me.totalfreedom.totalfreedommod.httpd.module;
 import me.totalfreedom.totalfreedommod.TotalFreedomMod;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.httpd.NanoHTTPD;
-import me.totalfreedom.totalfreedommod.staff.StaffMember;
+import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,7 +12,6 @@ import org.json.simple.JSONObject;
 
 public class Module_players extends HTTPDModule
 {
-
     public Module_players(TotalFreedomMod plugin, NanoHTTPD.HTTPSession session)
     {
         super(plugin, session);
@@ -25,7 +24,7 @@ public class Module_players extends HTTPDModule
         final JSONObject responseObject = new JSONObject();
 
         final JSONArray players = new JSONArray();
-        final JSONArray onlinestaff = new JSONArray();
+        final JSONArray onlineAdmins = new JSONArray();
         final JSONArray masterbuilders = new JSONArray();
         final JSONArray admins = new JSONArray();
         final JSONArray senioradmins = new JSONArray();
@@ -35,22 +34,22 @@ public class Module_players extends HTTPDModule
         // All online players
         for (Player player : Bukkit.getOnlinePlayers())
         {
-            if (!plugin.sl.isVanished(player.getName()))
+            if (!plugin.al.isVanished(player.getName()))
             {
                 players.add(player.getName());
-                if (plugin.sl.isStaff(player) && !plugin.sl.isStaffImpostor(player))
+                if (plugin.al.isAdmin(player) && !plugin.al.isAdminImpostor(player))
                 {
-                    onlinestaff.add(player.getName());
+                    onlineAdmins.add(player.getName());
                 }
             }
         }
 
-        // Staff
-        for (StaffMember staffMember : plugin.sl.getActiveStaffMembers())
+        // Admins
+        for (Admin admin : plugin.al.getActiveAdmins())
         {
-            final String username = staffMember.getName();
+            final String username = admin.getName();
 
-            switch (staffMember.getRank())
+            switch (admin.getRank())
             {
                 case ADMIN:
                     admins.add(username);

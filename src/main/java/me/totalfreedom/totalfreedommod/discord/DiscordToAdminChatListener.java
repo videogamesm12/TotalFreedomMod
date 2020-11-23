@@ -26,7 +26,7 @@ public class DiscordToAdminChatListener extends ListenerAdapter
             {
                 Member member = event.getMember();
                 String tag = dtml.getDisplay(member);
-                StringBuilder message = new StringBuilder(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + "STAFF" + ChatColor.DARK_GRAY + "]");
+                StringBuilder message = new StringBuilder(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + "ADMIN" + ChatColor.DARK_GRAY + "]");
                 Message msg = event.getMessage();
                 if (tag != null)
                 {
@@ -56,7 +56,7 @@ public class DiscordToAdminChatListener extends ListenerAdapter
                 }
                 for (Player player : Bukkit.getOnlinePlayers())
                 {
-                    if (TotalFreedomMod.getPlugin().sl.isStaff(player))
+                    if (TotalFreedomMod.getPlugin().al.isAdmin(player))
                     {
                         player.spigot().sendMessage(builder.create());
                     }

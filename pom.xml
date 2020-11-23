@@ -5,12 +5,12 @@
 
     <groupId>me.totalfreedom</groupId>
     <artifactId>TotalFreedomMod</artifactId>
-    <version>2020.11.5</version>
+    <version>6.0</version>
     <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tfm.build.codename>Antaeus</tfm.build.codename>
+        <tfm.build.codename>Mirror</tfm.build.codename>
         <jar.finalName>${project.name}</jar.finalName>
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>MM/dd/yyyy HH:mm</maven.build.timestamp.format>
@@ -33,9 +33,9 @@
     </organization>
 
     <scm>
-        <connection>scm:git:git@github.com:TFPatches/TotalFreedomMod.git</connection>
-        <developerConnection>scm:git:git@github.com:TFPatches/TotalFreedomMod.git</developerConnection>
-        <url>git@github.com:TFPatches/TotalFreedomMod.git</url>
+        <connection>scm:git:git@github.com:TotalFreedomMC/TotalFreedomMod.git</connection>
+        <developerConnection>scm:git:git@github.com:TotalFreedomMC/TotalFreedomMod.git</developerConnection>
+        <url>git@github.com:TotalFreedomMC/TotalFreedomMod.git</url>
     </scm>
 
     <repositories>
@@ -195,7 +195,7 @@
         <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>EssentialsX</artifactId>
-            <version>2.18.1</version>
+            <version>2.18.2</version>
             <scope>provided</scope>
         </dependency>
 
@@ -274,13 +274,6 @@
             <artifactId>maven-checkstyle-plugin</artifactId>
             <version>3.1.1</version>
             <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.dean.jraw</groupId>
-            <artifactId>JRAW</artifactId>
-            <version>1.1.0</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 

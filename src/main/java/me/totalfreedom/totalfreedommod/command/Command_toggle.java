@@ -44,15 +44,11 @@ public class Command_toggle extends FreedomCommand
             msg("- grindstones");
             msg("- jukeboxes");
             msg("- spawners");
-            msg("- 4chan");
             msg("- beehives");
             msg("- respawnanchors");
             msg("- autotp");
             msg("- autoclear");
             msg("- minecarts");
-            msg("- landmines");
-            msg("- mp44");
-            msg("- tossmob");
             return false;
         }
 
@@ -111,7 +107,7 @@ public class Command_toggle extends FreedomCommand
             {
                 boolean active = !plugin.lp.isLockdownEnabled();
                 plugin.lp.setLockdownEnabled(active);
-                FUtil.staffAction(sender.getName(), (active ? "A" : "De-a") + "ctivating server lockdown", true);
+                FUtil.adminAction(sender.getName(), (active ? "A" : "De-a") + "ctivating server lockdown", true);
                 break;
             }
 
@@ -243,12 +239,6 @@ public class Command_toggle extends FreedomCommand
                 break;
             }
 
-            case "4chan":
-            {
-                toggle("4chan mode is", ConfigEntry.FOURCHAN_ENABLED);
-                break;
-            }
-
             case "beehives":
             {
                 toggle("Beehives are", ConfigEntry.ALLOW_BEEHIVES);
@@ -278,24 +268,6 @@ public class Command_toggle extends FreedomCommand
                 toggle("Minecarts are", ConfigEntry.ALLOW_MINECARTS);
                 break;
             }
-
-            case "landmines":
-            {
-                toggle("Landmines are", ConfigEntry.LANDMINES_ENABLED);
-                break;
-            }
-
-            case "mp44":
-            {
-                toggle("MP44 is", ConfigEntry.MP44_ENABLED);
-                break;
-            }
-
-            case "tossmob":
-            {
-                toggle("Tossmob is", ConfigEntry.TOSSMOB_ENABLED);
-                break;
-            }
         }
         return true;
     }
@@ -308,7 +280,7 @@ public class Command_toggle extends FreedomCommand
     @Override
     public List<String> getTabCompleteOptions(CommandSender sender, Command command, String alias, String[] args)
     {
-        if (!plugin.sl.isStaff(sender))
+        if (!plugin.al.isAdmin(sender))
         {
             return Collections.emptyList();
         }
@@ -318,8 +290,8 @@ public class Command_toggle extends FreedomCommand
             return Arrays.asList(
                     "waterplace", "fireplace", "lavaplace", "fluidspread", "lavadmg", "firespread", "frostwalk",
                     "firework", "prelog", "lockdown", "petprotect", "entitywipe", "nonuke", "explosives", "unsafeenchs",
-                    "bells", "armorstands", "structureblocks", "jigsaws", "grindstones", "jukeboxes", "spawners", "4chan", "beehives",
-                    "respawnanchors", "autotp", "autoclear", "minecarts", "mp44", "landmines", "tossmob");
+                    "bells", "armorstands", "structureblocks", "jigsaws", "grindstones", "jukeboxes", "spawners", "beehives",
+                    "respawnanchors", "autotp", "autoclear", "minecarts");
         }
         return Collections.emptyList();
     }

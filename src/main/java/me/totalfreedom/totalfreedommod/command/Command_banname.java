@@ -55,7 +55,7 @@ public class Command_banname extends FreedomCommand
 
         if (!silent)
         {
-            FUtil.staffAction(sender.getName(), "Banned the name " + name, true);
+            FUtil.adminAction(sender.getName(), "Banned the name " + name, true);
         }
 
         Player player = getPlayer(name);

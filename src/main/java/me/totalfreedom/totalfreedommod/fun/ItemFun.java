@@ -46,7 +46,6 @@ import org.bukkit.util.Vector;
 
 public class ItemFun extends FreedomService
 {
-
     public List<Player> explosivePlayers = new ArrayList<>();
 
     private final Random random = new Random();
@@ -177,30 +176,9 @@ public class ItemFun extends FreedomService
         }
 
         final Player player = event.getPlayer();
-        final FPlayer fPlayer = plugin.pl.getPlayer(player);
 
         switch (event.getMaterial())
         {
-            case GUNPOWDER:
-            {
-                if (!fPlayer.isMP44Armed())
-                {
-                    break;
-                }
-
-                event.setCancelled(true);
-
-                if (fPlayer.toggleMP44Firing())
-                {
-                    fPlayer.startArrowShooter(plugin);
-                }
-                else
-                {
-                    fPlayer.stopArrowShooter();
-                }
-                break;
-            }
-
             case BLAZE_ROD:
             {
                 if (!plugin.sh.isRealItem(plugin.pl.getData(player), ShopItem.LIGHTNING_ROD, player.getInventory(), plugin.sh.getLightningRod()))

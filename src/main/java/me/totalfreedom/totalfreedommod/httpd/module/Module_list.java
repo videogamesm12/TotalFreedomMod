@@ -4,7 +4,7 @@ import java.util.Collection;
 import me.totalfreedom.totalfreedommod.TotalFreedomMod;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.httpd.NanoHTTPD;
-import me.totalfreedom.totalfreedommod.staff.StaffMember;
+import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -38,7 +38,7 @@ public class Module_list extends HTTPDModule
             for (Player player : Bukkit.getOnlinePlayers())
             {
 
-                if (plugin.sl.isVanished(player.getName()))
+                if (plugin.al.isVanished(player.getName()))
                 {
                     continue;
                 }
@@ -68,15 +68,15 @@ public class Module_list extends HTTPDModule
                     owners.add(player.getName());
                 }
 
-                if (!plugin.sl.isStaff(player) && !hasSpecialTitle(player))
+                if (!plugin.al.isAdmin(player) && !hasSpecialTitle(player))
                 {
                     operators.add(player.getName());
                 }
 
-                if (!hasSpecialTitle(player) && plugin.sl.isStaff(player) && !plugin.sl.isVanished(player.getName()))
+                if (!hasSpecialTitle(player) && plugin.al.isAdmin(player) && !plugin.al.isVanished(player.getName()))
                 {
-                    StaffMember staffMember = plugin.sl.getAdmin(player);
-                    switch (staffMember.getRank())
+                    Admin admin = plugin.al.getAdmin(player);
+                    switch (admin.getRank())
                     {
                         case ADMIN:
                             admins.add(player.getName());
@@ -115,7 +115,7 @@ public class Module_list extends HTTPDModule
 
             for (Player player : onlinePlayers)
             {
-                if (plugin.sl.isVanished(player.getName()))
+                if (plugin.al.isVanished(player.getName()))
                 {
                     continue;
                 }
@@ -133,7 +133,7 @@ public class Module_list extends HTTPDModule
 
     public boolean isImposter(Player player)
     {
-        if (plugin.sl.isStaffImpostor(player) || plugin.pl.isPlayerImpostor(player))
+        if (plugin.al.isAdminImpostor(player) || plugin.pl.isPlayerImpostor(player))
         {
             return true;
         }

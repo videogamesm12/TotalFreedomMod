@@ -20,7 +20,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class FPlayer
 {
-
     public static final long AUTO_PURGE_TICKS = 5L * 60L * 20L;
 
     @Getter
@@ -51,13 +50,10 @@ public class FPlayer
     private EntityType mobThrowerEntity = EntityType.PIG;
     private double mobThrowerSpeed = 4.0;
     private final List<LivingEntity> mobThrowerQueue = new ArrayList<>();
-    private BukkitTask mp44ScheduleTask = null;
-    private boolean mp44Armed = false;
-    private boolean mp44Firing = false;
     private BukkitTask lockupScheduleTask = null;
     private boolean lockedUp = false;
     private String lastMessage = "";
-    private boolean inStaffchat = false;
+    private boolean inAdminChat = false;
     private boolean allCommandsBlocked = false;
     @Getter
     @Setter
@@ -236,46 +232,6 @@ public class FPlayer
         }
     }
 
-    public void startArrowShooter(TotalFreedomMod plugin)
-    {
-        this.stopArrowShooter();
-        this.mp44ScheduleTask = new ArrowShooter(this.player).runTaskTimer(plugin, 1L, 1L);
-        this.mp44Firing = true;
-    }
-
-    public void stopArrowShooter()
-    {
-        if (this.mp44ScheduleTask != null)
-        {
-            this.mp44ScheduleTask.cancel();
-            this.mp44ScheduleTask = null;
-        }
-        this.mp44Firing = false;
-    }
-
-    public void armMP44()
-    {
-        this.mp44Armed = true;
-        this.stopArrowShooter();
-    }
-
-    public void disarmMP44()
-    {
-        this.mp44Armed = false;
-        this.stopArrowShooter();
-    }
-
-    public boolean isMP44Armed()
-    {
-        return this.mp44Armed;
-    }
-
-    public boolean toggleMP44Firing()
-    {
-        this.mp44Firing = !this.mp44Firing;
-        return mp44Firing;
-    }
-
     public boolean isMuted()
     {
         return unmuteTask != null;
@@ -306,12 +262,12 @@ public class FPlayer
             {
                 if (getPlayer() != null)
                 {
-                    FUtil.staffAction(ConfigEntry.SERVER_NAME.getString(), "Unmuting " + getPlayer().getName(), false);
+                    FUtil.adminAction(ConfigEntry.SERVER_NAME.getString(), "Unmuting " + getPlayer().getName(), false);
                     setMuted(false);
                 }
                 else
                 {
-                    FUtil.staffAction(ConfigEntry.SERVER_NAME.getString(), "Unmuting " + getName(), false);
+                    FUtil.adminAction(ConfigEntry.SERVER_NAME.getString(), "Unmuting " + getName(), false);
                     plugin.mu.MUTED_PLAYERS.remove(getName());
                 }
             }
@@ -348,14 +304,15 @@ public class FPlayer
         return lastMessage;
     }
 
-    public void setStaffChat(boolean inStaffchat)
+    public void setAdminChat(boolean inAdminChat
+    )
     {
-        this.inStaffchat = inStaffchat;
+        this.inAdminChat = inAdminChat;
     }
 
-    public boolean inStaffChat()
+    public boolean inAdminChat()
     {
-        return this.inStaffchat;
+        return this.inAdminChat;
     }
 
     public boolean allCommandsBlocked()

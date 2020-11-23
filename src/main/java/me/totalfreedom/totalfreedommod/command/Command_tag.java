@@ -18,14 +18,12 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Allows you to set your own prefix.", usage = "/<command> [-s[ave]] <set <tag..> | list | gradient <hex> <hex> <tag..> | off | clear <player> | clearall>")
 public class Command_tag extends FreedomCommand
 {
-
     public static final List<String> FORBIDDEN_WORDS = Arrays.asList(
-            "admin", "owner", "moderator", "developer", "console", "dev", "staff", "mod", "sra", "tca", "sta", "sa");
+            "admin", "owner", "moderator", "developer", "console", "dev", "admin", "mod", "sra", "tca", "sta", "sa");
 
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
-
         boolean save = false;
 
         if (args.length < 1)
@@ -41,14 +39,13 @@ public class Command_tag extends FreedomCommand
 
         if (args.length == 1)
         {
-
             if ("list".equalsIgnoreCase(args[0]))
             {
                 msg("Tags for all online players:");
 
                 for (final Player player : server.getOnlinePlayers())
                 {
-                    if (plugin.sl.isVanished(player.getName()) && !plugin.sl.isStaff(sender))
+                    if (plugin.al.isVanished(player.getName()) && !plugin.al.isAdmin(sender))
                     {
                         continue;
                     }
@@ -63,13 +60,13 @@ public class Command_tag extends FreedomCommand
             }
             else if ("clearall".equalsIgnoreCase(args[0]))
             {
-                if (!plugin.sl.isStaff(sender))
+                if (!plugin.al.isAdmin(sender))
                 {
                     noPerms();
                     return true;
                 }
 
-                FUtil.staffAction(sender.getName(), "Removing all tags", false);
+                FUtil.adminAction(sender.getName(), "Removing all tags", false);
 
                 int count = 0;
                 for (final Player player : server.getOnlinePlayers())
@@ -113,7 +110,7 @@ public class Command_tag extends FreedomCommand
         {
             if ("clear".equalsIgnoreCase(args[0]))
             {
-                if (!plugin.sl.isStaff(sender))
+                if (!plugin.al.isAdmin(sender))
                 {
                     noPerms();
                     return true;
@@ -156,7 +153,7 @@ public class Command_tag extends FreedomCommand
                                 });
                 final String outputTag = FUtil.colorize(strippedTag);
 
-                int tagLimit = (plugin.sl.isStaff(sender) ? 30 : 20);
+                int tagLimit = (plugin.al.isAdmin(sender) ? 30 : 20);
 
                 final String rawTag = ChatColor.stripColor(outputTag).toLowerCase();
 
@@ -166,7 +163,7 @@ public class Command_tag extends FreedomCommand
                     return true;
                 }
 
-                if (!plugin.sl.isStaff(sender))
+                if (!plugin.al.isAdmin(sender))
                 {
                     for (String word : FORBIDDEN_WORDS)
                     {
@@ -233,7 +230,7 @@ public class Command_tag extends FreedomCommand
                 tag = StringUtils.join(splitTag, "");
                 final String outputTag = FUtil.colorize(tag);
 
-                int tagLimit = (plugin.sl.isStaff(sender) ? 30 : 20);
+                int tagLimit = (plugin.al.isAdmin(sender) ? 30 : 20);
 
                 final String rawTag = ChatColor.stripColor(outputTag).toLowerCase();
 
@@ -243,7 +240,7 @@ public class Command_tag extends FreedomCommand
                     return true;
                 }
 
-                if (!plugin.sl.isStaff(sender))
+                if (!plugin.al.isAdmin(sender))
                 {
                     for (String word : FORBIDDEN_WORDS)
                     {

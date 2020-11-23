@@ -32,7 +32,7 @@ public class Cager extends FreedomService
     {
         Player player = event.getPlayer();
         if (player == null
-                || plugin.sl.isStaff(player))
+                || plugin.al.isAdmin(player))
         {
             return;
         }

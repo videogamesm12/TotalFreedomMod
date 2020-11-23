@@ -1,4 +1,4 @@
-package me.totalfreedom.totalfreedommod.staff;
+package me.totalfreedom.totalfreedommod.admin;
 
 import com.google.common.collect.Maps;
 import java.util.Map;
@@ -17,7 +17,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class ActivityLog extends FreedomService
 {
-
     public static final String FILENAME = "activitylog.yml";
 
     @Getter
@@ -167,7 +166,7 @@ public class ActivityLog extends FreedomService
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         Player player = event.getPlayer();
-        if (plugin.sl.isStaff(player))
+        if (plugin.al.isAdmin(player))
         {
             getActivityLog(event.getPlayer()).addLogin();
             plugin.acl.save();
@@ -179,7 +178,7 @@ public class ActivityLog extends FreedomService
     public void onPlayerQuit(PlayerQuitEvent event)
     {
         Player player = event.getPlayer();
-        if (plugin.sl.isStaff(player))
+        if (plugin.al.isAdmin(player))
         {
             getActivityLog(event.getPlayer()).addLogout();
             plugin.acl.save();

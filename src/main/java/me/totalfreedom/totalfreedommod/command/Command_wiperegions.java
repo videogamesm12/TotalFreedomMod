@@ -40,7 +40,7 @@ public class Command_wiperegions extends FreedomCommand
 
         if (regionsWiped != 0)
         {
-            FUtil.staffAction(sender.getName(), "Wiped all regions in " + world.getName(), true);
+            FUtil.adminAction(sender.getName(), "Wiped all regions in " + world.getName(), true);
             msg("Wiped " + regionsWiped + " regions in " + world.getName());
             return true;
         }

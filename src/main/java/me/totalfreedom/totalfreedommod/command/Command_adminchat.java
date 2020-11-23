@@ -8,10 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandPermissions(level = Rank.ADMIN, source = SourceType.BOTH)
-@CommandParameters(description = "Talk privately with other staff on the server.", usage = "/<command> [message]", aliases = "o,sc")
-public class Command_staffchat extends FreedomCommand
+@CommandParameters(description = "Talk privately with other admins on the server.", usage = "/<command> [message]", aliases = "o,sc")
+public class Command_adminchat extends FreedomCommand
 {
-
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
@@ -19,17 +18,17 @@ public class Command_staffchat extends FreedomCommand
         {
             if (senderIsConsole)
             {
-                msg("You must be in-game to toggle staff chat, it cannot be toggled via CONSOLE or Telnet.");
+                msg("You must be in-game to toggle admin chat, it cannot be toggled via CONSOLE or Telnet.");
                 return true;
             }
 
             FPlayer userinfo = plugin.pl.getPlayer(playerSender);
-            userinfo.setStaffChat(!userinfo.inStaffChat());
-            msg("Toggled your staff chat " + (userinfo.inStaffChat() ? "on" : "off") + ".");
+            userinfo.setAdminChat(!userinfo.inAdminChat());
+            msg("Toggled your admin chat " + (userinfo.inAdminChat() ? "on" : "off") + ".");
         }
         else
         {
-            plugin.cm.staffChat(sender, StringUtils.join(args, " "));
+            plugin.cm.adminChat(sender, StringUtils.join(args, " "));
         }
         return true;
     }

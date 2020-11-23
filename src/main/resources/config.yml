@@ -19,7 +19,7 @@ server:
   # MOTD Modification
   motds:
     ban: '&cYou are banned.'
-    staffmode: '&cServer is closed.'
+    adminmode: '&cServer is closed.'
     lockdown: '&cServer is in lock-down.'
     whitelist: '&cWhitelist enabled.'
     full: '&cServer is full.'
@@ -78,31 +78,6 @@ discord:
   # Owner role ID
   server_owner_role_id: ''
 
-# Reddit
-reddit:
-  # Name of your subreddit (the r/NAME, excluding r/)
-  subreddit_name: 'TotalFreedom'
-  # Username of the bot account
-  username: ''
-  # Bot account password
-  password: ''
-  # Developer app id (Make one at https://www.reddit.com/prefs/apps (make sure the type is script))
-  client_id: ''
-  # Developer app secret
-  client_secret: ''
-  # Master Builder flair ID
-  master_builder_flair_id: ''
-  # Admin flair ID
-  admin_flair_id: ''
-  # Senior Admin flair ID
-  senior_admin_flair_id: ''
-  # Developer flair ID
-  developer_flair_id: ''
-  # Executive Admin flair ID
-  executive_flair_id: ''
-  # Owner flair ID
-  server_owner_flair_id: ''
-
 # Pterodactyl
 ptero:
   # URL - do not leave a trailing forward slash
@@ -132,7 +107,6 @@ shop:
 
   # Chat reactions
   reactions:
-
     # Enable chat reactions?
     enabled: true
 
@@ -177,10 +151,9 @@ shop:
     clown_fish: 1500
     login_messages: 5000
 
-# Staff list
-stafflist:
-
-  # The amount of hours after which staff may be removed from the admin list
+# Admin list
+adminlist:
+  # The amount of hours after which admins may be removed from the admin list
   clean_threshold_hours: 167
 
   # Give the default CONSOLE admin privileges.
@@ -250,9 +223,8 @@ allow:
 # * The first section is a letter which indicates which rank may use this command
 #   Valid ranks:
 #   n - Nobody (Completely disabled)
-#   c - Trial Mods (Console)
-#   m - Admins (Console)
-#   s - Staff (Any in-game admin)
+#   a - Admins (Console)
+#   s - Senior Admins (Console)
 #   o - Ops (Non-Ops won't be able to use it)
 #
 # * The second section is a letter which indicates what to do when a player executes that command.
@@ -264,8 +236,8 @@ allow:
 # * The third section is the command to be blocked, prefixed with a slash
 #
 # * The fourth section is the message to send to the player when executing that command.
-#   This should be ommited if unwanted. ChatColors are supported with the &-key. By default
-#   -the starting ChatColor is set to gray. You can use the default 'That command is blocked.' message
+#   This should be omitted if unwanted. ChatColors are supported with the &-key. By default
+#   the starting ChatColor is set to gray. You can use the default 'That command is blocked.' message
 #   by using a single underscore.
 #
 # Examples:
@@ -299,46 +271,46 @@ blocked_commands:
   - 'n:b:/bossbar:_'
   - 'n:b://forceload:_'
 
-  # Staff commands
-  - 's:b:/save-all:_'
-  - 's:b:/kick:_'
-  - 's:b:/socialspy:_'
-  - 's:b:/replaceitem:_'
-  - 's:b:/kill:_'
-  - 's:b://generate:_'
-  - 's:b://:_'
-  - 's:b:/superpickaxe:_'
-  - 's:b:/brush:_'
-  - 's:b:/size:_'
-  - 's:b://mask:_'
-  - 's:b:/mat:_'
-  - 's:b://butcher:_'
-  - 's:b:/scoreboard:_'
-  - 's:b:/setspawn:_'
-  - 's:b://snow:_'
-  - 's:b:/tellraw:_'
-  - 's:b:/forestgen:_'
-  - 's:b:/setidletimeout:_'
-  - 's:b:/mail sendall:_'
-  - 's:b:/eco reset:_'
-  - 's:b:/mask:_'
-  - 's:b:/gmask:_'
-  - 's:b:/lrbuild:_'
-  - 's:b:/defaultgamemode:_'
-  - 's:b:/reload:_'
-  - 's:b:/title:_'
-  - 's:b:/worldborder:_'
-  - 's:b:/weather:_'
-  - 's:b:/tpall:_'
-  - 's:b:/setblock:_'
-  - 's:b:/green:_'
-  - 's:b:/gamerule:_'
-  - 's:b:/togglejail:_'
-  - 's:b:/fill:_'
-  - 's:b:/flood:_'
-  - 's:b:/team:_'
-  - 's:b:/loot:_'
-  - 's:b:/schedule:_'
+  # Admin commands
+  - 'a:b:/save-all:_'
+  - 'a:b:/kick:_'
+  - 'a:b:/socialspy:_'
+  - 'a:b:/replaceitem:_'
+  - 'a:b:/kill:_'
+  - 'a:b://generate:_'
+  - 'a:b://:_'
+  - 'a:b:/superpickaxe:_'
+  - 'a:b:/brush:_'
+  - 'a:b:/size:_'
+  - 'a:b://mask:_'
+  - 'a:b:/mat:_'
+  - 'a:b://butcher:_'
+  - 'a:b:/scoreboard:_'
+  - 'a:b:/setspawn:_'
+  - 'a:b://snow:_'
+  - 'a:b:/tellraw:_'
+  - 'a:b:/forestgen:_'
+  - 'a:b:/setidletimeout:_'
+  - 'a:b:/mail sendall:_'
+  - 'a:b:/eco reset:_'
+  - 'a:b:/mask:_'
+  - 'a:b:/gmask:_'
+  - 'a:b:/lrbuild:_'
+  - 'a:b:/defaultgamemode:_'
+  - 'a:b:/reload:_'
+  - 'a:b:/title:_'
+  - 'a:b:/worldborder:_'
+  - 'a:b:/weather:_'
+  - 'a:b:/tpall:_'
+  - 'a:b:/setblock:_'
+  - 'a:b:/green:_'
+  - 'a:b:/gamerule:_'
+  - 'a:b:/togglejail:_'
+  - 'a:b:/fill:_'
+  - 'a:b:/flood:_'
+  - 'a:b:/team:_'
+  - 'a:b:/loot:_'
+  - 'a:b:/schedule:_'
 
 # Automatically wipe dropped objects
 auto_wipe: true
@@ -361,13 +333,6 @@ disable:
   night: true
   weather: true
 
-
-# Enable misc. features
-landmines_enabled: false
-mp44_enabled: false
-tossmob_enabled: false
-4chan_enabled: false
-
 # Moblimiter
 moblimiter:
   enabled: true
@@ -386,7 +351,7 @@ flatlands:
   generate_params: 16,stone,32,dirt,1,grass_block
 
 # Admin-Only Mode
-staff_only_mode: false
+admin_only_mode: false
 
 # Toggle Chat
 toggle_chat: true
@@ -429,10 +394,10 @@ announcer:
   - 'Racism, nazism, and sexism are strictly forbidden!'
   - 'Join our Discord server! Link: https://discordapp.com/invite/XXjmAmV/'
 
-# What to display in the staffinfo command.
-staffinfo:
-  - '&bHow to apply for staff on the TotalFreedom Server:'
-  - ' &6- Do not ask for staff in game'
+# What to display in the admin info command.
+admininfo:
+  - '&bHow to apply for admin on the TotalFreedom Server:'
+  - ' &6- Do not ask for admin in game'
   - ' &2- Be helpful within the server'
   - ' &6- Report those breaking the rules'
   - ' &2- And apply on our forums at the link:'

@@ -1,4 +1,4 @@
-package me.totalfreedom.totalfreedommod.staff;
+package me.totalfreedom.totalfreedommod.admin;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
-import me.totalfreedom.totalfreedommod.LogViewer.LogsRegistrationMode;
 import me.totalfreedom.totalfreedommod.TotalFreedomMod;
 import me.totalfreedom.totalfreedommod.rank.Rank;
 import me.totalfreedom.totalfreedommod.util.FLog;
@@ -17,7 +16,7 @@ import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 
-public class StaffMember
+public class Admin
 {
     @Getter
     @Setter
@@ -45,13 +44,13 @@ public class StaffMember
     @Setter
     private String pteroID = null;
 
-    public StaffMember(Player player)
+    public Admin(Player player)
     {
         this.name = player.getName();
         this.ips.add(FUtil.getIp(player));
     }
 
-    public StaffMember(ResultSet resultSet)
+    public Admin(ResultSet resultSet)
     {
         try
         {
@@ -68,7 +67,7 @@ public class StaffMember
         }
         catch (SQLException e)
         {
-            FLog.severe("Failed to load staff: " + e.getMessage());
+            FLog.severe("Failed to load admin: " + e.getMessage());
         }
     }
 
@@ -77,7 +76,7 @@ public class StaffMember
     {
         final StringBuilder output = new StringBuilder();
 
-        output.append("Staff: ").append(name).append("\n")
+        output.append("Admin: ").append(name).append("\n")
                 .append("- IPs: ").append(StringUtils.join(ips, ", ")).append("\n")
                 .append("- Last Login: ").append(FUtil.dateToString(lastLogin)).append("\n")
                 .append("- Rank: ").append(rank.getName()).append("\n")
@@ -151,8 +150,6 @@ public class StaffMember
                     plugin.btb.killTelnetSessions(getName());
                 }
             }
-
-            plugin.lv.updateLogsRegistration(null, getName(), LogsRegistrationMode.DELETE);
         }
     }
 

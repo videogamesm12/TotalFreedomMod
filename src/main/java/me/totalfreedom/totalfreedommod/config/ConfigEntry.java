@@ -64,7 +64,7 @@ public enum ConfigEntry
     SERVER_TABLIST_FOOTER(String.class, "server.tablist_footer"),
     //
     SERVER_BAN_MOTD(String.class, "server.motds.ban"),
-    SERVER_STAFFMODE_MOTD(String.class, "server.motds.staffmode"),
+    SERVER_ADMINMODE_MOTD(String.class, "server.motds.adminmode"),
     SERVER_LOCKDOWN_MOTD(String.class, "server.motds.lockdown"),
     SERVER_WHITELIST_MOTD(String.class, "server.motds.whitelist"),
     SERVER_FULL_MOTD(String.class, "server.motds.full"),
@@ -73,7 +73,6 @@ public enum ConfigEntry
     DISCORD_REPORT_CHANNEL_ID(String.class, "discord.report_channel_id"),
     DISCORD_CHAT_CHANNEL_ID(String.class, "discord.chat_channel_id"),
     DISCORD_ADMINCHAT_CHANNEL_ID(String.class, "discord.adminchat_channel_id"),
-
     DISCORD_ROLE_SYNC(Boolean.class, "discord.role_sync"),
     DISCORD_SERVER_ID(String.class, "discord.server_id"),
     DISCORD_MASTER_BUILDER_ROLE_ID(String.class, "discord.master_builder_role_id"),
@@ -82,18 +81,6 @@ public enum ConfigEntry
     DISCORD_DEVELOPER_ROLE_ID(String.class, "discord.developer_role_id"),
     DISCORD_EXECUTIVE_ROLE_ID(String.class, "discord.executive_role_id"),
     DISCORD_SERVER_OWNER_ROLE_ID(String.class, "discord.server_owner_role_id"),
-    //
-    REDDIT_SUBREDDIT_NAME(String.class, "reddit.subreddit_name"),
-    REDDIT_USERNAME(String.class, "reddit.username"),
-    REDDIT_PASSWORD(String.class, "reddit.password"),
-    REDDIT_CLIENT_ID(String.class, "reddit.client_id"),
-    REDDIT_CLIENT_SECRET(String.class, "reddit.client_secret"),
-    REDDIT_MASTER_BUILDER_FLAIR_ID(String.class, "reddit.master_builder_flair_id"),
-    REDDIT_NEW_ADMIN_FLAIR_ID(String.class, "reddit.admin_flair_id"),
-    REDDIT_SENIOR_ADMIN_FLAIR_ID(String.class, "reddit.senior_admin_flair_id"),
-    REDDIT_DEVELOPER_FLAIR_ID(String.class, "reddit.developer_flair_id"),
-    REDDIT_EXECUTIVE_FLAIR_ID(String.class, "reddit.executive_flair_id"),
-    REDDIT_SERVER_OWNER_FLAIR_ID(String.class, "reddit.server_owner_flair_id"),
     //
     PTERO_URL(String.class, "ptero.url"),
     PTERO_DEFAULT_EMAIL_DOMAIN(String.class, "ptero.default_email_domain"),
@@ -119,8 +106,8 @@ public enum ConfigEntry
     SHOP_PRICES_CLOWN_FISH(Integer.class, "shop.prices.clown_fish"),
     SHOP_PRICES_LOGIN_MESSAGES(Integer.class, "shop.prices.login_messages"),
     //
-    STAFFLIST_CLEAN_THESHOLD_HOURS(Integer.class, "stafflist.clean_threshold_hours"),
-    STAFFLIST_CONSOLE_IS_ADMIN(Boolean.class, "stafflist.console_is_admin"),
+    ADMINLIST_CLEAN_THESHOLD_HOURS(Integer.class, "adminlist.clean_threshold_hours"),
+    ADMINLIST_CONSOLE_IS_ADMIN(Boolean.class, "adminlist.console_is_admin"),
     //
     COREPROTECT_MYSQL_ENABLED(Boolean.class, "coreprotect.enabled"),
     COREPROTECT_MYSQL_HOST(String.class, "coreprotect.host"),
@@ -135,17 +122,12 @@ public enum ConfigEntry
     ENABLE_PREPROCESS_LOG(Boolean.class, "preprocess_log"),
     ENABLE_PET_PROTECT(Boolean.class, "petprotect.enabled"),
     //
-    LANDMINES_ENABLED(Boolean.class, "landmines_enabled"),
-    TOSSMOB_ENABLED(Boolean.class, "tossmob_enabled"),
-    AUTOKICK_ENABLED(Boolean.class, "autokick.enabled"),
-    MP44_ENABLED(Boolean.class, "mp44_enabled"),
-    FOURCHAN_ENABLED(Boolean.class, "4chan_enabled"),
-    //
     NUKE_MONITOR_ENABLED(Boolean.class, "nukemonitor.enabled"),
     NUKE_MONITOR_COUNT_BREAK(Integer.class, "nukemonitor.count_break"),
     NUKE_MONITOR_COUNT_PLACE(Integer.class, "nukemonitor.count_place"),
     NUKE_MONITOR_RANGE(Double.class, "nukemonitor.range"),
     //
+    AUTOKICK_ENABLED(Boolean.class, "autokick.enabled"),
     AUTOKICK_THRESHOLD(Double.class, "autokick.threshold"),
     AUTOKICK_TIME(Integer.class, "autokick.time"),
     //
@@ -166,8 +148,8 @@ public enum ConfigEntry
     BLOCKED_COMMANDS(List.class, "blocked_commands"),
     HOST_SENDER_NAMES(List.class, "host_sender_names"),
     FAMOUS_PLAYERS(List.class, "famous_players"),
-    STAFF_ONLY_MODE(Boolean.class, "staff_only_mode"),
-    STAFF_INFO(List.class, "staffinfo"),
+    ADMIN_ONLY_MODE(Boolean.class, "admin_only_mode"),
+    ADMIN_INFO(List.class, "admininfo"),
     VOTING_INFO(List.class, "votinginfo"),
     MASTER_BUILDER_INFO(List.class, "masterbuilderinfo"),
     AUTO_ENTITY_WIPE(Boolean.class, "auto_wipe"),

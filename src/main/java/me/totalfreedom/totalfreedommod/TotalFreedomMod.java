@@ -26,11 +26,8 @@ import me.totalfreedom.totalfreedommod.command.CommandLoader;
 import me.totalfreedom.totalfreedommod.config.MainConfig;
 import me.totalfreedom.totalfreedommod.discord.Discord;
 import me.totalfreedom.totalfreedommod.freeze.Freezer;
-import me.totalfreedom.totalfreedommod.fun.CurseListener;
 import me.totalfreedom.totalfreedommod.fun.ItemFun;
 import me.totalfreedom.totalfreedommod.fun.Jumppads;
-import me.totalfreedom.totalfreedommod.fun.Landminer;
-import me.totalfreedom.totalfreedommod.fun.MP44;
 import me.totalfreedom.totalfreedommod.fun.Trailer;
 import me.totalfreedom.totalfreedommod.httpd.HTTPDaemon;
 import me.totalfreedom.totalfreedommod.permissions.PermissionConfig;
@@ -41,8 +38,8 @@ import me.totalfreedom.totalfreedommod.rank.RankManager;
 import me.totalfreedom.totalfreedommod.shop.Shop;
 import me.totalfreedom.totalfreedommod.shop.Votifier;
 import me.totalfreedom.totalfreedommod.sql.SQLite;
-import me.totalfreedom.totalfreedommod.staff.ActivityLog;
-import me.totalfreedom.totalfreedommod.staff.StaffList;
+import me.totalfreedom.totalfreedommod.admin.ActivityLog;
+import me.totalfreedom.totalfreedommod.admin.AdminList;
 import me.totalfreedom.totalfreedommod.util.FLog;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import me.totalfreedom.totalfreedommod.util.MethodTimer;
@@ -83,8 +80,7 @@ public class TotalFreedomMod extends JavaPlugin
     public ServerInterface si;
     public SavedFlags sf;
     public WorldManager wm;
-    public LogViewer lv;
-    public StaffList sl;
+    public AdminList al;
     public ActivityLog acl;
     public RankManager rm;
     public CommandBlocker cb;
@@ -107,7 +103,6 @@ public class TotalFreedomMod extends JavaPlugin
     public BanManager bm;
     public IndefiniteBanList im;
     public PermissionManager pem;
-    public Reddit rd;
     public GameRuleHandler gr;
     public CommandSpy cs;
     public Cager ca;
@@ -122,22 +117,16 @@ public class TotalFreedomMod extends JavaPlugin
     public Monitors mo;
     public MovementValidator mv;
     public ServerPing sp;
-    public CurseListener cul;
     public ItemFun it;
-    public Landminer lm;
-    public MP44 mp;
     public Jumppads jp;
     public Trailer tr;
     public HTTPDaemon hd;
     public WorldRestrictions wr;
     public SignBlocker snp;
     public EntityWiper ew;
-    public Sitter st;
     public VanishHandler vh;
     public Pterodactyl ptero;
 
-    //public HubWorldRestrictions hwr;
-    //
     // Bridges
     public BukkitTelnetBridge btb;
     public EssentialsBridge esb;
@@ -200,9 +189,8 @@ public class TotalFreedomMod extends JavaPlugin
         si = new ServerInterface();
         sf = new SavedFlags();
         wm = new WorldManager();
-        lv = new LogViewer();
         sql = new SQLite();
-        sl = new StaffList();
+        al = new AdminList();
         acl = new ActivityLog();
         rm = new RankManager();
         cb = new CommandBlocker();
@@ -225,11 +213,9 @@ public class TotalFreedomMod extends JavaPlugin
         bm = new BanManager();
         im = new IndefiniteBanList();
         pem = new PermissionManager();
-        rd = new Reddit();
         gr = new GameRuleHandler();
         snp = new SignBlocker();
         ew = new EntityWiper();
-        st = new Sitter();
         vh = new VanishHandler();
         ptero = new Pterodactyl();
 
@@ -250,10 +236,7 @@ public class TotalFreedomMod extends JavaPlugin
         sp = new ServerPing();
 
         // Fun
-        cul = new CurseListener();
         it = new ItemFun();
-        lm = new Landminer();
-        mp = new MP44();
         jp = new Jumppads();
         tr = new Trailer();
         // HTTPD

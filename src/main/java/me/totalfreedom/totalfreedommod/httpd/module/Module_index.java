@@ -10,7 +10,6 @@ import org.reflections.Reflections;
 
 public class Module_index extends HTTPDModule
 {
-
     public Module_index(TotalFreedomMod plugin, NanoHTTPD.HTTPSession session)
     {
         super(plugin, session);
