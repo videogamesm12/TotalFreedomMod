@@ -117,27 +117,6 @@ public class ItemFun extends FreedomService
                 player.sendMessage("Stacked " + entity.getName());
             }
         }
-
-        if (player.getInventory().getItemInMainHand().getType().equals(Material.BONE) || entity.getType().equals(EntityType.PLAYER))
-        {
-            if (!fPlayer.mobThrowerEnabled())
-            {
-                return;
-            }
-
-            Location playerLoc = player.getLocation();
-            Vector direction = playerLoc.getDirection().normalize();
-
-            LivingEntity livingEntity = (LivingEntity)event.getRightClicked();
-            EntityType entityType = livingEntity.getType();
-            if (!(entityType == fPlayer.mobThrowerCreature()))
-            {
-                return;
-            }
-
-            livingEntity.setVelocity(direction.multiply(fPlayer.mobThrowerSpeed()));
-            fPlayer.enqueueMob(livingEntity);
-        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

@@ -46,10 +46,6 @@ public class FPlayer
     private final CageData cageData = new CageData(this);
     private boolean isOrbiting = false;
     private double orbitStrength = 10.0;
-    private boolean mobThrowerEnabled = false;
-    private EntityType mobThrowerEntity = EntityType.PIG;
-    private double mobThrowerSpeed = 4.0;
-    private final List<LivingEntity> mobThrowerQueue = new ArrayList<>();
     private BukkitTask lockupScheduleTask = null;
     private boolean lockedUp = false;
     private String lastMessage = "";
@@ -190,46 +186,6 @@ public class FPlayer
     public void resetFreecamPlaceCount()
     {
         this.freecamPlaceCount = 0;
-    }
-
-    public void enableMobThrower(EntityType mobThrowerCreature, double mobThrowerSpeed)
-    {
-        this.mobThrowerEnabled = true;
-        this.mobThrowerEntity = mobThrowerCreature;
-        this.mobThrowerSpeed = mobThrowerSpeed;
-    }
-
-    public void disableMobThrower()
-    {
-        this.mobThrowerEnabled = false;
-    }
-
-    public EntityType mobThrowerCreature()
-    {
-        return this.mobThrowerEntity;
-    }
-
-    public double mobThrowerSpeed()
-    {
-        return this.mobThrowerSpeed;
-    }
-
-    public boolean mobThrowerEnabled()
-    {
-        return this.mobThrowerEnabled;
-    }
-
-    public void enqueueMob(LivingEntity mob)
-    {
-        mobThrowerQueue.add(mob);
-        if (mobThrowerQueue.size() > 4)
-        {
-            LivingEntity oldmob = mobThrowerQueue.remove(0);
-            if (oldmob != null)
-            {
-                oldmob.damage(500.0);
-            }
-        }
     }
 
     public boolean isMuted()

@@ -237,7 +237,7 @@ public class LoginProcess extends FreedomService
             int noteCount = playerData.getNotes().size();
             if (noteCount != 0)
             {
-                String noteMessage = "This player has " + noteCount + " admin note" + (noteCount > 1 ? "s" : "") + ".";
+                String noteMessage = "This player has " + noteCount + " note" + (noteCount > 1 ? "s" : "") + ".";
                 JSONMessage notice = JSONMessage.create(ChatColor.GOLD + noteMessage + " Click here to view them.")
                         .tooltip("Click here to view them.")
                         .runCommand("/notes " + player.getName() + " list");
