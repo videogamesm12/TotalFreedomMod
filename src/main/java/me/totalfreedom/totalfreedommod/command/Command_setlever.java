@@ -1,16 +1,18 @@
 package me.totalfreedom.totalfreedommod.command;
 
 import java.util.List;
+
 import me.totalfreedom.totalfreedommod.rank.Rank;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Switch;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.material.Lever;
 
 @CommandPermissions(level = Rank.NON_OP, source = SourceType.BOTH)
 @CommandParameters(description = "Set the on/off state of the lever at position x, y, z in world 'worldname'.", usage = "/<command> <x> <y> <z> <worldname> <on|off>")
@@ -35,6 +37,12 @@ public class Command_setlever extends FreedomCommand
         catch (NumberFormatException ex)
         {
             msg("Invalid coordinates.");
+            return true;
+        }
+
+        if (x > 29999998 || x < -29999998 || y > 29999998 || y < -29999998 || z > 29999998 || z < -29999998)
+        {
+            msg("Coordinates cannot be larger than 29999998 or smaller than -29999998 blocks.");
             return true;
         }
 
@@ -65,10 +73,14 @@ public class Command_setlever extends FreedomCommand
         if (targetBlock.getType() == Material.LEVER)
         {
             BlockState state = targetBlock.getState();
-            Lever lever = (Lever)state.getData();
-            lever.setPowered(leverOn);
-            state.setData(lever);
+            BlockData data = state.getBlockData();
+            Switch caster = (Switch)data;
+
+            caster.setPowered(leverOn);
+            state.setBlockData(data);
             state.update();
+
+            plugin.cpb.getCoreProtectAPI().logInteraction(sender.getName(), leverLocation);
         }
         else
         {

@@ -93,7 +93,7 @@ public class Command_blockpvp extends FreedomCommand
         final Player p = getPlayer(args[0]);
         if (p == null)
         {
-            sender.sendMessage(FreedomCommand.PLAYER_NOT_FOUND);
+            msg(PLAYER_NOT_FOUND);
             return true;
         }
 
@@ -108,14 +108,14 @@ public class Command_blockpvp extends FreedomCommand
         {
             FUtil.adminAction(sender.getName(), "Enabling PVP for " + p.getName(), true);
             pd.setPvpBlocked(false);
-            msg("Enabling PVP  for  " + p.getName());
+            msg("Enabling PVP for " + p.getName());
             msg(p, "Your PVP have been enabled.", ChatColor.GREEN);
         }
         else
         {
             if (plugin.al.isAdmin(p))
             {
-                msg(p.getName() + " is an admin and cannot have their PVP disabled.");
+                msg(p.getName() + " is an admin, and cannot have their PVP disabled.");
                 return true;
             }
 

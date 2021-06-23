@@ -1,12 +1,10 @@
 package me.totalfreedom.totalfreedommod.command;
 
-import java.util.ArrayList;
-import java.util.List;
+import me.totalfreedom.totalfreedommod.admin.Admin;
+import me.totalfreedom.totalfreedommod.admin.AdminList;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.rank.Displayable;
 import me.totalfreedom.totalfreedommod.rank.Rank;
-import me.totalfreedom.totalfreedommod.admin.AdminList;
-import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
@@ -14,10 +12,14 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @CommandPermissions(level = Rank.IMPOSTOR, source = SourceType.BOTH)
 @CommandParameters(description = "Lists the real names of all online players.", usage = "/<command> [-s | -i | -f | -v]", aliases = "who,lsit")
 public class Command_list extends FreedomCommand
 {
+
     public boolean run(final CommandSender sender, final Player playerSender, final Command cmd, final String commandLabel, final String[] args, final boolean senderIsConsole)
     {
         if (args.length > 1)
@@ -29,7 +31,10 @@ public class Command_list extends FreedomCommand
             List<String> names = new ArrayList<>();
             for (Player player : server.getOnlinePlayers())
             {
-                names.add(player.getName());
+                if (!plugin.al.isVanished(player.getName()))
+                {
+                    names.add(player.getName());
+                }
             }
             msg("There are " + names.size() + "/" + server.getMaxPlayers() + " players online:\n" + StringUtils.join(names, ", "), ChatColor.WHITE);
             return true;
@@ -41,6 +46,7 @@ public class Command_list extends FreedomCommand
             switch (s)
             {
                 case "-s":
+                case "-a":
                 {
                     listFilter = ListFilter.ADMINS;
                     break;
@@ -82,7 +88,7 @@ public class Command_list extends FreedomCommand
 
         List<String> n = new ArrayList<>();
 
-        if (listFilter == ListFilter.TELNET_SESSIONS && plugin.al.isAdmin(sender) && plugin.al.getAdmin(playerSender).getRank().isAtLeast(Rank.ADMIN))
+        if (listFilter == ListFilter.TELNET_SESSIONS && plugin.al.isAdmin(sender))
         {
             List<Admin> connectedAdmins = plugin.btb.getConnectedAdmins();
             onlineStats.append(ChatColor.BLUE).append("There are ").append(ChatColor.RED).append(connectedAdmins.size())
@@ -95,7 +101,7 @@ public class Command_list extends FreedomCommand
         }
         else
         {
-            onlineStats.append(ChatColor.BLUE).append("There are ").append(ChatColor.RED).append(server.getOnlinePlayers().size() - AdminList.vanished.size())
+            onlineStats.append(ChatColor.BLUE).append("There are ").append(ChatColor.RED).append(FUtil.getFakePlayerCount())
                     .append(ChatColor.BLUE)
                     .append(" out of a maximum ")
                     .append(ChatColor.RED)
@@ -140,13 +146,13 @@ public class Command_list extends FreedomCommand
                 .append(StringUtils.join(n, ChatColor.WHITE + ", "));
         if (senderIsConsole)
         {
-            sender.sendMessage(ChatColor.stripColor(onlineStats.toString()));
-            sender.sendMessage(ChatColor.stripColor(onlineUsers.toString()));
+            msg(ChatColor.stripColor(onlineStats.toString()));
+            msg(ChatColor.stripColor(onlineUsers.toString()));
         }
         else
         {
-            sender.sendMessage(onlineStats.toString());
-            sender.sendMessage(onlineUsers.toString());
+            msg(onlineStats.toString());
+            msg(onlineUsers.toString());
         }
         n.clear();
         return true;

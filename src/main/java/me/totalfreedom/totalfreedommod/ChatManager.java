@@ -1,11 +1,11 @@
 package me.totalfreedom.totalfreedommod;
 
 import com.google.common.base.Strings;
+import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.player.FPlayer;
 import me.totalfreedom.totalfreedommod.player.PlayerData;
 import me.totalfreedom.totalfreedommod.rank.Displayable;
-import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.util.FLog;
 import me.totalfreedom.totalfreedommod.util.FSync;
 import me.totalfreedom.totalfreedommod.util.FUtil;
@@ -95,6 +95,21 @@ public class ChatManager extends FreedomService
             return;
         }
 
+        // Check for 4chan trigger
+        boolean green = ChatColor.stripColor(message).toLowerCase().startsWith(">");
+        boolean orange = ChatColor.stripColor(message).toLowerCase().endsWith("<");
+        if (ConfigEntry.FOURCHAN_ENABLED.getBoolean())
+        {
+            if (green)
+            {
+                message = ChatColor.GREEN + message;
+            }
+            else if (orange)
+            {
+                message = ChatColor.GOLD + message;
+            }
+        }
+
         // Finally, set message
         event.setMessage(message);
 
@@ -108,7 +123,7 @@ public class ChatManager extends FreedomService
         }
 
         // Check for mentions
-        Boolean mentionEveryone = ChatColor.stripColor(message).toLowerCase().contains("@everyone") && plugin.al.isAdmin(player);
+        boolean mentionEveryone = ChatColor.stripColor(message).toLowerCase().contains("@everyone") && plugin.al.isAdmin(player);
         for (Player p : server.getOnlinePlayers())
         {
             if (ChatColor.stripColor(message).toLowerCase().contains("@" + p.getName().toLowerCase()) || mentionEveryone)
@@ -120,10 +135,10 @@ public class ChatManager extends FreedomService
         // Set format
         event.setFormat(format);
 
-        // Send to Discord
+        // Send to discord
         if (!ConfigEntry.ADMIN_ONLY_MODE.getBoolean() && !Bukkit.hasWhitelist() && !plugin.pl.getPlayer(player).isMuted() && !plugin.tfg.inGuildChat(player))
         {
-            plugin.dc.messageChatChannel(plugin.dc.deformat(player.getName()) + " \u00BB " + ChatColor.stripColor(message));
+            plugin.dc.messageChatChannel(player.getName() + " \u00BB " + ChatColor.stripColor(message));
         }
     }
 
@@ -144,24 +159,20 @@ public class ChatManager extends FreedomService
         FLog.info("[ADMIN] " + sender.getName() + " " + display.getTag() + ": " + message, true);
         plugin.dc.messageAdminChatChannel(sender.getName() + " \u00BB " + message);
 
-        for (Player player : server.getOnlinePlayers())
+        server.getOnlinePlayers().stream().filter(player -> plugin.al.isAdmin(player)).forEach(player ->
         {
-            if (plugin.al.isAdmin(player))
-            {
-                Admin admin = plugin.al.getAdmin(player);
-                if (!Strings.isNullOrEmpty(admin.getAcFormat()))
-                {
-                    String format = admin.getAcFormat();
-                    ChatColor color = getColor(display);
-                    String msg = format.replace("%name%", sender.getName()).replace("%rank%", display.getAbbr()).replace("%rankcolor%", color.toString()).replace("%msg%", message);
-                    player.sendMessage(FUtil.colorize(msg));
-                }
-                else
-                {
-                    player.sendMessage("[" + ChatColor.AQUA + "ADMIN" + ChatColor.WHITE + "] " + ChatColor.DARK_RED + sender.getName() + ChatColor.DARK_GRAY + " [" + getColoredTag(display) + ChatColor.DARK_GRAY + "]" + ChatColor.WHITE + ": " + ChatColor.GOLD + FUtil.colorize(message));
-                }
+            Admin admin = plugin.al.getAdmin(player);
+            if (!Strings.isNullOrEmpty(admin.getAcFormat())) {
+                String format = admin.getAcFormat();
+                ChatColor color = getColor(display);
+                String msg = format.replace("%name%", sender.getName()).replace("%rank%", display.getAbbr()).replace("%rankcolor%", color.toString()).replace("%msg%", message);
+                player.sendMessage(FUtil.colorize(msg));
             }
-        }
+            else
+            {
+                player.sendMessage("[" + ChatColor.AQUA + "ADMIN" + ChatColor.WHITE + "] " + ChatColor.DARK_RED + sender.getName() + ChatColor.DARK_GRAY + " [" + getColoredTag(display) + ChatColor.DARK_GRAY + "]" + ChatColor.WHITE + ": " + ChatColor.GOLD + FUtil.colorize(message));
+            }
+        });
     }
 
     public void reportAction(Player reporter, Player reported, String report)

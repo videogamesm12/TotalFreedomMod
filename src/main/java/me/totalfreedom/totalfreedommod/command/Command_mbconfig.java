@@ -101,7 +101,7 @@ public class Command_mbconfig extends FreedomCommand
                     return false;
                 }
 
-                if (!plugin.pl.canManageMasterBuilders(sender.getName()))
+                if (plugin.pl.canManageMasterBuilders(sender.getName()))
                 {
                     return noPerms();
                 }
@@ -129,7 +129,7 @@ public class Command_mbconfig extends FreedomCommand
                         plugin.pl.verify(player, null);
                         plugin.rm.updateDisplay(player);
                         player.setOp(true);
-                        player.sendMessage(YOU_ARE_OP);
+                        msg(player, YOU_ARE_OP);
                     }
                 }
                 else if (!data.isMasterBuilder())
@@ -157,7 +157,7 @@ public class Command_mbconfig extends FreedomCommand
                     return false;
                 }
 
-                if (!plugin.pl.canManageMasterBuilders(sender.getName()))
+                if (plugin.pl.canManageMasterBuilders(sender.getName()))
                 {
                     return noPerms();
                 }

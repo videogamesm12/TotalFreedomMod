@@ -40,7 +40,7 @@ public class Command_freeze extends FreedomCommand
             return true;
         }
 
-        if (args[0].equals("purge"))
+        if (args[0].equalsIgnoreCase("purge"))
         {
             FUtil.adminAction(sender.getName(), "Unfreezing all players", false);
             for (Player player : server.getOnlinePlayers())

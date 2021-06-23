@@ -39,7 +39,7 @@ public class Command_rank extends FreedomCommand
 
         if (player == null)
         {
-            sender.sendMessage(FreedomCommand.PLAYER_NOT_FOUND);
+            msg(PLAYER_NOT_FOUND);
             return true;
         }
 
@@ -54,16 +54,14 @@ public class Command_rank extends FreedomCommand
         Rank rank = plugin.rm.getRank(player);
 
         StringBuilder sb = new StringBuilder();
-        sb
-                .append(ChatColor.AQUA)
+        sb.append(ChatColor.AQUA)
                 .append(player.getName())
                 .append(" is ")
                 .append(display.getColoredLoginMessage());
 
         if (rank != display)
         {
-            sb
-                    .append(ChatColor.AQUA)
+            sb.append(ChatColor.AQUA)
                     .append(" (")
                     .append(rank.getColoredName())
                     .append(ChatColor.AQUA)

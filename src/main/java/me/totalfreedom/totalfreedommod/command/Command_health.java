@@ -13,10 +13,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-@CommandPermissions(level = Rank.ADMIN, source = SourceType.BOTH)
+@CommandPermissions(level = Rank.OP, source = SourceType.BOTH)
 @CommandParameters(description = "View server health, such as ticks-per-second, memory, etc.", usage = "/<command>")
 public class Command_health extends FreedomCommand
 {
+
     private static final int BYTES_PER_MB = 1024 * 1024;
     private static final DoubleRange TPS_RANGE = new DoubleRange(20.0 - 0.1, 20.0 + 0.1);
 
@@ -39,7 +40,7 @@ public class Command_health extends FreedomCommand
             {
                 try
                 {
-                    TickMeter tickMeter = new TickMeter(plugin);
+                    TFM_TickMeter tickMeter = new TFM_TickMeter(plugin);
                     tickMeter.startTicking();
                     Thread.sleep(2500);
                     final double ticksPerSecond = tickMeter.stopTicking();
@@ -69,14 +70,15 @@ public class Command_health extends FreedomCommand
         return true;
     }
 
-    private class TickMeter
+    private static class TFM_TickMeter
     {
+
         private final AtomicInteger ticks = new AtomicInteger();
         private final TotalFreedomMod plugin;
         private long startTime;
         private BukkitTask task;
 
-        public TickMeter(TotalFreedomMod plugin)
+        public TFM_TickMeter(TotalFreedomMod plugin)
         {
             this.plugin = plugin;
         }

@@ -1,7 +1,6 @@
 package me.totalfreedom.totalfreedommod.bridge;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import me.totalfreedom.bukkittelnet.BukkitTelnet;
@@ -10,8 +9,8 @@ import me.totalfreedom.bukkittelnet.api.TelnetPreLoginEvent;
 import me.totalfreedom.bukkittelnet.api.TelnetRequestDataTagsEvent;
 import me.totalfreedom.bukkittelnet.session.ClientSession;
 import me.totalfreedom.totalfreedommod.FreedomService;
-import me.totalfreedom.totalfreedommod.rank.Rank;
 import me.totalfreedom.totalfreedommod.admin.Admin;
+import me.totalfreedom.totalfreedommod.rank.Rank;
 import me.totalfreedom.totalfreedommod.util.FLog;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -66,10 +65,8 @@ public class BukkitTelnetBridge extends FreedomService
     @EventHandler(priority = EventPriority.NORMAL)
     public void onTelnetRequestDataTags(TelnetRequestDataTagsEvent event)
     {
-        final Iterator<Map.Entry<Player, Map<String, Object>>> it = event.getDataTags().entrySet().iterator();
-        while (it.hasNext())
+        for (Map.Entry<Player, Map<String, Object>> entry : event.getDataTags().entrySet())
         {
-            final Map.Entry<Player, Map<String, Object>> entry = it.next();
             final Player player = entry.getKey();
             final Map<String, Object> playerTags = entry.getValue();
 

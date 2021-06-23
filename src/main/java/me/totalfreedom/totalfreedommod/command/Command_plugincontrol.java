@@ -18,7 +18,7 @@ import org.bukkit.plugin.PluginManager;
 public class Command_plugincontrol extends FreedomCommand
 {
 
-    private final List<String> UNTOUCHABLE_PLUGINS = Arrays.asList(plugin.getName(), "BukkitTelnet");
+    private final List<String> UNTOUCHABLE_PLUGINS = Arrays.asList(plugin.getName());
 
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
@@ -38,7 +38,7 @@ public class Command_plugincontrol extends FreedomCommand
                 {
                     final String version = serverPlugin.getDescription().getVersion();
                     msg(ChatColor.GRAY + "- " + (serverPlugin.isEnabled() ? ChatColor.GREEN : ChatColor.RED) + serverPlugin.getName()
-                            + ChatColor.GOLD + (version != null && !version.isEmpty() ? " v" + version : "") + " by "
+                            + ChatColor.GOLD + (!version.isEmpty() ? " v" + version : "") + " by "
                             + StringUtils.join(serverPlugin.getDescription().getAuthors(), ", "));
                 }
 

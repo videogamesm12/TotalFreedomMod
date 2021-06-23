@@ -5,12 +5,12 @@
 
     <groupId>me.totalfreedom</groupId>
     <artifactId>TotalFreedomMod</artifactId>
-    <version>6.0</version>
+    <version>2021.05</version>
     <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tfm.build.codename>Mirror</tfm.build.codename>
+        <tfm.build.codename>Phoenix</tfm.build.codename>
         <jar.finalName>${project.name}</jar.finalName>
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>MM/dd/yyyy HH:mm</maven.build.timestamp.format>
@@ -18,7 +18,7 @@
 
     <name>TotalFreedomMod</name>
     <description>Server modification for the TotalFreedom server</description>
-    <url>https://github.com/TFPatches/TotalFreedomMod</url>
+    <url>https://github.com/AtlasMediaGroup/TotalFreedomMod</url>
 
     <licenses>
         <license>
@@ -33,9 +33,9 @@
     </organization>
 
     <scm>
-        <connection>scm:git:git@github.com:TotalFreedomMC/TotalFreedomMod.git</connection>
-        <developerConnection>scm:git:git@github.com:TotalFreedomMC/TotalFreedomMod.git</developerConnection>
-        <url>git@github.com:TotalFreedomMC/TotalFreedomMod.git</url>
+        <connection>scm:git:git@github.com:TFPatches/TotalFreedomMod.git</connection>
+        <developerConnection>scm:git:git@github.com:TFPatches/TotalFreedomMod.git</developerConnection>
+        <url>git@github.com:TFPatches/TotalFreedomMod.git</url>
     </scm>
 
     <repositories>
@@ -66,18 +66,18 @@
 
         <repository>
             <id>elmakers-repo</id>
-            <url>http://maven.elmakers.com/repository/</url>
+            <url>https://maven.elmakers.com/repository/</url>
         </repository>
 
         <repository>
             <id>sk89q-snapshots</id>
-            <url>http://maven.sk89q.com/artifactory/repo</url>
+            <url>https://maven.sk89q.com/artifactory/repo</url>
         </repository>
 
         <repository>
-            <id>jcenter</id>
-            <name>jcenter-bintray</name>
-            <url>https://jcenter.bintray.com</url>
+            <id>dv8tion</id>
+            <name>m2-dv8tion</name>
+            <url>https://m2.dv8tion.net/releases/</url>
         </repository>
 
         <repository>
@@ -87,17 +87,17 @@
 
         <repository>
             <id>md_5-public</id>
-            <url>http://repo.md-5.net/content/groups/public/</url>
+            <url>https://repo.md-5.net/content/groups/public/</url>
         </repository>
 
         <repository>
             <id>dmulloy2-repo</id>
-            <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
+            <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
 
         <repository>
             <id>sk89q-repo</id>
-            <url>http://maven.sk89q.com/repo/</url>
+            <url>https://maven.sk89q.com/repo/</url>
         </repository>
 
         <repository>
@@ -114,20 +114,9 @@
             <id>ess-repo</id>
             <url>https://ci.ender.zone/plugin/repository/everything/</url>
         </repository>
-
-        <repository>
-            <id>telesphoreo-repo</id>
-            <url>https://telesphoreo.me/repo/maven/</url>
-        </repository>
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
-            <scope>provided</scope>
-        </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
@@ -151,23 +140,23 @@
         </dependency>
 
         <dependency>
-            <groupId>me.telesphoreo</groupId>
-            <artifactId>mojangson</artifactId>
-            <version>1.0</version>
+            <groupId>com.github.speedxx</groupId>
+            <artifactId>Mojangson</artifactId>
+            <version>1957eef8d6</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>1.7</version>
+            <version>1.8</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -202,14 +191,14 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.2.0_168</version>
+            <version>4.2.1_255</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>net.coreprotect</groupId>
             <artifactId>coreprotect</artifactId>
-            <version>19.1</version>
+            <version>19.3</version>
             <scope>provided</scope>
         </dependency>
 
@@ -223,7 +212,7 @@
         <dependency>
             <groupId>io.papermc</groupId>
             <artifactId>paperlib</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
             <scope>compile</scope>
         </dependency>
 
@@ -263,10 +252,17 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.TotalFreedomMC</groupId>
+            <groupId>com.github.AtlasMediaGroup</groupId>
             <artifactId>TFGuilds</artifactId>
-            <version>db036fb187</version>
+            <version>master-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>20.1.0</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -274,6 +270,17 @@
             <artifactId>maven-checkstyle-plugin</artifactId>
             <version>3.1.1</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.4.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.sisu</groupId>
+            <artifactId>org.eclipse.sisu.inject</artifactId>
+            <version>0.3.4</version>
         </dependency>
     </dependencies>
 
@@ -294,9 +301,9 @@
                 <version>3.8.1</version>
                 <configuration>
                     <outputFileName>TotalFreedomMod.jar</outputFileName>
-                    <compilerVersion>1.8</compilerVersion>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <compilerVersion>11</compilerVersion>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
 
@@ -432,7 +439,8 @@
                             <relocations>
                                 <relocation>
                                     <pattern>io.papermc.lib</pattern>
-                                    <shadedPattern>me.totalfreedom.totalfreedommod.paperlib</shadedPattern> <!-- Replace this -->
+                                    <shadedPattern>me.totalfreedom.totalfreedommod.paperlib
+                                    </shadedPattern> <!-- Replace this -->
                                 </relocation>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
@@ -448,8 +456,9 @@
                                     <include>org.javassist:javassist</include>
                                     <include>me.rayzr522:jsonmessage</include>
                                     <include>io.papermc:paperlib</include>
-                                    <include>me.telesphoreo:mojangson</include>
+                                    <include>com.github.speedxx:Mojangson</include>
                                     <include>org.bstats:bstats-bukkit</include>
+                                    <include>org.jetbrains:annotations</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

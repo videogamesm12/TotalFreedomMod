@@ -25,14 +25,14 @@ public class Command_settotalvotes extends FreedomCommand
             return false;
         }
 
-        int votes = 0;
+        int votes;
         try
         {
             votes = Integer.parseInt(args[0]);
         }
         catch (NumberFormatException e)
         {
-            msg("Invalid number: " +  args[0]);
+            msg("Invalid number: " + args[0]);
             return true;
         }
 
@@ -53,7 +53,7 @@ public class Command_settotalvotes extends FreedomCommand
 
         if (player != null)
         {
-            player.sendMessage(ChatColor.GREEN + sender.getName() + " has set your total votes to " + votes);
+            msg(player, sender.getName() + " has set your total votes to " + votes, ChatColor.GREEN);
         }
         return true;
     }

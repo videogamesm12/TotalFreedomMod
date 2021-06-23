@@ -58,5 +58,4 @@ public class EditBlocker extends FreedomService
         FSync.playerMsg(event.getPlayer(), ChatColor.RED + "Your ability to destroy blocks has been disabled!");
         event.setCancelled(true);
     }
-
 }

@@ -1,5 +1,6 @@
 package me.totalfreedom.totalfreedommod.command;
 
+import me.totalfreedom.totalfreedommod.admin.AdminList;
 import me.totalfreedom.totalfreedommod.player.PlayerData;
 import me.totalfreedom.totalfreedommod.rank.Displayable;
 import me.totalfreedom.totalfreedommod.rank.Rank;
@@ -66,7 +67,7 @@ public class Command_vanish extends FreedomCommand
             }
             plugin.esb.setVanished(playerSender.getName(), false);
             playerSender.setPlayerListName(StringUtils.substring(displayName, 0, 16));
-            plugin.al.vanished.remove(playerSender.getName());
+            AdminList.vanished.remove(playerSender.getName());
         }
         else
         {
@@ -88,7 +89,7 @@ public class Command_vanish extends FreedomCommand
             }
             else
             {
-                msg ("You have vanished.", ChatColor.GOLD);
+                msg("You have vanished.", ChatColor.GOLD);
                 FUtil.bcastMsg(playerSender.getName() + " left the game.", ChatColor.YELLOW);
                 plugin.dc.messageChatChannel("**" + playerSender.getName() + " left the server" + "**");
             }
@@ -105,7 +106,7 @@ public class Command_vanish extends FreedomCommand
             }
 
             plugin.esb.setVanished(playerSender.getName(), true);
-            plugin.al.vanished.add(playerSender.getName());
+            AdminList.vanished.add(playerSender.getName());
         }
         return true;
     }

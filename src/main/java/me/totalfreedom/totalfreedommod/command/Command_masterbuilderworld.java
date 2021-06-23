@@ -19,11 +19,6 @@ import org.bukkit.entity.Player;
 public class Command_masterbuilderworld extends FreedomCommand
 {
 
-    private enum CommandMode
-    {
-        TELEPORT, TIME, WEATHER
-    }
-
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
@@ -66,7 +61,7 @@ public class Command_masterbuilderworld extends FreedomCommand
                     {
                         masterBuilderWorld = plugin.wm.masterBuilderWorld.getWorld();
                     }
-                    catch (Exception ex)
+                    catch (Exception ignored)
                     {
                     }
 
@@ -143,7 +138,7 @@ public class Command_masterbuilderworld extends FreedomCommand
             {
                 return noPerms();
             }
-            sender.sendMessage(ex.getMessage());
+            msg(ex.getMessage());
             return true;
         }
 
@@ -178,13 +173,18 @@ public class Command_masterbuilderworld extends FreedomCommand
     // TODO: Redo this properly
     private void assertCommandPerms(CommandSender sender, Player playerSender) throws PermissionDeniedException
     {
-        if (!(sender instanceof Player) || playerSender == null || !plugin.al.isSeniorAdmin(playerSender))
+        if (!(sender instanceof Player) || playerSender == null || !plugin.al.isAdmin(playerSender))
         {
             throw new PermissionDeniedException();
         }
     }
 
-    private class PermissionDeniedException extends Exception
+    private enum CommandMode
+    {
+        TELEPORT, TIME, WEATHER
+    }
+
+    private static class PermissionDeniedException extends Exception
     {
 
         private static final long serialVersionUID = 1L;
@@ -199,5 +199,4 @@ public class Command_masterbuilderworld extends FreedomCommand
             super(string);
         }
     }
-
 }

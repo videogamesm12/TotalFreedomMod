@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.Objects;
+import java.util.SplittableRandom;
 import java.util.UUID;
 import me.totalfreedom.totalfreedommod.FreedomService;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
@@ -46,15 +47,12 @@ import org.bukkit.util.Vector;
 
 public class ItemFun extends FreedomService
 {
-    public List<Player> explosivePlayers = new ArrayList<>();
 
-    private final Random random = new Random();
-
+    private final SplittableRandom random = new SplittableRandom();
     private final Map<String, List<String>> cooldownTracker = new HashMap<>();
-
     private final Map<Player, Float> orientationTracker = new HashMap<>();
-
     private final List<UUID> FIRE_BALL_UUIDS = new ArrayList<>();
+    public List<Player> explosivePlayers = new ArrayList<>();
 
     private void cooldown(Player player, ShopItem item, int seconds)
     {
@@ -117,6 +115,27 @@ public class ItemFun extends FreedomService
                 player.sendMessage("Stacked " + entity.getName());
             }
         }
+
+        if (player.getInventory().getItemInMainHand().getType().equals(Material.BONE) || entity.getType().equals(EntityType.PLAYER))
+        {
+            if (!fPlayer.mobThrowerEnabled())
+            {
+                return;
+            }
+
+            Location playerLoc = player.getLocation();
+            Vector direction = playerLoc.getDirection().normalize();
+
+            LivingEntity livingEntity = (LivingEntity)event.getRightClicked();
+            EntityType entityType = livingEntity.getType();
+            if (!(entityType == fPlayer.mobThrowerCreature()))
+            {
+                return;
+            }
+
+            livingEntity.setVelocity(direction.multiply(fPlayer.mobThrowerSpeed()));
+            fPlayer.enqueueMob(livingEntity);
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -155,9 +174,30 @@ public class ItemFun extends FreedomService
         }
 
         final Player player = event.getPlayer();
+        final FPlayer fPlayer = plugin.pl.getPlayer(player);
 
         switch (event.getMaterial())
         {
+            case GUNPOWDER:
+            {
+                if (!fPlayer.isMP44Armed())
+                {
+                    break;
+                }
+
+                event.setCancelled(true);
+
+                if (fPlayer.toggleMP44Firing())
+                {
+                    fPlayer.startArrowShooter(plugin);
+                }
+                else
+                {
+                    fPlayer.stopArrowShooter();
+                }
+                break;
+            }
+
             case BLAZE_ROD:
             {
                 if (!plugin.sh.isRealItem(plugin.pl.getData(player), ShopItem.LIGHTNING_ROD, player.getInventory(), plugin.sh.getLightningRod()))
@@ -207,6 +247,12 @@ public class ItemFun extends FreedomService
             {
                 final int RADIUS_HIT = 5;
                 final int STRENGTH = 4;
+                
+                if (plugin.lp.CLOWNFISH_TOGGLE.contains(player.getName()))
+                {
+                    player.sendMessage(ChatColor.GRAY + "An admin has disabled your ability to use clownfish.");
+                    break;
+                }
 
                 if (!plugin.sh.isRealItem(plugin.pl.getData(player), ShopItem.CLOWN_FISH, player.getInventory(), plugin.sh.getClownFish()))
                 {
@@ -239,7 +285,7 @@ public class ItemFun extends FreedomService
                             didHit = true;
                         }
                     }
-                    catch (IllegalArgumentException ex)
+                    catch (IllegalArgumentException ignored)
                     {
                     }
                 }
@@ -251,7 +297,7 @@ public class ItemFun extends FreedomService
                     {
                         if (sound.toString().contains("HIT"))
                         {
-                            playerLoc.getWorld().playSound(randomOffset(playerLoc, 5.0), sound, 20f, randomDoubleRange(0.5, 2.0).floatValue());
+                            Objects.requireNonNull(playerLoc.getWorld()).playSound(randomOffset(playerLoc), sound, 20f, randomDoubleRange(0.5, 2.0).floatValue());
                         }
                     }
                     cooldown(player, ShopItem.CLOWN_FISH, 30);
@@ -284,13 +330,13 @@ public class ItemFun extends FreedomService
         {
             arrow = (Arrow)entity;
         }
-        if (arrow != null && (arrow.getShooter() instanceof Player))
+        //Redundant Player cast is required to avoid suspicious method calls.
+        if (arrow != null
+                && (arrow.getShooter() instanceof Player)
+                && explosivePlayers.contains(arrow.getShooter()))
         {
-            if (explosivePlayers.contains((Player)arrow.getShooter()))
-            {
-                arrow.getLocation().getWorld().createExplosion(arrow.getLocation().getX(), arrow.getLocation().getY(), arrow.getLocation().getZ(), ConfigEntry.EXPLOSIVE_RADIUS.getDouble().floatValue(), false, ConfigEntry.ALLOW_EXPLOSIONS.getBoolean());
-                arrow.remove();
-            }
+            Objects.requireNonNull(arrow.getLocation().getWorld()).createExplosion(arrow.getLocation().getX(), arrow.getLocation().getY(), arrow.getLocation().getZ(), ConfigEntry.EXPLOSIVE_RADIUS.getDouble().floatValue(), false, ConfigEntry.ALLOW_EXPLOSIONS.getBoolean());
+            arrow.remove();
         }
 
         if (entity instanceof Fireball)
@@ -312,9 +358,9 @@ public class ItemFun extends FreedomService
         }
     }
 
-    private Location randomOffset(Location a, double magnitude)
+    private Location randomOffset(Location a)
     {
-        return a.clone().add(randomDoubleRange(-1.0, 1.0) * magnitude, randomDoubleRange(-1.0, 1.0) * magnitude, randomDoubleRange(-1.0, 1.0) * magnitude);
+        return a.clone().add(randomDoubleRange(-1.0, 1.0) * 5.0, randomDoubleRange(-1.0, 1.0) * 5.0, randomDoubleRange(-1.0, 1.0) * 5.0);
     }
 
     private Double randomDoubleRange(double min, double max)

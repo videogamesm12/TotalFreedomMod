@@ -47,7 +47,7 @@ public class Command_warn extends FreedomCommand
 
         if (plugin.al.isAdmin(player))
         {
-            msg(ChatColor.RED + "You can not warn admins.");
+            msg(ChatColor.RED + "You can not warn admins");
             return true;
         }
 

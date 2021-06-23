@@ -4,8 +4,6 @@ import io.papermc.lib.PaperLib;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-import lombok.Getter;
-import lombok.Setter;
 import me.rayzr522.jsonmessage.JSONMessage;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.player.FPlayer;
@@ -29,12 +27,20 @@ public class LoginProcess extends FreedomService
     public static final int MIN_USERNAME_LENGTH = 2;
     public static final int MAX_USERNAME_LENGTH = 20;
     public static final Pattern USERNAME_REGEX = Pattern.compile("^[\\w\\d_]{3,20}$");
+    private static boolean lockdownEnabled = false;
     public List<String> TELEPORT_ON_JOIN = new ArrayList<>();
     public List<String> CLEAR_ON_JOIN = new ArrayList<>();
+    public List<String> CLOWNFISH_TOGGLE = new ArrayList<>();
 
-    @Getter
-    @Setter
-    private static boolean lockdownEnabled = false;
+    public static boolean isLockdownEnabled()
+    {
+        return lockdownEnabled;
+    }
+
+    public static void setLockdownEnabled(boolean lockdownEnabled)
+    {
+        LoginProcess.lockdownEnabled = lockdownEnabled;
+    }
 
     @Override
     public void onStart()
@@ -113,11 +119,8 @@ public class LoginProcess extends FreedomService
             }
         }
 
-        // Check if player is admin
-        final boolean isAdmin = plugin.al.getEntryByIp(ip) != null;
-
         // Validation below this point
-        if (isAdmin) // Player is admin
+        if (plugin.al.getEntryByIp(ip) != null) // Check if player is admin
         {
             // Force-allow log in
             event.allow();
@@ -177,7 +180,6 @@ public class LoginProcess extends FreedomService
             if (!plugin.si.getWhitelisted().contains(username.toLowerCase()))
             {
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "You are not whitelisted on this server.");
-                return;
             }
         }
     }
@@ -237,18 +239,10 @@ public class LoginProcess extends FreedomService
             int noteCount = playerData.getNotes().size();
             if (noteCount != 0)
             {
-                String noteMessage = "This player has " + noteCount + " note" + (noteCount > 1 ? "s" : "") + ".";
-                JSONMessage notice = JSONMessage.create(ChatColor.GOLD + noteMessage + " Click here to view them.")
-                        .tooltip("Click here to view them.")
-                        .runCommand("/notes " + player.getName() + " list");
+                String noteMessage = "This player has " + noteCount + " admin note" + (noteCount > 1 ? "s" : "") + ".";
                 FLog.info(noteMessage);
-                for (Player p : server.getOnlinePlayers())
-                {
-                    if (plugin.al.isAdminImpostor(p))
-                    {
-                        notice.send(p);
-                    }
-                }
+                plugin.al.messageAllAdmins(ChatColor.GOLD + noteMessage);
+                plugin.al.messageAllAdmins(ChatColor.GOLD + "Do " + ChatColor.YELLOW + "/notes " + player.getName() + " list" + ChatColor.GOLD + " to view them.");
             }
         }
 
@@ -264,7 +258,7 @@ public class LoginProcess extends FreedomService
 
                 if (lockdownEnabled)
                 {
-                    FUtil.playerMsg(player, "Warning: Server is currently in lockdown-mode, new players will not be able to join!", ChatColor.RED);
+                    FUtil.playerMsg(player, "Warning: Server is currenty in lockdown-mode, new players will not be able to join!", ChatColor.RED);
                 }
             }
         }.runTaskLater(plugin, 20L);

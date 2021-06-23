@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import me.totalfreedom.totalfreedommod.banning.Ban;
 import me.totalfreedom.totalfreedommod.player.PlayerData;
 import me.totalfreedom.totalfreedommod.punishments.Punishment;
@@ -12,6 +13,8 @@ import me.totalfreedom.totalfreedommod.rank.Rank;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -22,7 +25,7 @@ import org.bukkit.entity.Player;
 public class Command_tempban extends FreedomCommand
 {
 
-    private static final SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd \'at\' HH:mm:ss z");
+    private static final SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
 
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
@@ -47,9 +50,10 @@ public class Command_tempban extends FreedomCommand
         final List<String> ips = new ArrayList<>();
 
         final Player player = getPlayer(args[0]);
+        final PlayerData entry;
         if (player == null)
         {
-            final PlayerData entry = plugin.pl.getData(args[0]);
+            entry = plugin.pl.getData(args[0]);
 
             if (entry == null)
             {
@@ -62,12 +66,12 @@ public class Command_tempban extends FreedomCommand
         }
         else
         {
-            final PlayerData entry = plugin.pl.getData(player);
+            entry = plugin.pl.getData(player);
             username = player.getName();
-            ips.addAll(entry.getIps());
+            ips.add(FUtil.getIp(player));
         }
 
-        final StringBuilder message = new StringBuilder("Temporarily banned " + player.getName());
+        final StringBuilder message = new StringBuilder("Temporarily banned " + username);
 
         Date expires = FUtil.parseDateOffset("30m");
         message.append(" until ").append(date_format.format(expires));
@@ -84,36 +88,15 @@ public class Command_tempban extends FreedomCommand
             message.append(", Reason: \"").append(reason).append("\"");
         }
 
-        if (!quiet)
-        {
-            // Strike with lightning
-            final Location targetPos = player.getLocation();
-            for (int x = -1; x <= 1; x++)
-            {
-                for (int z = -1; z <= 1; z++)
-                {
-                    final Location strike_pos = new Location(targetPos.getWorld(), targetPos.getBlockX() + x, targetPos.getBlockY(), targetPos.getBlockZ() + z);
-                    targetPos.getWorld().strikeLightningEffect(strike_pos);
-                }
-            }
-
-            FUtil.adminAction(sender.getName(), message.toString(), true);
-        }
-        else
-        {
-            msg("Quietly temporarily banned " + player.getName() + ".");
-        }
-
-
         Ban ban;
 
         if (player != null)
         {
-            ban = Ban.forPlayer(player, sender, null, reason);
+            ban = Ban.forPlayer(player, sender, expires, reason);
         }
         else
         {
-            ban = Ban.forPlayerName(username, sender, null, reason);
+            ban = Ban.forPlayerName(username, sender, expires, reason);
         }
 
         for (String ip : ips)
@@ -121,8 +104,43 @@ public class Command_tempban extends FreedomCommand
             ban.addIp(ip);
         }
         plugin.bm.addBan(ban);
-        player.kickPlayer(ban.bakeKickMessage());
-        plugin.pul.logPunishment(new Punishment(player.getName(), FUtil.getIp(player), sender.getName(), PunishmentType.TEMPBAN, reason));
+
+        if (!quiet)
+        {
+            if (player != null)
+            {
+                // Strike with lightning
+                final Location targetPos = player.getLocation();
+                for (int x = -1; x <= 1; x++)
+                {
+                    for (int z = -1; z <= 1; z++)
+                    {
+                        final Location strike_pos = new Location(targetPos.getWorld(), targetPos.getBlockX() + x, targetPos.getBlockY(), targetPos.getBlockZ() + z);
+                        Objects.requireNonNull(targetPos.getWorld()).strikeLightningEffect(strike_pos);
+                    }
+                }
+            }
+
+            FUtil.adminAction(sender.getName(), message.toString(), true);
+        }
+        else
+        {
+            msg("Quietly temporarily banned " + username + ".");
+        }
+
+        if (player != null)
+        {
+            player.kickPlayer(ban.bakeKickMessage());
+            for (Player p : Bukkit.getOnlinePlayers())
+            {
+                if (FUtil.getIp(p).equals(FUtil.getIp(player)))
+                {
+                    p.kickPlayer(ChatColor.RED + "You've been kicked because someone on your IP has been banned.");
+                }
+            }
+        }
+
+        plugin.pul.logPunishment(new Punishment(username, ips.get(0), sender.getName(), PunishmentType.TEMPBAN, reason));
         return true;
     }
 }

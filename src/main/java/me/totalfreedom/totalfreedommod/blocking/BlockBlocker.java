@@ -29,6 +29,7 @@ public class BlockBlocker extends FreedomService
     {
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event)
     {
@@ -132,17 +133,18 @@ public class BlockBlocker extends FreedomService
             case PLAYER_HEAD:
             case PLAYER_WALL_HEAD:
             {
-                Skull skull = (Skull) event.getBlockPlaced().getState();
+                Skull skull = (Skull)event.getBlockPlaced().getState();
                 if (skull.getOwner() != null)
                 {
                     if (skull.getOwner().contains("\u00A7"))
                     {
                         skull.setOwner(skull.getOwner().replace("\u00A7", ""));
-                        SkullMeta meta = (SkullMeta) event.getItemInHand().getItemMeta();
+                        SkullMeta meta = (SkullMeta)event.getItemInHand().getItemMeta();
                         if (meta != null)
                         {
                             ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
                             ItemMeta headMeta = newHead.getItemMeta();
+                            assert headMeta != null;
                             headMeta.setDisplayName(ChatColor.YELLOW + "C-sectioned Head");
                             newHead.setItemMeta(headMeta);
                             player.getInventory().setItem(player.getInventory().getHeldItemSlot(), newHead);
@@ -173,8 +175,9 @@ public class BlockBlocker extends FreedomService
 
         if (Groups.BANNERS.contains(event.getBlockPlaced().getType()))
         {
-            Banner banner = (Banner) event.getBlockPlaced().getState();
-            List<Pattern> patterns = banner.getPatterns();;
+            Banner banner = (Banner)event.getBlockPlaced().getState();
+            List<Pattern> patterns = banner.getPatterns();
+
             if (patterns.size() >= 2)
             {
                 banner.setPatterns(patterns.subList(0, 2));

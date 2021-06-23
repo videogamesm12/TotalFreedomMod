@@ -126,7 +126,7 @@ public class InteractBlocker extends FreedomService
                 event.setCancelled(true);
                 break;
             }
-            
+
             case ARMOR_STAND:
             {
                 if (ConfigEntry.ALLOW_ARMOR_STANDS.getBoolean())

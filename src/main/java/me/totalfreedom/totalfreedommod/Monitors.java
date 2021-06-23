@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -20,7 +19,6 @@ import org.bukkit.potion.PotionEffectType;
 
 public class Monitors extends FreedomService
 {
-    @Getter
     private final List<Map.Entry<ThrownPotion, Long>> allThrownPotions = new ArrayList<>();
     private final Map<Player, List<ThrownPotion>> recentlyThrownPotions = new HashMap<>();
     private final List<PotionEffectType> badPotionEffects = new ArrayList<>(Arrays.asList(PotionEffectType.BLINDNESS,
@@ -48,7 +46,7 @@ public class Monitors extends FreedomService
 
                 plugin.al.potionSpyMessage(ChatColor.translateAlternateColorCodes('&', String.format("&8[&ePotionSpy&8] &r%s splashed %s %s at X: %s Y: %s Z: %s in the world '%s'%s.",
                         player.getName(), potionsThrown, potionsThrown == 1 ? "potion" : "potions", latestThrownPotion.getLocation().getBlockX(), latestThrownPotion.getLocation().getBlockY(), latestThrownPotion.getLocation().getBlockZ(),
-                            latestThrownPotion.getWorld().getName(), trollPotions > 0 ? String.format(" &c(most likely troll %s)", trollPotions == 1 ? "potion" : "potions") : "")));
+                        latestThrownPotion.getWorld().getName(), trollPotions > 0 ? String.format(" &c(most likely troll %s)", trollPotions == 1 ? "potion" : "potions") : "")));
             }
             recentlyThrownPotions.clear();
         }, 0L, 40L);
@@ -140,5 +138,20 @@ public class Monitors extends FreedomService
         }
 
         return badEffectsDetected > 0;
+    }
+
+    public List<Map.Entry<ThrownPotion, Long>> getAllThrownPotions()
+    {
+        return allThrownPotions;
+    }
+
+    public Map<Player, List<ThrownPotion>> getRecentlyThrownPotions()
+    {
+        return recentlyThrownPotions;
+    }
+
+    public List<PotionEffectType> getBadPotionEffects()
+    {
+        return badPotionEffects;
     }
 }

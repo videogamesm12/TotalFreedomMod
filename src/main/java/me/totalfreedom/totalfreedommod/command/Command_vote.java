@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Information on how to vote", usage = "/<command>")
 public class Command_vote extends FreedomCommand
 {
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
@@ -21,7 +22,7 @@ public class Command_vote extends FreedomCommand
 
         if (voteInfo.isEmpty())
         {
-            msg("The voting information section in the config.yml file has not been configured.", ChatColor.RED);
+            msg("The voting information section of the config.yml file has not been configured.", ChatColor.RED);
         }
         else
         {

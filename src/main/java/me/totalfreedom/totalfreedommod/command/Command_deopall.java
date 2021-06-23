@@ -19,7 +19,8 @@ public class Command_deopall extends FreedomCommand
         for (Player player : server.getOnlinePlayers())
         {
             player.setOp(false);
-            player.sendMessage(FreedomCommand.YOU_ARE_NOT_OP);
+            msg(player, YOU_ARE_NOT_OP);
+            plugin.rm.updateDisplay(player);
         }
 
         return true;

@@ -26,8 +26,8 @@ public class Command_banname extends FreedomCommand
         boolean silent = false;
 
         String reason = null;
-        
-        String name = args[0];;
+
+        String name = args[0];
 
         if (plugin.bm.getByUsername(name) != null)
         {

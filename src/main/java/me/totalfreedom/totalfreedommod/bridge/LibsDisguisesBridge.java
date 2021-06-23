@@ -46,7 +46,7 @@ public class LibsDisguisesBridge extends FreedomService
         return libsDisguisesPlugin;
     }
 
-    public void undisguiseAll(boolean admins)
+    public void undisguiseAll(boolean admin)
     {
         try
         {
@@ -61,7 +61,7 @@ public class LibsDisguisesBridge extends FreedomService
             {
                 if (DisguiseAPI.isDisguised(player))
                 {
-                    if (!admins && plugin.al.isAdmin(player))
+                    if (!admin && plugin.al.isAdmin(player))
                     {
                         continue;
                     }
@@ -75,6 +75,11 @@ public class LibsDisguisesBridge extends FreedomService
         }
     }
 
+    public boolean isDisguisesEnabled()
+    {
+        return !BlockedDisguises.disabled;
+    }
+
     public void setDisguisesEnabled(boolean state)
     {
         final LibsDisguises libsDisguises = getLibsDisguisesPlugin();
@@ -85,11 +90,6 @@ public class LibsDisguisesBridge extends FreedomService
         }
 
         BlockedDisguises.disabled = !state;
-    }
-
-    public boolean isDisguisesEnabled()
-    {
-        return !BlockedDisguises.disabled;
     }
 
     public boolean isEnabled()

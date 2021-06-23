@@ -37,7 +37,7 @@ public class Command_invsee extends FreedomCommand
 
         if (plugin.al.isAdmin(player) && !plugin.al.isAdmin(playerSender))
         {
-            msg("You cannot see the inventory of admin members.", ChatColor.RED);
+            msg("You cannot see the inventory of admins.", ChatColor.RED);
             return true;
         }
 
@@ -47,11 +47,6 @@ public class Command_invsee extends FreedomCommand
             if (args[1].equals("offhand"))
             {
                 ItemStack offhand = player.getInventory().getItemInOffHand();
-                if (offhand == null)
-                {
-                    msg("That player has nothing in their offhand.");
-                    return true;
-                }
                 Inventory inventory = server.createInventory(null, 9, player.getName() + "'s offhand");
                 inventory.setItem(1, offhand);
                 playerSender.openInventory(inventory);

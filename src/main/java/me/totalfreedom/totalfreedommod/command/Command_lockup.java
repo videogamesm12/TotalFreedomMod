@@ -17,7 +17,7 @@ public class Command_lockup extends FreedomCommand
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
-        Boolean silent = (args[args.length - 1].equalsIgnoreCase("-q"));
+        boolean silent = (args[args.length - 1].equalsIgnoreCase("-q"));
         if (args.length == 1)
         {
             if (args[0].equalsIgnoreCase("all"))
@@ -53,7 +53,7 @@ public class Command_lockup extends FreedomCommand
 
                 if (player == null)
                 {
-                    sender.sendMessage(FreedomCommand.PLAYER_NOT_FOUND);
+                    msg(PLAYER_NOT_FOUND);
                     return true;
                 }
 
@@ -70,7 +70,7 @@ public class Command_lockup extends FreedomCommand
 
                 if (player == null)
                 {
-                    sender.sendMessage(FreedomCommand.PLAYER_NOT_FOUND);
+                    msg(PLAYER_NOT_FOUND);
                     return true;
                 }
 

@@ -20,6 +20,16 @@ import org.bukkit.inventory.ItemStack;
 public class Command_dispfill extends FreedomCommand
 {
 
+    private static void setDispenserContents(final Block targetBlock, final ItemStack[] items)
+    {
+        if (targetBlock.getType() == Material.DISPENSER)
+        {
+            final Inventory dispenserInv = ((Dispenser)targetBlock.getState()).getInventory();
+            dispenserInv.clear();
+            dispenserInv.addItem(items);
+        }
+    }
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
@@ -33,7 +43,7 @@ public class Command_dispfill extends FreedomCommand
             }
             catch (NumberFormatException ex)
             {
-                sender.sendMessage("Invalid radius.");
+                msg("Invalid radius.");
                 return true;
             }
 
@@ -50,11 +60,11 @@ public class Command_dispfill extends FreedomCommand
                 }
                 else
                 {
-                    sender.sendMessage("Skipping invalid item: " + searchItem);
+                    msg("Skipping invalid item: " + searchItem);
                 }
             }
 
-            final ItemStack[] itemsArray = items.toArray(new ItemStack[items.size()]);
+            final ItemStack[] itemsArray = items.toArray(new ItemStack[0]);
 
             int affected = 0;
             final Location centerLocation = playerSender.getLocation();
@@ -70,7 +80,8 @@ public class Command_dispfill extends FreedomCommand
                         {
                             if (targetBlock.getType().equals(Material.DISPENSER))
                             {
-                                sender.sendMessage("Filling dispenser @ " + FUtil.formatLocation(targetBlock.getLocation()));
+                                msg("Filling dispenser @ " + FUtil.formatLocation(targetBlock.getLocation()));
+                                plugin.cpb.getCoreProtectAPI().logContainerTransaction(sender.getName(), targetBlock.getLocation());
                                 setDispenserContents(targetBlock, itemsArray);
                                 affected++;
                             }
@@ -79,7 +90,7 @@ public class Command_dispfill extends FreedomCommand
                 }
             }
 
-            sender.sendMessage("Done. " + affected + " dispenser(s) filled.");
+            msg("Done. " + affected + " dispenser(s) filled.");
         }
         else
         {
@@ -87,15 +98,5 @@ public class Command_dispfill extends FreedomCommand
         }
 
         return true;
-    }
-
-    private static void setDispenserContents(final Block targetBlock, final ItemStack[] items)
-    {
-        if (targetBlock.getType() == Material.DISPENSER)
-        {
-            final Inventory dispenserInv = ((Dispenser)targetBlock.getState()).getInventory();
-            dispenserInv.clear();
-            dispenserInv.addItem(items);
-        }
     }
 }

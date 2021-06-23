@@ -1,10 +1,11 @@
 package me.totalfreedom.totalfreedommod.rank;
 
+import java.util.Objects;
 import me.totalfreedom.totalfreedommod.FreedomService;
+import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.player.FPlayer;
 import me.totalfreedom.totalfreedommod.player.PlayerData;
-import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -60,13 +61,18 @@ public class RankManager extends FreedomService
         {
             return Title.EXECUTIVE;
         }
+        
+        if (ConfigEntry.SERVER_ASSISTANT_EXECUTIVES.getList().contains(player.getName()) && plugin.al.isAdmin(player))
+        {
+            return Title.ASSTEXEC;
+        }
 
         if (plugin.al.isVerifiedAdmin(player))
         {
             return Title.VERIFIED_ADMIN;
         }
 
-        // Master builders show up if they are not admins
+        // Master builders show up if they are not an admin
         if (plugin.pl.getData(player).isMasterBuilder() && !plugin.al.isAdmin(player))
         {
             return Title.MASTER_BUILDER;
@@ -197,7 +203,7 @@ public class RankManager extends FreedomService
             // Verify strict IP match
             if (!plugin.al.isIdentityMatched(player))
             {
-                FUtil.bcastMsg("Warning: " + player.getName() + " is an admin, but is using an account not registered to one of their IP-list.", ChatColor.RED);
+                FUtil.bcastMsg("Warning: " + player.getName() + " is an admin, but is using an account not registered to one of their ip-list.", ChatColor.RED);
                 fPlayer.setSuperadminIdVerified(false);
             }
             else
@@ -276,21 +282,21 @@ public class RankManager extends FreedomService
         }
         if (message != null)
         {
-            String loginMessage = FUtil.colorize(ChatColor.AQUA + (message.contains("%name%") ? "" : player.getName() + " is ")
+            return FUtil.colorize(ChatColor.AQUA + (message.contains("%name%") ? "" : player.getName() + " is ")
                     + FUtil.colorize(message).replace("%name%", player.getName())
                     .replace("%rank%", display.getName())
                     .replace("%coloredrank%", display.getColoredName())
                     .replace("%art%", display.getArticle()));
-            return loginMessage;
         }
 
         return null;
     }
 
+    @SuppressWarnings("deprecation")
     public void updatePlayerTeam(Player player)
     {
         Displayable display = getDisplay(player);
-        Scoreboard scoreboard = server.getScoreboardManager().getMainScoreboard();
+        Scoreboard scoreboard = Objects.requireNonNull(server.getScoreboardManager()).getMainScoreboard();
         Team team = scoreboard.getPlayerTeam(player);
         if (!display.hasTeam())
         {

@@ -2,7 +2,6 @@ package me.totalfreedom.totalfreedommod.admin;
 
 import com.google.common.collect.Maps;
 import java.util.Map;
-import lombok.Getter;
 import me.totalfreedom.totalfreedommod.FreedomService;
 import me.totalfreedom.totalfreedommod.config.YamlConfig;
 import me.totalfreedom.totalfreedommod.util.FLog;
@@ -19,7 +18,6 @@ public class ActivityLog extends FreedomService
 {
     public static final String FILENAME = "activitylog.yml";
 
-    @Getter
     private final Map<String, ActivityLogEntry> allActivityLogs = Maps.newHashMap();
     private final Map<String, ActivityLogEntry> nameTable = Maps.newHashMap();
     private final Map<String, ActivityLogEntry> ipTable = Maps.newHashMap();
@@ -29,6 +27,11 @@ public class ActivityLog extends FreedomService
     public ActivityLog()
     {
         this.config = new YamlConfig(plugin, FILENAME, true);
+    }
+
+    public static String getFILENAME()
+    {
+        return FILENAME;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class ActivityLog extends FreedomService
             ConfigurationSection section = config.getConfigurationSection(key);
             if (section == null)
             {
-                logger.warning("Invalid activity log format: " + key);
+                FLog.warning("Invalid activity log format: " + key);
                 continue;
             }
 
@@ -110,10 +113,10 @@ public class ActivityLog extends FreedomService
             activityLog = getEntryByIp(ip);
             if (activityLog != null)
             {
-               // Set the new username
-               activityLog.setName(player.getName());
-               save();
-               updateTables();
+                // Set the new username
+                activityLog.setName(player.getName());
+                save();
+                updateTables();
             }
             else
             {
@@ -184,5 +187,25 @@ public class ActivityLog extends FreedomService
             plugin.acl.save();
             plugin.acl.updateTables();
         }
+    }
+
+    public Map<String, ActivityLogEntry> getAllActivityLogs()
+    {
+        return allActivityLogs;
+    }
+
+    public Map<String, ActivityLogEntry> getNameTable()
+    {
+        return nameTable;
+    }
+
+    public Map<String, ActivityLogEntry> getIpTable()
+    {
+        return ipTable;
+    }
+
+    public YamlConfig getConfig()
+    {
+        return config;
     }
 }

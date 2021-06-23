@@ -1,5 +1,6 @@
 package me.totalfreedom.totalfreedommod.command;
 
+import java.util.Objects;
 import me.totalfreedom.totalfreedommod.rank.Rank;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.bukkit.OfflinePlayer;
@@ -20,7 +21,7 @@ public class Command_ops extends FreedomCommand
             return false;
         }
 
-        if (args[0].equals("count"))
+        if (args[0].equalsIgnoreCase("count"))
         {
             int totalOps = server.getOperators().size();
             int onlineOps = 0;
@@ -36,11 +37,10 @@ public class Command_ops extends FreedomCommand
             msg("Online OPs: " + onlineOps);
             msg("Offline OPs: " + (totalOps - onlineOps));
             msg("Total OPs: " + totalOps);
-
             return true;
         }
 
-        if (args[0].equals("purge"))
+        if (args[0].equalsIgnoreCase("purge"))
         {
             if (!plugin.al.isAdmin(sender))
             {
@@ -55,12 +55,11 @@ public class Command_ops extends FreedomCommand
                 player.setOp(false);
                 if (player.isOnline())
                 {
-                    msg(player.getPlayer(), FreedomCommand.YOU_ARE_NOT_OP);
+                    msg(Objects.requireNonNull(player.getPlayer()), FreedomCommand.YOU_ARE_NOT_OP);
                 }
             }
             return true;
         }
-
         return false;
     }
 }

@@ -17,28 +17,16 @@ public enum WorldTime
     private final int timeTicks;
     private final List<String> aliases;
 
-    private WorldTime()
+    WorldTime()
     {
         this.timeTicks = 0;
         this.aliases = null;
     }
 
-    private WorldTime(String aliases, int timeTicks)
+    WorldTime(String aliases, int timeTicks)
     {
         this.timeTicks = timeTicks;
         this.aliases = Arrays.asList(StringUtils.split(aliases, ","));
-    }
-
-    public int getTimeTicks()
-    {
-        return timeTicks;
-    }
-
-    public void setWorldToTime(World world)
-    {
-        long time = world.getTime();
-        time -= time % 24000;
-        world.setTime(time + 24000 + getTimeTicks());
     }
 
     public static WorldTime getByAlias(String needle)
@@ -52,5 +40,17 @@ public enum WorldTime
             }
         }
         return null;
+    }
+
+    public int getTimeTicks()
+    {
+        return timeTicks;
+    }
+
+    public void setWorldToTime(World world)
+    {
+        long time = world.getTime();
+        time -= time % 24000;
+        world.setTime(time + 24000 + getTimeTicks());
     }
 }

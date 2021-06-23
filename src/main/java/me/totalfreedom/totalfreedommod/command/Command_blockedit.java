@@ -46,7 +46,7 @@ public class Command_blockedit extends FreedomCommand
 
         if (args[0].equals("purge"))
         {
-            FUtil.adminAction(sender.getName(), "Unblocking block modification abilities for all players.", true);
+            FUtil.adminAction(sender.getName(), "Unblocking block modification abilities for all players", true);
             int count = 0;
             for (final Player player : this.server.getOnlinePlayers())
             {
@@ -63,7 +63,7 @@ public class Command_blockedit extends FreedomCommand
 
         if (args[0].equals("all"))
         {
-            FUtil.adminAction(sender.getName(), "Blocking block modification abilities for all non-admins.", true);
+            FUtil.adminAction(sender.getName(), "Blocking block modification abilities for all non-admins", true);
             int counter = 0;
             for (final Player player : this.server.getOnlinePlayers())
             {
@@ -92,7 +92,7 @@ public class Command_blockedit extends FreedomCommand
         final Player player2 = getPlayer(args[0]);
         if (player2 == null)
         {
-            sender.sendMessage(FreedomCommand.PLAYER_NOT_FOUND);
+            msg(PLAYER_NOT_FOUND);
             return true;
         }
 

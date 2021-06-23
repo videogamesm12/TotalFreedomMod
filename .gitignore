@@ -25,6 +25,7 @@ manifest.mf
 /.idea/workspace.xml
 /.idea/uiDesigner.xml
 /.idea/libraries
+/.idea/
 *.iml
 
 # Maven excludes
@@ -37,3 +38,4 @@ manifest.mf
 .Trashes
 ehthumbs.db
 Thumbs.db
+.idea/inspectionProfiles/Project_Default.xml

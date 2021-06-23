@@ -11,9 +11,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandPermissions(level = Rank.ADMIN, source = SourceType.BOTH)
-@CommandParameters(description = "Denies joining of operators and only allows admins to join.", usage = "/<command> [on | off]")
+@CommandParameters(description = "Denies joining of operators and only allows admins to join.", usage = "/<command> [on | off]", aliases = "staffmode")
 public class Command_adminmode extends FreedomCommand
 {
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
@@ -25,13 +26,13 @@ public class Command_adminmode extends FreedomCommand
         if (args[0].equalsIgnoreCase("off"))
         {
             ConfigEntry.ADMIN_ONLY_MODE.setBoolean(false);
-            FUtil.adminAction(sender.getName(), "Opening the server to all players.", true);
+            FUtil.adminAction(sender.getName(), "Opening the server to all players", true);
             return true;
         }
         else if (args[0].equalsIgnoreCase("on"))
         {
             ConfigEntry.ADMIN_ONLY_MODE.setBoolean(true);
-            FUtil.adminAction(sender.getName(), "Closing the server to non-admins.", true);
+            FUtil.adminAction(sender.getName(), "Closing the server to non-admins", true);
             for (Player player : server.getOnlinePlayers())
             {
                 if (!isAdmin(player))

@@ -21,7 +21,7 @@ public class Command_setplayerlimit extends FreedomCommand
             Player player = Bukkit.getPlayer(args[0]);
             if (player == null)
             {
-                sender.sendMessage(PLAYER_NOT_FOUND);
+                msg(PLAYER_NOT_FOUND);
                 return true;
             }
 
@@ -59,6 +59,7 @@ public class Command_setplayerlimit extends FreedomCommand
         }
         if (success)
         {
+            assert player != null;
             FUtil.adminAction(sender.getName(), "Setting " + player.getName() + "'s WorldEdit block modification limit to " + amount + ".", true);
         }
         return true;

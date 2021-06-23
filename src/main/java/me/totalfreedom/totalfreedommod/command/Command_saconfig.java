@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.discord.Discord;
 import me.totalfreedom.totalfreedommod.player.FPlayer;
 import me.totalfreedom.totalfreedommod.rank.Rank;
-import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -18,9 +18,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandPermissions(level = Rank.OP, source = SourceType.BOTH)
-@CommandParameters(description = "List, add, remove, or set the rank of admins, clean or reload the admin list, or view the info of admins.", usage = "/<command> <list | clean | reload | | setrank <username> <rank> | <add | remove | info> <username>>")
+@CommandParameters(description = "List, add, remove, or set the rank of admins, clean or reload the admin list, or view admin information.", usage = "/<command> <list | clean | reload | | setrank <username> <rank> | <add | remove | info> <username>>", aliases = "slconfig")
 public class Command_saconfig extends FreedomCommand
 {
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
@@ -42,7 +43,7 @@ public class Command_saconfig extends FreedomCommand
                 checkConsole();
                 checkRank(Rank.SENIOR_ADMIN);
 
-                FUtil.adminAction(sender.getName(), "Cleaning admin list", true);
+                FUtil.adminAction(sender.getName(), "Cleaning the admin list", true);
                 plugin.al.deactivateOldEntries(true);
                 msg("Admins: " + StringUtils.join(plugin.al.getAdminNames(), ", "), ChatColor.GOLD);
 
@@ -175,7 +176,7 @@ public class Command_saconfig extends FreedomCommand
                 }
 
                 // Find the old admin entry
-                String name = player != null ? player.getName() : args[1];
+                String name = player.getName();
                 Admin admin = null;
                 for (Admin loopAdmin : plugin.al.getAllAdmins())
                 {
@@ -194,33 +195,24 @@ public class Command_saconfig extends FreedomCommand
 
                 if (admin == null) // New admin
                 {
-                    if (player == null)
-                    {
-                        msg(FreedomCommand.PLAYER_NOT_FOUND);
-                        return true;
-                    }
 
                     FUtil.adminAction(sender.getName(), "Adding " + player.getName() + " to the admin list", true);
                     admin = new Admin(player);
 
                     plugin.al.addAdmin(admin);
                     plugin.rm.updateDisplay(player);
-                    plugin.ptero.updateAccountStatus(admin);
                 }
                 else // Existing admin
                 {
                     FUtil.adminAction(sender.getName(), "Re-adding " + player.getName() + " to the admin list", true);
 
-                    if (player != null)
+                    String oldName = admin.getName();
+                    if (!oldName.equals(player.getName()))
                     {
-                        String oldName = admin.getName();
-                        if (!oldName.equals(player.getName()))
-                        {
-                            admin.setName(player.getName());
-                            plugin.sql.updateAdminName(oldName, admin.getName());
-                        }
-                        admin.addIp(FUtil.getIp(player));
+                        admin.setName(player.getName());
+                        plugin.sql.updateAdminName(oldName, admin.getName());
                     }
+                    admin.addIp(FUtil.getIp(player));
 
                     admin.setActive(true);
                     admin.setLastLogin(new Date());
@@ -228,37 +220,30 @@ public class Command_saconfig extends FreedomCommand
                     if (plugin.al.isVerifiedAdmin(player))
                     {
                         plugin.al.verifiedNoAdmin.remove(player.getName());
-                        plugin.al.verifiedNoAdminIps.remove(player.getName());
                     }
 
                     plugin.al.save(admin);
                     plugin.al.updateTables();
-                    if (player != null)
-                    {
-                        plugin.rm.updateDisplay(player);
-                    }
+                    plugin.rm.updateDisplay(player);
 
                     if (plugin.dc.enabled && ConfigEntry.DISCORD_ROLE_SYNC.getBoolean())
                     {
-                        plugin.dc.syncRoles(admin, plugin.pl.getData(player).getDiscordID());
+                        Discord.syncRoles(admin, plugin.pl.getData(player).getDiscordID());
                     }
-                    plugin.ptero.updateAccountStatus(admin);
+                }
+                plugin.ptero.updateAccountStatus(admin);
+
+                final FPlayer fPlayer = plugin.pl.getPlayer(player);
+                if (fPlayer.getFreezeData().isFrozen())
+                {
+                    fPlayer.getFreezeData().setFrozen(false);
+                    msg(player, "You have been unfrozen.");
                 }
 
-                if (player != null)
+                if (!player.isOp())
                 {
-                    final FPlayer fPlayer = plugin.pl.getPlayer(player);
-                    if (fPlayer.getFreezeData().isFrozen())
-                    {
-                        fPlayer.getFreezeData().setFrozen(false);
-                        msg(player, "You have been unfrozen.");
-                    }
-
-                    if (!player.isOp())
-                    {
-                        player.setOp(true);
-                        player.sendMessage(YOU_ARE_OP);
-                    }
+                    player.setOp(true);
+                    msg(player, YOU_ARE_OP);
                 }
                 return true;
             }
@@ -319,6 +304,7 @@ public class Command_saconfig extends FreedomCommand
             arguments.add("list");
             if (plugin.al.isAdmin(sender))
             {
+                arguments.add("info");
                 arguments.add("add");
                 arguments.add("remove");
             }

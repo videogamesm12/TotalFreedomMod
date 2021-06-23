@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Manage notes for a player", usage = "/<command> <name> <list | add <note> | remove <id> | clear>")
 public class Command_notes extends FreedomCommand
 {
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
@@ -49,24 +50,21 @@ public class Command_notes extends FreedomCommand
         {
             case "list":
             {
-                if (playerData.getNotes().size() == 0)
-                {
-                    msg("This player has no notes.", ChatColor.RED);
-                    return true;
-                }
                 final StringBuilder noteList = new StringBuilder();
-                noteList.append(ChatColor.GREEN + "Player notes for ").append(playerData.getName()).append(":");
+                noteList.append(ChatColor.GREEN).append("Player notes for ").append(playerData.getName()).append(":");
                 int id = 1;
                 for (String note : playerData.getNotes())
                 {
                     String noteLine = id + ". " + note;
-                    noteList.append("\n" + ChatColor.GOLD).append(noteLine);
+                    noteList.append("\n").append(ChatColor.GOLD).append(noteLine);
                     id++;
                 }
                 msg(noteList.toString());
                 return true;
             }
+
             case "add":
+            {
                 if (args.length < 3)
                 {
                     return false;
@@ -76,12 +74,15 @@ public class Command_notes extends FreedomCommand
                 plugin.pl.save(playerData);
                 msg("Note added.", ChatColor.GREEN);
                 return true;
+            }
+
             case "remove":
             {
                 if (args.length < 3)
                 {
                     return false;
                 }
+
                 int id;
                 try
                 {
@@ -92,7 +93,9 @@ public class Command_notes extends FreedomCommand
                     msg("Invalid number: " + args[2], ChatColor.RED);
                     return true;
                 }
+
                 id--;
+
                 if (playerData.removeNote(id))
                 {
                     plugin.pl.save(playerData);
@@ -104,6 +107,7 @@ public class Command_notes extends FreedomCommand
                 }
                 return true;
             }
+
             case "clear":
             {
                 int count = playerData.getNotes().size();
@@ -112,11 +116,8 @@ public class Command_notes extends FreedomCommand
                 msg("Cleared " + count + " notes.", ChatColor.GREEN);
                 return true;
             }
-            default:
-            {
-                return false;
-            }
         }
+        return false;
     }
 
     @Override

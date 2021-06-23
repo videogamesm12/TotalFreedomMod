@@ -34,6 +34,7 @@ public enum ConfigEntry
     ALLOW_RESPAWN_ANCHORS(Boolean.class, "allow.respawnanchors"),
     AUTO_TP(Boolean.class, "allow.auto_tp"),
     AUTO_CLEAR(Boolean.class, "allow.auto_clear"),
+    ALLOW_GRAVITY(Boolean.class, "allow.gravity"),
     //
     BLOCKED_CHATCODES(String.class, "blocked_chatcodes"),
     //
@@ -57,6 +58,7 @@ public enum ConfigEntry
     SERVER_LOGIN_SUBTITLE(String.class, "server.login_title.subtitle"),
     SERVER_OWNERS(List.class, "server.owners"),
     SERVER_EXECUTIVES(List.class, "server.executives"),
+    SERVER_ASSISTANT_EXECUTIVES(List.class, "server.assistant_executives"),
     SERVER_MASTER_BUILDER_MANAGEMENT(List.class, "server.master_builder_management"),
     SERVER_BAN_URL(String.class, "server.ban_url"),
     SERVER_INDEFBAN_URL(String.class, "server.indefban_url"),
@@ -69,6 +71,7 @@ public enum ConfigEntry
     SERVER_WHITELIST_MOTD(String.class, "server.motds.whitelist"),
     SERVER_FULL_MOTD(String.class, "server.motds.full"),
     //
+    DISCORD_VERIFICATION(Boolean.class, "discord.verification"),
     DISCORD_TOKEN(String.class, "discord.token"),
     DISCORD_REPORT_CHANNEL_ID(String.class, "discord.report_channel_id"),
     DISCORD_CHAT_CHANNEL_ID(String.class, "discord.chat_channel_id"),
@@ -79,6 +82,7 @@ public enum ConfigEntry
     DISCORD_NEW_ADMIN_ROLE_ID(String.class, "discord.admin_role_id"),
     DISCORD_SENIOR_ADMIN_ROLE_ID(String.class, "discord.senior_admin_role_id"),
     DISCORD_DEVELOPER_ROLE_ID(String.class, "discord.developer_role_id"),
+    DISCORD_ASSISTANT_EXECUTIVE_ROLE_ID(String.class, "discord.assistant_executive_role_id"),
     DISCORD_EXECUTIVE_ROLE_ID(String.class, "discord.executive_role_id"),
     DISCORD_SERVER_OWNER_ROLE_ID(String.class, "discord.server_owner_role_id"),
     //
@@ -145,7 +149,10 @@ public enum ConfigEntry
     EXPLOSIVE_RADIUS(Double.class, "explosive_radius"),
     FREECAM_TRIGGER_COUNT(Integer.class, "freecam_trigger_count"),
     SERVICE_CHECKER_URL(String.class, "service_checker_url"),
-    BLOCKED_COMMANDS(List.class, "blocked_commands"),
+    BLOCKED_COMMANDS(List.class, "blocked_commands.global"),
+    MUTED_BLOCKED_COMMANDS(List.class, "blocked_commands.muted"),
+    WILDCARD_BLOCKED_COMMANDS(List.class, "blocked_commands.wildcard"),
+    FORBIDDEN_WORDS(List.class, "forbidden_words"),
     HOST_SENDER_NAMES(List.class, "host_sender_names"),
     FAMOUS_PLAYERS(List.class, "famous_players"),
     ADMIN_ONLY_MODE(Boolean.class, "admin_only_mode"),
@@ -154,7 +161,8 @@ public enum ConfigEntry
     MASTER_BUILDER_INFO(List.class, "masterbuilderinfo"),
     AUTO_ENTITY_WIPE(Boolean.class, "auto_wipe"),
     TOGGLE_CHAT(Boolean.class, "toggle_chat"),
-    DEVELOPER_MODE(Boolean.class, "developer_mode");
+    DEVELOPER_MODE(Boolean.class, "developer_mode"),
+    ANTISPAM_MINUTES(Integer.class, "antispam_minutes");
     //
     private final Class<?> type;
     private final String configName;
@@ -163,6 +171,19 @@ public enum ConfigEntry
     {
         this.type = type;
         this.configName = configName;
+    }
+
+    public static ConfigEntry findConfigEntry(String name)
+    {
+        name = name.toLowerCase().replace("_", "");
+        for (ConfigEntry entry : values())
+        {
+            if (entry.toString().toLowerCase().replace("_", "").equals(name))
+            {
+                return entry;
+            }
+        }
+        return null;
     }
 
     public Class<?> getType()
@@ -180,21 +201,14 @@ public enum ConfigEntry
         return getConfig().getString(this);
     }
 
-    public String setString(String value)
-    {
-        getConfig().setString(this, value);
-        return value;
-    }
-
     public Double getDouble()
     {
         return getConfig().getDouble(this);
     }
 
-    public Double setDouble(Double value)
+    public void setDouble(Double value)
     {
         getConfig().setDouble(this, value);
-        return value;
     }
 
     public Boolean getBoolean()
@@ -213,10 +227,9 @@ public enum ConfigEntry
         return getConfig().getInteger(this);
     }
 
-    public Integer setInteger(Integer value)
+    public void setInteger(Integer value)
     {
         getConfig().setInteger(this, value);
-        return value;
     }
 
     public List<?> getList()
@@ -232,19 +245,6 @@ public enum ConfigEntry
 
     private MainConfig getConfig()
     {
-        return TotalFreedomMod.plugin().config;
-    }
-
-    public static ConfigEntry findConfigEntry(String name)
-    {
-        name = name.toLowerCase().replace("_", "");
-        for (ConfigEntry entry : values())
-        {
-            if (entry.toString().toLowerCase().replace("_", "").equals(name))
-            {
-                return entry;
-            }
-        }
-        return null;
+        return TotalFreedomMod.getPlugin().config;
     }
 }

@@ -4,9 +4,9 @@ import com.google.common.base.Strings;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.player.PlayerData;
 import me.totalfreedom.totalfreedommod.rank.Rank;
-import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -41,7 +41,7 @@ public class Command_panel extends FreedomCommand
             return false;
         }
 
-        if (args[0].equals("create"))
+        if (args[0].equalsIgnoreCase("create"))
         {
             msg("Creating your Pterodactyl account...", ChatColor.GREEN);
             Admin admin = getAdmin(playerSender);
@@ -72,7 +72,7 @@ public class Command_panel extends FreedomCommand
             msg("Successfully created your Pterodactyl account. Check your DMs from " + plugin.dc.formatBotTag() + " on discord to get your credentials.", ChatColor.GREEN);
             return true;
         }
-        else if (args[0].equals("delete"))
+        else if (args[0].equalsIgnoreCase("delete"))
         {
             msg("Deleting your Pterodactyl account...", ChatColor.GREEN);
             Admin admin = getAdmin(playerSender);
@@ -98,7 +98,6 @@ public class Command_panel extends FreedomCommand
             msg("Successfully deleted your Pterodactyl account.", ChatColor.GREEN);
             return true;
         }
-
         return false;
     }
 
@@ -112,5 +111,4 @@ public class Command_panel extends FreedomCommand
 
         return Collections.emptyList();
     }
-
 }

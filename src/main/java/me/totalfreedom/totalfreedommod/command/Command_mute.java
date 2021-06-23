@@ -29,7 +29,7 @@ public class Command_mute extends FreedomCommand
             return false;
         }
 
-        if (args[0].equals("list"))
+        if (args[0].equalsIgnoreCase("list"))
         {
             msg("Muted players:");
             FPlayer info;
@@ -51,7 +51,7 @@ public class Command_mute extends FreedomCommand
             return true;
         }
 
-        if (args[0].equals("purge"))
+        if (args[0].equalsIgnoreCase("purge"))
         {
             FUtil.adminAction(sender.getName(), "Unmuting all players.", true);
             FPlayer info;
@@ -71,7 +71,7 @@ public class Command_mute extends FreedomCommand
             return true;
         }
 
-        if (args[0].equals("all"))
+        if (args[0].equalsIgnoreCase("all"))
         {
             FUtil.adminAction(sender.getName(), "Muting all non-admins", true);
 
@@ -109,7 +109,7 @@ public class Command_mute extends FreedomCommand
         final Player player = getPlayer(args[0]);
         if (player == null)
         {
-            sender.sendMessage(FreedomCommand.PLAYER_NOT_FOUND);
+            msg(PLAYER_NOT_FOUND);
             return true;
         }
 

@@ -1,13 +1,13 @@
 package me.totalfreedom.totalfreedommod.blocking.command;
 
 import me.totalfreedom.totalfreedommod.TotalFreedomMod;
-import me.totalfreedom.totalfreedommod.rank.Rank;
 import me.totalfreedom.totalfreedommod.admin.Admin;
+import me.totalfreedom.totalfreedommod.rank.Rank;
 import org.bukkit.command.CommandSender;
 
 public enum CommandBlockerRank
 {
-    ANYONE("a"),
+    EVERYONE("e"),
     OP("o"),
     ADMIN("a"),
     SENIOR_ADMIN("s"),
@@ -15,24 +15,14 @@ public enum CommandBlockerRank
     //
     private final String token;
 
-    private CommandBlockerRank(String token)
+    CommandBlockerRank(String token)
     {
         this.token = token;
     }
 
-    public String getToken()
-    {
-        return this.token;
-    }
-
-    public boolean hasPermission(CommandSender sender)
-    {
-        return fromSender(sender).ordinal() >= ordinal();
-    }
-
     public static CommandBlockerRank fromSender(CommandSender sender)
     {
-        Admin admin = TotalFreedomMod.plugin().al.getAdmin(sender);
+        Admin admin = TotalFreedomMod.getPlugin().al.getAdmin(sender);
         if (admin != null)
         {
             if (admin.getRank() == Rank.SENIOR_ADMIN)
@@ -47,8 +37,7 @@ public enum CommandBlockerRank
             return OP;
         }
 
-        return ANYONE;
-
+        return EVERYONE;
     }
 
     public static CommandBlockerRank fromToken(String token)
@@ -60,6 +49,16 @@ public enum CommandBlockerRank
                 return rank;
             }
         }
-        return ANYONE;
+        return EVERYONE;
+    }
+
+    public String getToken()
+    {
+        return this.token;
+    }
+
+    public boolean hasPermission(CommandSender sender)
+    {
+        return fromSender(sender).ordinal() >= ordinal();
     }
 }

@@ -104,7 +104,7 @@ public class Command_whitelist extends FreedomCommand
         }
 
         // remove
-        if ("remove".equals(args[0]))
+        if (args[0].equalsIgnoreCase("remove"))
         {
             if (args.length < 2)
             {
@@ -124,13 +124,12 @@ public class Command_whitelist extends FreedomCommand
             {
                 FUtil.adminAction(sender.getName(), "Removing " + player.getName() + " from the whitelist", false);
                 player.setWhitelisted(false);
-                return true;
             }
             else
             {
                 msg("That player is not whitelisted");
-                return true;
             }
+            return true;
         }
 
         // addall
@@ -151,7 +150,7 @@ public class Command_whitelist extends FreedomCommand
             return true;
         }
 
-        // Admin only
+        // Telnet only
         checkConsole();
         checkRank(Rank.ADMIN);
 
@@ -170,8 +169,7 @@ public class Command_whitelist extends FreedomCommand
     {
         if (args.length == 1)
         {
-            List<String> arguments = new ArrayList<>();
-            arguments.addAll(Arrays.asList("list", "count"));
+            List<String> arguments = new ArrayList<>(Arrays.asList("list", "count"));
             if (plugin.al.isAdmin(sender))
             {
                 arguments.addAll(Arrays.asList("on", "off", "add", "remove", "addall"));

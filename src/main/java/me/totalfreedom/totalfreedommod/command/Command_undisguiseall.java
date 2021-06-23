@@ -20,13 +20,16 @@ public class Command_undisguiseall extends FreedomCommand
         }
 
         boolean admins = false;
+
         if (args.length > 0 && args[0].equalsIgnoreCase("-a"))
         {
             admins = true;
         }
 
         FUtil.adminAction(sender.getName(), "Undisguising all " + (admins ? "players" : "non-admins"), true);
+
         plugin.ldb.undisguiseAll(admins);
+
         return true;
     }
 }

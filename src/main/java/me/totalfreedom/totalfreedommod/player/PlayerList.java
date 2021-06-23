@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import lombok.Getter;
+import java.util.Objects;
 import me.totalfreedom.totalfreedommod.FreedomService;
+import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.rank.Rank;
-import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.util.FLog;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.bukkit.OfflinePlayer;
@@ -19,10 +19,8 @@ import org.bukkit.entity.Player;
 
 public class PlayerList extends FreedomService
 {
-    @Getter
-    public final Map<String, FPlayer> playerMap = Maps.newHashMap(); // ip,dataMap
 
-    @Getter
+    public final Map<String, FPlayer> playerMap = Maps.newHashMap(); // ip,dataMap
     public final Map<String, PlayerData> dataMap = Maps.newHashMap(); // username, data
 
     @Override
@@ -72,7 +70,7 @@ public class PlayerList extends FreedomService
     {
         if (player.isOnline())
         {
-            return FUtil.getIp(player.getPlayer());
+            return FUtil.getIp(Objects.requireNonNull(player.getPlayer()));
         }
 
         final PlayerData entry = getData(player.getName());
@@ -97,13 +95,13 @@ public class PlayerList extends FreedomService
     {
         PlayerData data = getData(name);
 
-        return (ConfigEntry.HOST_SENDER_NAMES.getStringList().contains(name.toLowerCase()) || data == null || ConfigEntry.SERVER_OWNERS.getStringList().contains(data.getName()))
-                || ConfigEntry.SERVER_EXECUTIVES.getStringList().contains(data.getName())
-                || isAdminMasterBuilder(data)
-                || ConfigEntry.HOST_SENDER_NAMES.getStringList().contains(name.toLowerCase());
+        return (!ConfigEntry.HOST_SENDER_NAMES.getStringList().contains(name.toLowerCase()) && data != null && !ConfigEntry.SERVER_OWNERS.getStringList().contains(data.getName()))
+                && !ConfigEntry.SERVER_EXECUTIVES.getStringList().contains(data.getName())
+                && !isTelnetMasterBuilder(data)
+                && !ConfigEntry.HOST_SENDER_NAMES.getStringList().contains(name.toLowerCase());
     }
 
-    public boolean isAdminMasterBuilder(PlayerData playerData)
+    public boolean isTelnetMasterBuilder(PlayerData playerData)
     {
         Admin admin = plugin.al.getEntryByName(playerData.getName());
         return admin != null && admin.getRank().isAtLeast(Rank.ADMIN) && playerData.isMasterBuilder();
@@ -148,7 +146,7 @@ public class PlayerList extends FreedomService
         PlayerData playerData = getData(player);
         return plugin.dc.enabled
                 && !plugin.al.isAdmin(player)
-                && playerData.hasVerification()
+                && (playerData.hasVerification())
                 && !playerData.getIps().contains(FUtil.getIp(player));
     }
 
@@ -176,6 +174,7 @@ public class PlayerList extends FreedomService
             plugin.al.updateTables();
             plugin.al.save(admin);
         }
+
         plugin.rm.updateDisplay(player);
     }
 
@@ -199,6 +198,7 @@ public class PlayerList extends FreedomService
             plugin.al.save(admin);
         }
     }
+
 
     public void save(PlayerData player)
     {
@@ -250,23 +250,19 @@ public class PlayerList extends FreedomService
         }
 
         // Create new data if nonexistent
-        if (playerData == null)
-        {
-            FLog.info("Creating new player verification entry for " + player.getName());
+        FLog.info("Creating new player verification entry for " + player.getName());
 
-            // Create new player
-            playerData = new PlayerData(player);
-            playerData.addIp(FUtil.getIp(player));
+        // Create new player
+        playerData = new PlayerData(player);
+        playerData.addIp(FUtil.getIp(player));
 
-            // Store player
-            dataMap.put(player.getName(), playerData);
+        // Store player
+        dataMap.put(player.getName(), playerData);
 
-            // Save player
-            plugin.sql.addPlayer(playerData);
-            return playerData;
-        }
+        // Save player
+        plugin.sql.addPlayer(playerData);
+        return playerData;
 
-        return null;
     }
 
     public PlayerData getData(String username)
@@ -302,5 +298,15 @@ public class PlayerList extends FreedomService
         }
 
         return player;
+    }
+
+    public Map<String, FPlayer> getPlayerMap()
+    {
+        return playerMap;
+    }
+
+    public Map<String, PlayerData> getDataMap()
+    {
+        return dataMap;
     }
 }

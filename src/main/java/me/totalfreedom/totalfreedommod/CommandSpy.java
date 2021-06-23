@@ -29,6 +29,7 @@ public class CommandSpy extends FreedomService
                 {
                     continue;
                 }
+
                 if (player != event.getPlayer())
                 {
                     FUtil.playerMsg(player, event.getPlayer().getName() + ": " + event.getMessage());
@@ -36,5 +37,4 @@ public class CommandSpy extends FreedomService
             }
         }
     }
-
 }

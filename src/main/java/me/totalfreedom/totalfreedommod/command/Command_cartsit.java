@@ -1,5 +1,6 @@
 package me.totalfreedom.totalfreedommod.command;
 
+import java.util.Objects;
 import me.totalfreedom.totalfreedommod.rank.Rank;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,12 +19,11 @@ public class Command_cartsit extends FreedomCommand
 
         if (args.length == 1 && plugin.al.isAdmin(sender))
         {
-
             targetPlayer = getPlayer(args[0]);
 
             if (targetPlayer == null)
             {
-                sender.sendMessage(FreedomCommand.PLAYER_NOT_FOUND);
+                msg(PLAYER_NOT_FOUND);
                 return true;
             }
         }
@@ -32,14 +32,14 @@ public class Command_cartsit extends FreedomCommand
         {
             if (targetPlayer == null)
             {
-                sender.sendMessage("When used from the console, you must define a target player: /cartsit <player>");
+                msg("When used from the console, you must define a target player: /cartsit <player>");
                 return true;
             }
         }
 
         if (targetPlayer.isInsideVehicle())
         {
-            targetPlayer.getVehicle().eject();
+            Objects.requireNonNull(targetPlayer.getVehicle()).eject();
         }
         else
         {

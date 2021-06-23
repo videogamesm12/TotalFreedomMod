@@ -1,32 +1,5 @@
 package me.totalfreedom.totalfreedommod.util;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import me.totalfreedom.totalfreedommod.TotalFreedomMod;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import org.apache.commons.io.FileUtils;
@@ -47,12 +20,23 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.json.simple.JSONArray;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.bukkit.Bukkit.getServer;
 
 public class FUtil
 {
 
-    private static final Random RANDOM = new Random();
     public static final String SAVED_FLAGS_FILENAME = "savedflags.dat";
     /* See https://github.com/TotalFreedom/License - None of the listed names may be removed.
     Leaving this list here for anyone running TFM on a cracked server:
@@ -66,10 +50,18 @@ public class FUtil
             "e67d77c4-fff9-4cea-94cc-9f1f1ab7806b", // aggelosQQ
             "0061326b-8b3d-44c8-830a-5f2d59f5dc1b", // scripthead
             "78408086-1991-4c33-a571-d8fa325465b2", // Telesphoreo
-            "67ce0e28-3d6b-469c-ab71-304eec81b614"  // CoolJWB
+            "67ce0e28-3d6b-469c-ab71-304eec81b614", // CoolJWB
+            "03b41e15-d03f-4025-86f5-f1812df200fa", // elmon_
+            "d018f2b8-ce60-4672-a45f-e580e0331299", // speednt
+            "458de06f-36a5-4e1b-aaa6-ec1d1751c5b6", // SupItsDillon
+            "c8e5af82-6aba-4dd7-83e8-474381380cc9", // Paldiu
+            "38ea7c82-7bdc-4f48-b7fd-0e93fc26813d", // AwesomePinch
+            "ba5aafba-9012-418f-9819-a7020d591068",  // TFTWPhoenix
+            "d6dd9740-40db-45f5-ab16-4ee16a633009", // Abhi
+            "2e06e049-24c8-42e4-8bcf-d35372af31e6", // NotInSync
+            "f97c0d7b-6413-4558-a409-88f09a8f9adb" // videogamesm12
     );
-    public static final List<String> DEVELOPER_NAMES = Arrays.asList("Madgeek1450", "Prozza", "WickedGamingUK", "Wild1145", "aggelosQQ", "scripthead", "Telesphoreo", "CoolJWB");
-    public static String DATE_STORAGE_FORMAT = "EEE, d MMM yyyy HH:mm:ss Z";
+    public static final List<String> DEVELOPER_NAMES = Arrays.asList("Madgeek1450", "Prozza", "WickedGamingUK", "Wild1145", "aggelosQQ", "scripthead", "CoolJWB", "elmon_", "speednt", "SupItsDillon", "Paldiu", "AwesomePinch", "TFTWPhoenix", "abhithedev", "NotInSync", "videogamesm12");
     public static final Map<String, ChatColor> CHAT_COLOR_NAMES = new HashMap<>();
     public static final List<ChatColor> CHAT_COLOR_POOL = Arrays.asList(
             ChatColor.DARK_RED,
@@ -84,9 +76,10 @@ public class FUtil
             ChatColor.DARK_BLUE,
             ChatColor.DARK_PURPLE,
             ChatColor.LIGHT_PURPLE);
-    private static Iterator<ChatColor> CHAT_COLOR_ITERATOR;
-    private static String CHARACTER_STRING = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static Map<Integer, String> TIMEZONE_LOOKUP = new HashMap<>();
+    private static final SplittableRandom RANDOM = new SplittableRandom();
+    private static final String CHARACTER_STRING = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final Map<Integer, String> TIMEZONE_LOOKUP = new HashMap<>();
+    public static String DATE_STORAGE_FORMAT = "EEE, d MMM yyyy HH:mm:ss Z";
 
     static
     {
@@ -125,19 +118,26 @@ public class FUtil
         {
             task.cancel();
         }
-        catch (Exception ex)
+        catch (Exception ignored)
         {
         }
     }
 
     public static boolean isExecutive(String name)
     {
-        return ConfigEntry.SERVER_OWNERS.getStringList().contains(name) || ConfigEntry.SERVER_EXECUTIVES.getStringList().contains(name);
+        return ConfigEntry.SERVER_OWNERS.getStringList().contains(name) || ConfigEntry.SERVER_EXECUTIVES.getStringList().contains(name) || ConfigEntry.SERVER_ASSISTANT_EXECUTIVES.getStringList().contains(name);
     }
 
     public static boolean isDeveloper(Player player)
     {
-        return DEVELOPERS.contains(player.getUniqueId().toString());
+        if (Bukkit.getOnlineMode())
+        {
+            return DEVELOPERS.contains(player.getUniqueId().toString());
+        }
+        else
+        {
+            return DEVELOPER_NAMES.contains(player.getName());
+        }
     }
 
     public static boolean inDeveloperMode()
@@ -160,7 +160,7 @@ public class FUtil
         List<String> names = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers())
         {
-            if (!TotalFreedomMod.plugin().al.isVanished(player.getName()))
+            if (!TotalFreedomMod.getPlugin().al.isVanished(player.getName()))
             {
                 names.add(player.getName());
             }
@@ -190,8 +190,9 @@ public class FUtil
 
     /**
      * A way to get a sublist with a page index and a page size.
-     * @param list A list of objects that should be split into pages.
-     * @param size The size of the pages.
+     *
+     * @param list  A list of objects that should be split into pages.
+     * @param size  The size of the pages.
      * @param index The page index, if outside of bounds error will be thrown. The page index starts at 0 as with all lists.
      * @return A list of objects that is the page that has been selected from the previous last parameter.
      */
@@ -228,6 +229,7 @@ public class FUtil
         return names;
     }
 
+    @SuppressWarnings("unchecked")
     public static UUID nameToUUID(String name)
     {
         try
@@ -254,10 +256,10 @@ public class FUtil
         return null;
     }
 
-    public static Response sendRequest(String endpoint, String method, List<String>headers, String body) throws IOException
+    public static Response sendRequest(String endpoint, String method, List<String> headers, String body) throws IOException
     {
         URL url = new URL(endpoint);
-        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod(method);
 
@@ -284,7 +286,7 @@ public class FUtil
 
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String inputLine;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
 
         while ((inputLine = in.readLine()) != null)
         {
@@ -350,7 +352,7 @@ public class FUtil
     public static String formatLocation(Location location)
     {
         return String.format("%s: (%d, %d, %d)",
-                location.getWorld().getName(),
+                Objects.requireNonNull(location.getWorld()).getName(),
                 Math.round(location.getX()),
                 Math.round(location.getY()),
                 Math.round(location.getZ()));
@@ -367,14 +369,7 @@ public class FUtil
 
     public static void deleteCoreDumps()
     {
-        final File[] coreDumps = new File(".").listFiles(new FileFilter()
-        {
-            @Override
-            public boolean accept(File file)
-            {
-                return file.getName().startsWith("java.core");
-            }
-        });
+        final File[] coreDumps = new File(".").listFiles(file -> file.getName().startsWith("java.core"));
 
         for (File dump : coreDumps)
         {
@@ -383,109 +378,86 @@ public class FUtil
         }
     }
 
-    public static Date parseDateOffset(String time)
+    private static final List<String> regxList = new ArrayList<String>()
+    {{
+        add("y");
+        add("mo");
+        add("w");
+        add("d");
+        add("h");
+        add("m");
+        add("s");
+    }};
+
+    private static long a(String parse)
     {
-        Pattern timePattern = Pattern.compile(
-                "(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?"
-                        + "(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?"
-                        + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?"
-                        + "(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?"
-                        + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?"
-                        + "(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?"
-                        + "(?:([0-9]+)\\s*(?:s[a-z]*)?)?", Pattern.CASE_INSENSITIVE);
-        Matcher m = timePattern.matcher(time);
-        int years = 0;
-        int months = 0;
-        int weeks = 0;
-        int days = 0;
-        int hours = 0;
-        int minutes = 0;
-        int seconds = 0;
-        boolean found = false;
-        while (m.find())
+        StringBuilder sb = new StringBuilder();
+
+        regxList.forEach(obj -> {
+            if (parse.endsWith(obj))
+            {
+                sb.append(parse.split(obj)[0]);
+            }
+        });
+
+        return Long.parseLong(sb.toString());
+    }
+
+    private static TimeUnit verify(String arg)
+    {
+        TimeUnit unit = null;
+        for (String c : regxList)
         {
-            if (m.group() == null || m.group().isEmpty())
+            if (arg.endsWith(c))
             {
-                continue;
-            }
-            for (int i = 0; i < m.groupCount(); i++)
-            {
-                if (m.group(i) != null && !m.group(i).isEmpty())
+                switch (c)
                 {
-                    found = true;
-                    break;
-                }
-            }
-            if (found)
-            {
-                if (m.group(1) != null && !m.group(1).isEmpty())
-                {
-                    years = Integer.parseInt(m.group(1));
-                }
-                if (m.group(2) != null && !m.group(2).isEmpty())
-                {
-                    months = Integer.parseInt(m.group(2));
-                }
-                if (m.group(3) != null && !m.group(3).isEmpty())
-                {
-                    weeks = Integer.parseInt(m.group(3));
-                }
-                if (m.group(4) != null && !m.group(4).isEmpty())
-                {
-                    days = Integer.parseInt(m.group(4));
-                }
-                if (m.group(5) != null && !m.group(5).isEmpty())
-                {
-                    hours = Integer.parseInt(m.group(5));
-                }
-                if (m.group(6) != null && !m.group(6).isEmpty())
-                {
-                    minutes = Integer.parseInt(m.group(6));
-                }
-                if (m.group(7) != null && !m.group(7).isEmpty())
-                {
-                    seconds = Integer.parseInt(m.group(7));
+                    case "y":
+                        unit = (TimeUnit.YEAR);
+                        break;
+                    case "mo":
+                        unit = (TimeUnit.MONTH);
+                        break;
+                    case "w":
+                        unit = (TimeUnit.WEEK);
+                        break;
+                    case "d":
+                        unit = (TimeUnit.DAY);
+                        break;
+                    case "h":
+                        unit = (TimeUnit.HOUR);
+                        break;
+                    case "m":
+                        unit = (TimeUnit.MINUTE);
+                        break;
+                    case "s":
+                        unit = (TimeUnit.SECOND);
+                        break;
                 }
                 break;
             }
         }
-        if (!found)
-        {
-            return null;
-        }
+        return (unit != null) ? unit : TimeUnit.DAY;
+    }
 
-        Calendar c = new GregorianCalendar();
+    public static Date parseDateOffset(String... time)
+    {
+        Instant instant = Instant.now();
+        for (String arg : time)
+        {
+            instant = instant.plusSeconds(verify(arg).get() * a(arg));
+        }
+        return Date.from(instant);
+    }
 
-        if (years > 0)
+    public static long parseLongOffset(long unix, String... time)
+    {
+        Instant instant = Instant.ofEpochMilli(unix);
+        for (String arg : time)
         {
-            c.add(Calendar.YEAR, years);
+            instant = instant.plusSeconds(verify(arg).get() * a(arg));
         }
-        if (months > 0)
-        {
-            c.add(Calendar.MONTH, months);
-        }
-        if (weeks > 0)
-        {
-            c.add(Calendar.WEEK_OF_YEAR, weeks);
-        }
-        if (days > 0)
-        {
-            c.add(Calendar.DAY_OF_MONTH, days);
-        }
-        if (hours > 0)
-        {
-            c.add(Calendar.HOUR_OF_DAY, hours);
-        }
-        if (minutes > 0)
-        {
-            c.add(Calendar.MINUTE, minutes);
-        }
-        if (seconds > 0)
-        {
-            c.add(Calendar.SECOND, seconds);
-        }
-
-        return c.getTime();
+        return FUtil.getUnixTime(Date.from(instant));
     }
 
     public static String playerListToNames(Set<OfflinePlayer> players)
@@ -541,7 +513,7 @@ public class FUtil
             octets = 1;
         }
 
-        for (int i = 0; i < octets && i < 4; i++)
+        for (int i = 0; i < octets; i++)
         {
             if (aParts[i].equals("*") || bParts[i].equals("*"))
             {
@@ -580,10 +552,10 @@ public class FUtil
             {
                 Field field = checkClass.getDeclaredField(name);
                 field.setAccessible(true);
-                return (T)field.get(from);
+                return (T) field.get(from);
 
             }
-            catch (NoSuchFieldException | IllegalAccessException ex)
+            catch (NoSuchFieldException | IllegalAccessException ignored)
             {
             }
         }
@@ -600,7 +572,7 @@ public class FUtil
 
     public static String rainbowify(String string)
     {
-        CHAT_COLOR_ITERATOR = CHAT_COLOR_POOL.iterator();
+        Iterator<ChatColor> CHAT_COLOR_ITERATOR = CHAT_COLOR_POOL.iterator();
 
         StringBuilder newString = new StringBuilder();
         char[] chars = string.toCharArray();
@@ -635,12 +607,12 @@ public class FUtil
 
     public static Date getUnixDate(long unix)
     {
-        return new Date(unix * 1000);
+        return new Date(unix);
     }
 
     public static long getUnixTime()
     {
-        return System.currentTimeMillis() / 1000L;
+        return Instant.now().toEpochMilli();
     }
 
     public static long getUnixTime(Date date)
@@ -650,7 +622,7 @@ public class FUtil
             return 0;
         }
 
-        return date.getTime() / 1000L;
+        return date.getTime();
     }
 
     public static String getNMSVersion()
@@ -662,37 +634,36 @@ public class FUtil
     public static int randomInteger(int min, int max)
     {
         int range = max - min + 1;
-        int value = (int)(Math.random() * range) + min;
-        return value;
+        return (int) (Math.random() * range) + min;
     }
 
     public static String randomString(int length)
     {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvxyz0123456789-_=+[]{};:,.<>~";
-        String randomString = "";
+        StringBuilder randomString = new StringBuilder();
         for (int i = 0; i < length; i++)
         {
             int selectedCharacter = randomInteger(1, characters.length()) - 1;
 
-            randomString += characters.charAt(selectedCharacter);
+            randomString.append(characters.charAt(selectedCharacter));
         }
 
-        return randomString;
+        return randomString.toString();
 
     }
 
     public static String randomAlphanumericString(int length)
     {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvxyz0123456789";
-        String randomString = "";
+        StringBuilder randomString = new StringBuilder();
         for (int i = 0; i < length; i++)
         {
             int selectedCharacter = randomInteger(1, characters.length()) - 1;
 
-            randomString += characters.charAt(selectedCharacter);
+            randomString.append(characters.charAt(selectedCharacter));
         }
 
-        return randomString;
+        return randomString.toString();
 
     }
 
@@ -703,7 +674,7 @@ public class FUtil
             Class.forName("com.destroystokyo.paper.PaperConfig");
             return true;
         }
-        catch (ClassNotFoundException ex)
+        catch (ClassNotFoundException ignored)
         {
             return false;
         }
@@ -725,13 +696,14 @@ public class FUtil
 
     public static char getRandomCharacter()
     {
-        return CHARACTER_STRING.charAt(new Random().nextInt(CHARACTER_STRING.length()));
+        return CHARACTER_STRING.charAt(new SplittableRandom().nextInt(CHARACTER_STRING.length()));
     }
 
     public static void give(Player player, Material material, String coloredName, int amount, String... lore)
     {
         ItemStack stack = new ItemStack(material, amount);
         ItemMeta meta = stack.getItemMeta();
+        assert meta != null;
         meta.setDisplayName(FUtil.colorize(coloredName));
         List<String> loreList = new ArrayList<>();
         for (String entry : lore)
@@ -784,7 +756,7 @@ public class FUtil
 
     public static String getIp(Player player)
     {
-        return player.getAddress().getAddress().getHostAddress().trim();
+        return Objects.requireNonNull(player.getAddress()).getAddress().getHostAddress().trim();
     }
 
     public static String getIp(PlayerLoginEvent event)
@@ -805,12 +777,8 @@ public class FUtil
 
     public static boolean isValidIPv4(String ip)
     {
-        if (ip.matches("^([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))$")
-            || ip.matches("^([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))\\.([*])\\.([*])$"))
-        {
-            return true;
-        }
-        return false;
+        return !ip.matches("^([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))$")
+                && !ip.matches("^([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))\\.([*])\\.([*])$");
     }
 
     public static List<Color> createColorGradient(Color c1, Color c2, int steps)
@@ -864,8 +832,56 @@ public class FUtil
             @Override
             public void run()
             {
-                location.getWorld().createExplosion(location, power);
+                Objects.requireNonNull(location.getWorld()).createExplosion(location, power);
             }
         }.runTaskLater(TotalFreedomMod.getPlugin(), delay);
+    }
+
+    public static int getFakePlayerCount()
+    {
+        int i = TotalFreedomMod.getPlugin().al.vanished.size();
+        for (String name : TotalFreedomMod.getPlugin().al.vanished)
+        {
+            if (Bukkit.getPlayer(name) == null)
+            {
+                i--;
+            }
+        }
+        return getServer().getOnlinePlayers().size() - i;
+    }
+
+    public static class PaginationList<T> extends ArrayList<T>
+    {
+
+        private final int epp;
+
+        public PaginationList(int epp)
+        {
+            super();
+            this.epp = epp;
+        }
+
+        @SafeVarargs
+        public PaginationList(int epp, T... elements)
+        {
+            super(Arrays.asList(elements));
+            this.epp = epp;
+        }
+
+        public int getPageCount()
+        {
+            return (int) Math.ceil((double) size() / (double) epp);
+        }
+
+        public List<T> getPage(int page)
+        {
+            if (page < 1 || page > getPageCount())
+            {
+                return null;
+            }
+            int startIndex = (page - 1) * epp;
+            int endIndex = Math.min(startIndex + (epp - 1), this.size() - 1);
+            return subList(startIndex, endIndex + 1);
+        }
     }
 }

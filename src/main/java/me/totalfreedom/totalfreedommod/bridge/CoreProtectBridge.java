@@ -1,32 +1,77 @@
 package me.totalfreedom.totalfreedommod.bridge;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import me.totalfreedom.totalfreedommod.FreedomService;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
+import me.totalfreedom.totalfreedommod.player.PlayerData;
 import me.totalfreedom.totalfreedommod.util.FLog;
+import me.totalfreedom.totalfreedommod.util.FUtil;
 import net.coreprotect.CoreProtect;
 import net.coreprotect.CoreProtectAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 public class CoreProtectBridge extends FreedomService
 {
-    private CoreProtectAPI coreProtectAPI = null;
-
+    public static Map<Player, FUtil.PaginationList<String>> HISTORY_MAP = new HashMap<>();
     private final List<String> tables = Arrays.asList("co_sign", "co_session", "co_container", "co_block");
 
+    private final HashMap<String, Long> cooldown = new HashMap<>();
+    private CoreProtectAPI coreProtectAPI = null;
     private BukkitTask wiper;
+
+    public static Long getSecondsLeft(long prevTime, int timeAdd)
+    {
+        return prevTime / 1000L + timeAdd - System.currentTimeMillis() / 1000L;
+    }
+
+    // Unix timestamp converter taken from Functions class in CoreProtect, not my code
+    public static String getTimeAgo(int logTime, int currentTime)
+    {
+        StringBuilder message = new StringBuilder();
+        double timeSince = (double)currentTime - ((double)logTime + 0.0D);
+        timeSince /= 60.0D;
+        if (timeSince < 60.0D)
+        {
+            message.append((new DecimalFormat("0.00")).format(timeSince)).append("/m ago");
+        }
+
+        if (message.length() == 0)
+        {
+            timeSince /= 60.0D;
+            if (timeSince < 24.0D)
+            {
+                message.append((new DecimalFormat("0.00")).format(timeSince)).append("/h ago");
+            }
+        }
+
+        if (message.length() == 0)
+        {
+            timeSince /= 24.0D;
+            message.append((new DecimalFormat("0.00")).format(timeSince)).append("/d ago");
+        }
+
+        return message.toString();
+    }
 
     @Override
     public void onStart()
@@ -44,8 +89,8 @@ public class CoreProtectBridge extends FreedomService
         try
         {
             final Plugin coreProtectPlugin = Bukkit.getServer().getPluginManager().getPlugin("CoreProtect");
-
-            if (coreProtectPlugin != null && coreProtectPlugin instanceof CoreProtect)
+            assert coreProtectPlugin != null;
+            if (coreProtectPlugin instanceof CoreProtect)
             {
                 coreProtect = (CoreProtect)coreProtectPlugin;
             }
@@ -169,7 +214,7 @@ public class CoreProtectBridge extends FreedomService
 
         /* As CoreProtect doesn't have an API method for deleting all of the data for a specific world
            we have to do this manually via SQL */
-        Connection connection = null;
+        Connection connection;
         try
         {
             String host = ConfigEntry.COREPROTECT_MYSQL_HOST.getString();
@@ -179,11 +224,12 @@ public class CoreProtectBridge extends FreedomService
             String database = ConfigEntry.COREPROTECT_MYSQL_DATABASE.getString();
             String url = host + ":" + port + "/" + database + "?user=" + username + "&password=" + password + "&useSSL=false";
             connection = DriverManager.getConnection("jdbc:sql://" + url);
-            final Statement statement = connection.createStatement();
+            final PreparedStatement statement = connection.prepareStatement("SELECT id FROM co_world WHERE world = ?");
             statement.setQueryTimeout(30);
 
             // Obtain world ID from CoreProtect database
-            ResultSet resultSet = statement.executeQuery("SELECT id FROM co_world WHERE world = '" + world.getName() + "'");
+            statement.setString(1, world.getName());
+            ResultSet resultSet = statement.executeQuery();
             String worldID = null;
             while (resultSet.next())
             {
@@ -201,7 +247,10 @@ public class CoreProtectBridge extends FreedomService
             // Iterate through each table and delete their data if the world ID matches
             for (String table : tables)
             {
-                statement.executeQuery("DELETE FROM " + table + " WHERE wid = " + worldID);
+                final PreparedStatement statement1 = connection.prepareStatement("DELETE FROM ? WHERE wid = ?");
+                statement1.setString(1, table);
+                statement1.setString(2, worldID);
+                statement1.executeQuery();
             }
 
             connection.close();
@@ -216,6 +265,193 @@ public class CoreProtectBridge extends FreedomService
         if (shutdown)
         {
             server.shutdown();
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerInteract(PlayerInteractEvent event)
+    {
+        Player player = event.getPlayer();
+        PlayerData data = plugin.pl.getData(player);
+        Block block = event.getClickedBlock();
+        final CoreProtectAPI coreProtect = getCoreProtectAPI();
+
+        if (data.hasInspection())
+        {
+            if (event.getAction() == Action.LEFT_CLICK_BLOCK)
+            {
+                if (block != null)
+                {
+                    event.setCancelled(true);
+                    List<String[]> lookup = coreProtect.blockLookup(block, -1);
+
+                    int cooldownTime = 3;
+
+                    if (cooldown.containsKey(player.getName()))
+                    {
+                        long secondsLeft = getSecondsLeft(cooldown.get(player.getName()), cooldownTime);
+                        if (secondsLeft > 0L)
+                        {
+                            event.setCancelled(true);
+                            player.sendMessage(ChatColor.RED + String.valueOf(secondsLeft) + " seconds left before next query.");
+                            return;
+                        }
+                    }
+
+                    if (!plugin.al.isAdmin(player))
+                    {
+                        cooldown.put(player.getName(), System.currentTimeMillis());
+                    }
+
+                    if (lookup != null)
+                    {
+                        if (lookup.isEmpty())
+                        {
+                            player.sendMessage(net.md_5.bungee.api.ChatColor.of("#30ade4") + "Block Inspector " + ChatColor.WHITE + "- " + "No block data found for this location");
+                            return;
+                        }
+
+                        HISTORY_MAP.remove(event.getPlayer());
+                        HISTORY_MAP.put(event.getPlayer(), new FUtil.PaginationList<>(10));
+                        FUtil.PaginationList<String> paged = HISTORY_MAP.get(event.getPlayer());
+
+                        player.sendMessage("---- " + net.md_5.bungee.api.ChatColor.of("#30ade4") + "Block Inspector" + ChatColor.WHITE + " ---- " +
+                                ChatColor.GRAY + "(x" + block.getX() + "/" + "y" + block.getY() + "/" + "z" + block.getZ() + ")");
+
+                        for (String[] value : lookup)
+                        {
+                            CoreProtectAPI.ParseResult result = coreProtect.parseResult(value);
+                            BlockData bl = result.getBlockData();
+
+                            String s;
+                            String st = "";
+
+                            if (result.getActionString().equals("Placement"))
+                            {
+                                s = " placed ";
+                            }
+                            else if (result.getActionString().equals("Removal"))
+                            {
+                                s = " broke ";
+                            }
+                            else
+                            {
+                                s = " interacted with ";
+                            }
+
+                            if (result.isRolledBack())
+                            {
+                                st += "§m";
+                            }
+
+                            int time = (int)(System.currentTimeMillis() / 1000L);
+
+                            paged.add(ChatColor.GRAY + getTimeAgo(result.getTime(), time) + ChatColor.WHITE + " - " + net.md_5.bungee.api.ChatColor.of("#30ade4") +
+                                    st + result.getPlayer() + ChatColor.WHITE + st + s + net.md_5.bungee.api.ChatColor.of("#30ade4") + st + bl.getMaterial().toString().toLowerCase());
+                        }
+
+                        List<String> page = paged.getPage(1);
+                        for (String entries : page)
+                        {
+                            player.sendMessage(entries);
+                        }
+
+                        player.sendMessage("Page 1/" + paged.getPageCount() + " | To index through the pages, type " + net.md_5.bungee.api.ChatColor.of("#30ade4") + "/ins history <page>");
+                    }
+                }
+            }
+            else if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
+            {
+                if (block != null)
+                {
+                    if (data.hasInspection())
+                    {
+                        BlockState blockState = block.getRelative(event.getBlockFace()).getState();
+                        Block placedBlock = blockState.getBlock();
+                        event.setCancelled(true);
+                        List<String[]> lookup = coreProtect.blockLookup(placedBlock, -1);
+
+                        if (lookup.isEmpty())
+                        {
+                            lookup = coreProtect.blockLookup(block, -1);
+                        }
+
+                        int cooldownTime = 3;
+
+                        if (cooldown.containsKey(player.getName()))
+                        {
+                            long secondsLeft = getSecondsLeft(cooldown.get(player.getName()), cooldownTime);
+                            if (secondsLeft > 0L)
+                            {
+                                event.setCancelled(true);
+                                player.sendMessage(ChatColor.RED + String.valueOf(secondsLeft) + " seconds left before next query.");
+                                return;
+                            }
+                        }
+
+                        if (!plugin.al.isAdmin(player))
+                        {
+                            cooldown.put(player.getName(), System.currentTimeMillis());
+                        }
+
+                        if (lookup != null)
+                        {
+                            if (lookup.isEmpty())
+                            {
+                                player.sendMessage(net.md_5.bungee.api.ChatColor.of("#30ade4") + "Block Inspector " + ChatColor.WHITE + "- " + "No block data found for this location");
+                                return;
+                            }
+
+                            HISTORY_MAP.remove(event.getPlayer());
+                            HISTORY_MAP.put(event.getPlayer(), new FUtil.PaginationList<>(10));
+                            FUtil.PaginationList<String> paged = HISTORY_MAP.get(event.getPlayer());
+
+                            player.sendMessage("---- " + net.md_5.bungee.api.ChatColor.of("#30ade4") + "Block Inspector" + ChatColor.WHITE + " ---- " +
+                                    ChatColor.GRAY + "(x" + block.getX() + "/" + "y" + block.getY() + "/" + "z" + block.getZ() + ")");
+
+                            for (String[] value : lookup)
+                            {
+                                CoreProtectAPI.ParseResult result = coreProtect.parseResult(value);
+                                BlockData bl = result.getBlockData();
+
+                                String s;
+                                String st = "";
+
+                                if (result.getActionString().equals("Placement"))
+                                {
+                                    s = " placed ";
+                                }
+                                else if (result.getActionString().equals("Removal"))
+                                {
+                                    s = " broke ";
+                                }
+                                else
+                                {
+                                    s = " interacted with ";
+                                }
+
+                                if (result.isRolledBack())
+                                {
+                                    st += "§m";
+                                }
+
+                                int time = (int)(System.currentTimeMillis() / 1000L);
+
+                                paged.add(ChatColor.GRAY + getTimeAgo(result.getTime(), time) + ChatColor.WHITE + " - " + net.md_5.bungee.api.ChatColor.of("#30ade4") +
+                                        st + result.getPlayer() + ChatColor.WHITE + st + s + net.md_5.bungee.api.ChatColor.of("#30ade4") + st + bl.getMaterial().toString().toLowerCase());
+                            }
+
+                            List<String> page = paged.getPage(1);
+                            for (String entries : page)
+                            {
+                                player.sendMessage(entries);
+                            }
+
+                            player.sendMessage("Page 1/" + paged.getPageCount() + " | To index through the pages, type " + net.md_5.bungee.api.ChatColor.of("#30ade4") + "/ins history <page>");
+                        }
+                    }
+                }
+            }
         }
     }
 }

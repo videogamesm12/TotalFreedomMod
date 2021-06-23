@@ -2,6 +2,7 @@ package me.totalfreedom.totalfreedommod.world;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.util.FLog;
 import org.bukkit.Bukkit;
@@ -37,6 +38,7 @@ public final class AdminWorld extends CustomWorld
         super.sendToWorld(player);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected World generateWorld()
     {
@@ -48,6 +50,7 @@ public final class AdminWorld extends CustomWorld
 
         final World world = Bukkit.getServer().createWorld(worldCreator);
 
+        assert world != null;
         world.setSpawnFlags(false, false);
         world.setSpawnLocation(0, 50, 0);
 
@@ -80,7 +83,7 @@ public final class AdminWorld extends CustomWorld
             return true;
         }
 
-        if (world == null || !event.getTo().getWorld().equals(world))
+        if (world == null || !Objects.equals(Objects.requireNonNull(event.getTo()).getWorld(), world))
         {
             return true;
         }
@@ -112,7 +115,7 @@ public final class AdminWorld extends CustomWorld
         {
             weatherMode.setWorldToWeather(getWorld());
         }
-        catch (Exception ex)
+        catch (Exception ignored)
         {
         }
     }
@@ -130,9 +133,8 @@ public final class AdminWorld extends CustomWorld
         {
             timeOfDay.setWorldToTime(getWorld());
         }
-        catch (Exception ex)
+        catch (Exception ignored)
         {
         }
     }
-
 }

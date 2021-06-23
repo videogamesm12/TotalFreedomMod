@@ -18,10 +18,11 @@ import org.bukkit.potion.PotionEffectType;
 @CommandParameters(
         description = "Manipulate your potion effects. Duration is measured in server ticks (~20 ticks per second).",
         usage = "/<command> <list | clearall | clear [target name] | add <type> <duration> <amplifier> [target name]>",
-        aliases="effect")
+        aliases = "effect")
 public class Command_potion extends FreedomCommand
 {
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
@@ -62,9 +63,9 @@ public class Command_potion extends FreedomCommand
                 if (args[0].equalsIgnoreCase("clear"))
                 {
                     Player target = playerSender;
-                    if(args.length == 2)
+                    if (args.length == 2)
                     {
-                        if (!plugin.al.isAdmin(sender) && !target.equals(getPlayer(sender.getName())))
+                        if (!plugin.al.isAdmin(sender) && !args[1].equalsIgnoreCase(sender.getName()))
                         {
                             msg(ChatColor.RED + "Only admins can clear potion effects from other players.");
                             return true;
@@ -103,9 +104,9 @@ public class Command_potion extends FreedomCommand
 
                     if (args.length == 5)
                     {
-                        if (!plugin.al.isAdmin(sender) && !getPlayer(args[4]).equals(getPlayer(sender.getName())))
+                        if (!plugin.al.isAdmin(sender) && !args[4].equalsIgnoreCase(sender.getName()))
                         {
-                            sender.sendMessage(ChatColor.RED + "Only admins can apply potion effects to other players.");
+                            msg("Only admins can apply potion effects to other players.", ChatColor.RED);
                             return true;
                         }
 
@@ -113,7 +114,7 @@ public class Command_potion extends FreedomCommand
 
                         if (target == null || plugin.al.isVanished(target.getName()) && !plugin.al.isAdmin(sender))
                         {
-                            msg(FreedomCommand.PLAYER_NOT_FOUND, ChatColor.RED);
+                            msg(PLAYER_NOT_FOUND);
                             return true;
                         }
                     }
@@ -121,7 +122,7 @@ public class Command_potion extends FreedomCommand
                     {
                         if (senderIsConsole)
                         {
-                            sender.sendMessage("You must specify a target player when using this command from the console.");
+                            msg("You must specify a target player when using this command from the console.");
                             return true;
                         }
                     }
@@ -129,7 +130,7 @@ public class Command_potion extends FreedomCommand
                     PotionEffectType potion_effect_type = PotionEffectType.getByName(args[1]);
                     if (potion_effect_type == null)
                     {
-                        sender.sendMessage(ChatColor.AQUA + "Invalid potion effect type.");
+                        msg("Invalid potion effect type.", ChatColor.AQUA);
                         return true;
                     }
 
@@ -178,8 +179,7 @@ public class Command_potion extends FreedomCommand
         switch (args.length)
         {
             case 1:
-                List<String> arguments = new ArrayList<>();
-                arguments.addAll(Arrays.asList("list", "clear", "add"));
+                List<String> arguments = new ArrayList<>(Arrays.asList("list", "clear", "add"));
                 if (plugin.al.isAdmin(sender))
                 {
                     arguments.add("clearall");
@@ -203,17 +203,17 @@ public class Command_potion extends FreedomCommand
             case 3:
                 if (args[0].equals("add"))
                 {
-                    return Arrays.asList("<duration>");
+                    return Collections.singletonList("<duration>");
                 }
                 break;
 
             case 4:
                 if (args[0].equals("add"))
                 {
-                    return Arrays.asList("<amplifier>");
+                    return Collections.singletonList("<amplifier>");
                 }
                 break;
-                
+
             case 5:
                 if (plugin.al.isAdmin(sender))
                 {

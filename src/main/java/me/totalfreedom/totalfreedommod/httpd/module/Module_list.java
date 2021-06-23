@@ -1,22 +1,23 @@
 package me.totalfreedom.totalfreedommod.httpd.module;
 
-import java.util.Collection;
-import me.totalfreedom.totalfreedommod.TotalFreedomMod;
+import me.totalfreedom.totalfreedommod.admin.Admin;
+import me.totalfreedom.totalfreedommod.admin.AdminList;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.httpd.NanoHTTPD;
-import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.util.Collection;
+
 public class Module_list extends HTTPDModule
 {
 
-    public Module_list(TotalFreedomMod plugin, NanoHTTPD.HTTPSession session)
+    public Module_list(NanoHTTPD.HTTPSession session)
     {
-        super(plugin, session);
+        super(session);
     }
 
     @Override
@@ -26,18 +27,17 @@ public class Module_list extends HTTPDModule
         {
             final JSONObject responseObject = new JSONObject();
 
+            final JSONArray owners = new JSONArray();
+            final JSONArray executives = new JSONArray();
+            final JSONArray developers = new JSONArray();
+            final JSONArray senioradmins = new JSONArray();
+            final JSONArray admins = new JSONArray();
+            final JSONArray masterbuilders = new JSONArray();
             final JSONArray operators = new JSONArray();
             final JSONArray imposters = new JSONArray();
-            final JSONArray masterbuilders = new JSONArray();
-            final JSONArray admins = new JSONArray();
-            final JSONArray senioradmins = new JSONArray();
-            final JSONArray developers = new JSONArray();
-            final JSONArray executives = new JSONArray();
-            final JSONArray owners = new JSONArray();
 
             for (Player player : Bukkit.getOnlinePlayers())
             {
-
                 if (plugin.al.isVanished(player.getName()))
                 {
                     continue;
@@ -53,7 +53,7 @@ public class Module_list extends HTTPDModule
                     masterbuilders.add(player.getName());
                 }
 
-                if (FUtil.DEVELOPERS.contains(player.getName()))
+                if (FUtil.DEVELOPER_NAMES.contains(player.getName()))
                 {
                     developers.add(player.getName());
                 }
@@ -68,12 +68,12 @@ public class Module_list extends HTTPDModule
                     owners.add(player.getName());
                 }
 
-                if (!plugin.al.isAdmin(player) && !hasSpecialTitle(player))
+                if (!plugin.al.isAdmin(player) && hasSpecialTitle(player))
                 {
                     operators.add(player.getName());
                 }
 
-                if (!hasSpecialTitle(player) && plugin.al.isAdmin(player) && !plugin.al.isVanished(player.getName()))
+                if (hasSpecialTitle(player) && plugin.al.isAdmin(player) && !plugin.al.isVanished(player.getName()))
                 {
                     Admin admin = plugin.al.getAdmin(player);
                     switch (admin.getRank())
@@ -88,15 +88,16 @@ public class Module_list extends HTTPDModule
                 }
             }
 
+            // for future refernce - any multi-worded ranks are to be delimited by underscores in the json; eg. senior_admins
+            responseObject.put("owners", owners);
+            responseObject.put("executives", executives);
+            responseObject.put("developers", developers);
+            responseObject.put("senior_admins", senioradmins);
+            responseObject.put("admins", admins);
+            responseObject.put("master_builders", masterbuilders);
             responseObject.put("operators", operators);
             responseObject.put("imposters", imposters);
-            responseObject.put("masterbuilders", masterbuilders);
-            responseObject.put("admins", admins);
-            responseObject.put("senioradmins", senioradmins);
-            responseObject.put("developers", developers);
-            responseObject.put("executives", executives);
-            responseObject.put("owners", owners);
-            responseObject.put("online", server.getOnlinePlayers().size());
+            responseObject.put("online", FUtil.getFakePlayerCount());
             responseObject.put("max", server.getMaxPlayers());
 
             final NanoHTTPD.Response response = new NanoHTTPD.Response(NanoHTTPD.Response.Status.OK, NanoHTTPD.MIME_JSON, responseObject.toString());
@@ -109,7 +110,9 @@ public class Module_list extends HTTPDModule
 
             final Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
 
-            body.append("<p>There are ").append(onlinePlayers.size()).append("/").append(Bukkit.getMaxPlayers()).append(" players online:</p>\r\n");
+            int count = onlinePlayers.size() - AdminList.vanished.size();
+            body.append("<p>There are ").append(count < 0 ? 0 : count).append("/")
+                    .append(Bukkit.getMaxPlayers()).append(" players online:</p>\r\n");
 
             body.append("<ul>\r\n");
 
@@ -125,28 +128,18 @@ public class Module_list extends HTTPDModule
 
             body.append("</ul>\r\n");
 
-            final NanoHTTPD.Response response = new NanoHTTPD.Response(NanoHTTPD.Response.Status.OK, NanoHTTPD.MIME_HTML, body.toString());
-
-            return response;
+            return new NanoHTTPD.Response(NanoHTTPD.Response.Status.OK, NanoHTTPD.MIME_HTML, body.toString());
         }
     }
 
     public boolean isImposter(Player player)
     {
-        if (plugin.al.isAdminImpostor(player) || plugin.pl.isPlayerImpostor(player))
-        {
-            return true;
-        }
-        return false;
+        return plugin.al.isAdminImpostor(player) || plugin.pl.isPlayerImpostor(player);
     }
 
     public boolean hasSpecialTitle(Player player)
     {
-        if (FUtil.DEVELOPERS.contains(player.getUniqueId().toString()) || ConfigEntry.SERVER_EXECUTIVES.getList().contains(player.getName()) || ConfigEntry.SERVER_OWNERS.getList().contains(player.getName()))
-        {
-            return true;
-        }
-        return false;
+        return !FUtil.DEVELOPERS.contains(player.getUniqueId().toString()) && !ConfigEntry.SERVER_EXECUTIVES.getList().contains(player.getName()) && !ConfigEntry.SERVER_OWNERS.getList().contains(player.getName());
     }
 
     @Override

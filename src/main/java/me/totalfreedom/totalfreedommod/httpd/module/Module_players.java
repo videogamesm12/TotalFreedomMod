@@ -1,9 +1,8 @@
 package me.totalfreedom.totalfreedommod.httpd.module;
 
-import me.totalfreedom.totalfreedommod.TotalFreedomMod;
+import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.httpd.NanoHTTPD;
-import me.totalfreedom.totalfreedommod.admin.Admin;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,9 +11,10 @@ import org.json.simple.JSONObject;
 
 public class Module_players extends HTTPDModule
 {
-    public Module_players(TotalFreedomMod plugin, NanoHTTPD.HTTPSession session)
+
+    public Module_players(NanoHTTPD.HTTPSession session)
     {
-        super(plugin, session);
+        super(session);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class Module_players extends HTTPDModule
         final JSONObject responseObject = new JSONObject();
 
         final JSONArray players = new JSONArray();
-        final JSONArray onlineAdmins = new JSONArray();
+        final JSONArray onlineadmins = new JSONArray(); // updated, never queried.
         final JSONArray masterbuilders = new JSONArray();
         final JSONArray admins = new JSONArray();
         final JSONArray senioradmins = new JSONArray();
@@ -39,7 +39,7 @@ public class Module_players extends HTTPDModule
                 players.add(player.getName());
                 if (plugin.al.isAdmin(player) && !plugin.al.isAdminImpostor(player))
                 {
-                    onlineAdmins.add(player.getName());
+                    onlineadmins.add(player.getName());
                 }
             }
         }
@@ -48,7 +48,6 @@ public class Module_players extends HTTPDModule
         for (Admin admin : plugin.al.getActiveAdmins())
         {
             final String username = admin.getName();
-
             switch (admin.getRank())
             {
                 case ADMIN:

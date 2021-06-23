@@ -1,6 +1,5 @@
 package me.totalfreedom.totalfreedommod.rank;
 
-import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 
 public enum Title implements Displayable
@@ -9,24 +8,25 @@ public enum Title implements Displayable
     MASTER_BUILDER("a", "Master Builder", ChatColor.DARK_AQUA, org.bukkit.ChatColor.DARK_AQUA, "MB", true, true),
     VERIFIED_ADMIN("a", "Verified Admin", ChatColor.LIGHT_PURPLE, org.bukkit.ChatColor.LIGHT_PURPLE, "VA", false, true),
     EXECUTIVE("an", "Executive", ChatColor.RED, org.bukkit.ChatColor.RED, "Exec", true, true),
+    ASSTEXEC("an", "Assistant Executive", ChatColor.RED, org.bukkit.ChatColor.RED, "Asst Exec", true, true),
     DEVELOPER("a", "Developer", ChatColor.DARK_PURPLE, org.bukkit.ChatColor.DARK_PURPLE, "Dev", true, true),
-    OWNER("the", "Owner", ChatColor.of("#ff0000"), org.bukkit.ChatColor.DARK_RED, "Owner", true, true);
+    OWNER("the", "Owner", ChatColor.DARK_RED, org.bukkit.ChatColor.DARK_RED, "Owner", true, true);
 
-    @Getter
+
     private final String article;
-    @Getter
+
     private final String name;
-    @Getter
+
     private final String abbr;
-    @Getter
+
     private final String tag;
-    @Getter
+
     private final String coloredTag;
-    @Getter
+
     private final ChatColor color;
-    @Getter
+
     private final org.bukkit.ChatColor teamColor;
-    @Getter
+
     private final boolean hasTeam;
     private final boolean hasDefaultLoginMessage;
 
@@ -65,5 +65,47 @@ public enum Title implements Displayable
     public String getColoredLoginMessage()
     {
         return article + " " + color + name;
+    }
+
+    @Override
+    public String getArticle()
+    {
+        return article;
+    }
+
+    @Override
+    public String getName()
+    {
+        return name;
+    }
+
+    @Override
+    public String getAbbr()
+    {
+        return abbr;
+    }
+
+    @Override
+    public String getTag()
+    {
+        return tag;
+    }
+
+    @Override
+    public String getColoredTag()
+    {
+        return coloredTag;
+    }
+
+    @Override
+    public ChatColor getColor()
+    {
+        return color;
+    }
+
+    @Override
+    public org.bukkit.ChatColor getTeamColor()
+    {
+        return teamColor;
     }
 }

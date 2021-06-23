@@ -15,13 +15,9 @@ import org.bukkit.entity.Player;
 @CommandPermissions(level = Rank.OP, source = SourceType.BOTH)
 @CommandParameters(description = "Allows for admins to configure time, and weather of the AdminWorld, and allows for admins and ops to go to the AdminWorld.",
         usage = "/<command> [time <morning | noon | evening | night> | weather <off | rain | storm>]",
-        aliases = "aw")
+        aliases = "sw,aw,staffworld")
 public class Command_adminworld extends FreedomCommand
 {
-    private enum CommandMode
-    {
-        TELEPORT, TIME, WEATHER
-    }
 
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
@@ -65,7 +61,7 @@ public class Command_adminworld extends FreedomCommand
                     {
                         adminWorld = plugin.wm.adminworld.getWorld();
                     }
-                    catch (Exception ex)
+                    catch (Exception ignored)
                     {
                     }
 
@@ -141,7 +137,7 @@ public class Command_adminworld extends FreedomCommand
             {
                 return noPerms();
             }
-            sender.sendMessage(ex.getMessage());
+            msg(ex.getMessage());
             return true;
         }
 
@@ -154,22 +150,6 @@ public class Command_adminworld extends FreedomCommand
         if (!(sender instanceof Player) || playerSender == null || !isAdmin(sender))
         {
             throw new PermissionDeniedException();
-        }
-    }
-
-    private class PermissionDeniedException extends Exception
-    {
-
-        private static final long serialVersionUID = 1L;
-
-        private PermissionDeniedException()
-        {
-            super("");
-        }
-
-        private PermissionDeniedException(String string)
-        {
-            super(string);
         }
     }
 
@@ -196,5 +176,26 @@ public class Command_adminworld extends FreedomCommand
             }
         }
         return Collections.emptyList();
+    }
+
+    private enum CommandMode
+    {
+        TELEPORT, TIME, WEATHER
+    }
+
+    private static class PermissionDeniedException extends Exception
+    {
+
+        private static final long serialVersionUID = 1L;
+
+        private PermissionDeniedException()
+        {
+            super("");
+        }
+
+        private PermissionDeniedException(String string)
+        {
+            super(string);
+        }
     }
 }

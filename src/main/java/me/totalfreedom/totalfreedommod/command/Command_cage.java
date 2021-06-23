@@ -28,7 +28,7 @@ public class Command_cage extends FreedomCommand
         }
 
         String skullName = null;
-        if ("purge".equals(args[0]))
+        if (args[0].equalsIgnoreCase("purge"))
         {
             FUtil.adminAction(sender.getName(), "Uncaging all players", true);
             for (Player player : server.getOnlinePlayers())
@@ -42,14 +42,14 @@ public class Command_cage extends FreedomCommand
         Player player = getPlayer(args[0]);
         if (player == null)
         {
-            sender.sendMessage(FreedomCommand.PLAYER_NOT_FOUND);
+            msg(PLAYER_NOT_FOUND);
             return true;
         }
 
         final FPlayer fPlayer = plugin.pl.getPlayer(player);
         if (fPlayer.getCageData().isCaged())
         {
-            sender.sendMessage(ChatColor.RED + "That player is already caged.");
+            msg("That player is already caged.", ChatColor.RED);
             return true;
         }
 
@@ -80,7 +80,7 @@ public class Command_cage extends FreedomCommand
                         outerMaterial = Material.matchMaterial(args[2]);
                         break;
                     }
-                    sender.sendMessage(ChatColor.RED + "Invalid block!");
+                    msg("Invalid block!", ChatColor.RED);
                     break;
                 }
             }

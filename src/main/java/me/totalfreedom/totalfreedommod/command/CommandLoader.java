@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import lombok.Getter;
 import me.totalfreedom.totalfreedommod.FreedomService;
 import me.totalfreedom.totalfreedommod.util.FLog;
 import org.reflections.Reflections;
 
 public class CommandLoader extends FreedomService
 {
-    @Getter
     private final List<FreedomCommand> commands;
 
     public CommandLoader()
@@ -40,7 +38,9 @@ public class CommandLoader extends FreedomService
         for (FreedomCommand command : commands)
         {
             if (name.equals(command.getName()))
+            {
                 return command;
+            }
         }
         return null;
     }
@@ -50,7 +50,9 @@ public class CommandLoader extends FreedomService
         for (FreedomCommand command : commands)
         {
             if (Arrays.asList(command.getAliases().split(",")).contains(alias))
+            {
                 return true;
+            }
         }
         return false;
     }
@@ -69,10 +71,15 @@ public class CommandLoader extends FreedomService
             }
             catch (InstantiationException | IllegalAccessException | ExceptionInInitializerError ex)
             {
-                FLog.warning("Failed to register command: /" + commandClass.getSimpleName().replace("Command_" , ""));
+                FLog.warning("Failed to register command: /" + commandClass.getSimpleName().replace("Command_", ""));
             }
         }
 
         FLog.info("Loaded " + commands.size() + " commands");
+    }
+
+    public List<FreedomCommand> getCommands()
+    {
+        return commands;
     }
 }

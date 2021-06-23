@@ -11,9 +11,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandPermissions(level = Rank.OP, source = SourceType.BOTH)
-@CommandParameters(description = "Information on how to apply for admin.", usage = "/<command>", aliases = "ai")
+@CommandParameters(description = "Information on how to apply for admin.", usage = "/<command>", aliases = "si,ai,staffinfo")
 public class Command_admininfo extends FreedomCommand
 {
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
@@ -21,7 +22,7 @@ public class Command_admininfo extends FreedomCommand
 
         if (adminInfo.isEmpty())
         {
-            msg("The admin information section in the config.yml file has not been configured.", ChatColor.RED);
+            msg("The admin information section of the config.yml file has not been configured.", ChatColor.RED);
         }
         else
         {

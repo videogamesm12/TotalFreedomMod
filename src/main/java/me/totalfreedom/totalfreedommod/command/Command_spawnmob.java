@@ -1,13 +1,11 @@
 package me.totalfreedom.totalfreedommod.command;
 
 import java.util.List;
-import java.util.Set;
 import me.totalfreedom.totalfreedommod.rank.Rank;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -77,7 +75,7 @@ public class Command_spawnmob extends FreedomCommand
             return true;
         }
 
-        Location l = playerSender.getTargetBlock((Set<Material>)null, 30).getLocation().add(0, 1, 0);
+        Location l = playerSender.getTargetBlock(null, 30).getLocation().add(0, 1, 0);
         World w = playerSender.getWorld();
         msg("Spawning " + amount + " " + type.name().toLowerCase() + (amount > 1 ? "s." : "."));
 
@@ -87,5 +85,4 @@ public class Command_spawnmob extends FreedomCommand
         }
         return true;
     }
-
 }

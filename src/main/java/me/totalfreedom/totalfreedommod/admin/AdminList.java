@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import lombok.Getter;
 import me.totalfreedom.totalfreedommod.FreedomService;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.rank.Rank;
@@ -22,16 +21,18 @@ import org.bukkit.entity.Player;
 
 public class AdminList extends FreedomService
 {
-    @Getter
+    public static final List<String> vanished = new ArrayList<>();
+    public final Map<String, List<String>> verifiedNoAdmin = Maps.newHashMap();
     private final Set<Admin> allAdmins = Sets.newHashSet(); // Includes disabled admins
     // Only active admins below
-    @Getter
     private final Set<Admin> activeAdmins = Sets.newHashSet();
     private final Map<String, Admin> nameTable = Maps.newHashMap();
     private final Map<String, Admin> ipTable = Maps.newHashMap();
-    public final List<String> verifiedNoAdmin = new ArrayList<>();
-    public final Map<String, List<String>> verifiedNoAdminIps = Maps.newHashMap();
-    public static final List<String> vanished = new ArrayList<>();
+
+    public static List<String> getVanished()
+    {
+        return vanished;
+    }
 
     @Override
     public void onStart()
@@ -50,7 +51,7 @@ public class AdminList extends FreedomService
         allAdmins.clear();
         try
         {
-            ResultSet adminSet = plugin.sql.getAdminlist();
+            ResultSet adminSet = plugin.sql.getAdminList();
             {
                 while (adminSet.next())
                 {
@@ -65,7 +66,7 @@ public class AdminList extends FreedomService
         }
 
         updateTables();
-        FLog.info("Loaded " + allAdmins.size() + " admin members (" + nameTable.size() + " active,  " + ipTable.size() + " IPs)");
+        FLog.info("Loaded " + allAdmins.size() + " admins (" + nameTable.size() + " active,  " + ipTable.size() + " IPs)");
     }
 
     public void messageAllAdmins(String message)
@@ -238,7 +239,7 @@ public class AdminList extends FreedomService
 
     public boolean isVerifiedAdmin(Player player)
     {
-        return verifiedNoAdmin.contains(player.getName()) && verifiedNoAdminIps.get(player.getName()).contains(FUtil.getIp(player));
+        return verifiedNoAdmin.containsKey(player.getName()) && verifiedNoAdmin.get(player.getName()).contains(FUtil.getIp(player));
     }
 
     public boolean isIdentityMatched(Player player)
@@ -252,12 +253,12 @@ public class AdminList extends FreedomService
         return admin != null && admin.getName().equalsIgnoreCase(player.getName());
     }
 
-    public void addAdmin(Admin admin)
+    public boolean addAdmin(Admin admin)
     {
         if (!admin.isValid())
         {
             FLog.warning("Could not add admin: " + admin.getName() + ". Admin is missing details!");
-            return;
+            return false;
         }
 
         // Store admin, update views
@@ -266,6 +267,8 @@ public class AdminList extends FreedomService
 
         // Save admin
         plugin.sql.addAdmin(admin);
+
+        return true;
     }
 
     public boolean removeAdmin(Admin admin)
@@ -377,5 +380,30 @@ public class AdminList extends FreedomService
     public boolean isVanished(String player)
     {
         return vanished.contains(player);
+    }
+
+    public Set<Admin> getAllAdmins()
+    {
+        return allAdmins;
+    }
+
+    public Set<Admin> getActiveAdmins()
+    {
+        return activeAdmins;
+    }
+
+    public Map<String, Admin> getNameTable()
+    {
+        return nameTable;
+    }
+
+    public Map<String, Admin> getIpTable()
+    {
+        return ipTable;
+    }
+
+    public Map<String, List<String>> getVerifiedNoAdmin()
+    {
+        return verifiedNoAdmin;
     }
 }
