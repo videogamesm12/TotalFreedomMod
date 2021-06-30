@@ -288,6 +288,7 @@
             <groupId>com.mattmalec</groupId>
             <artifactId>Pterodactyl4J</artifactId>
             <version>2.BETA_49</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
