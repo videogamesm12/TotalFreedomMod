@@ -265,7 +265,7 @@ public class TotalFreedomMod extends JavaPlugin
                 number = props.getProperty("buildNumber", "1");
                 date = props.getProperty("buildDate", "unknown");
                 // Need to do this or it will display ${git.commit.id.abbrev}
-                head = props.getProperty("buildHead", "unknown").replace("${git.commit.id.abbrev}", "unknown");
+                head = props.getProperty("buildHead", "unknown");
             }
             catch (Exception ex)
             {

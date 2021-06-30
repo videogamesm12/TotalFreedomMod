@@ -88,7 +88,7 @@ dependencies {
 }
 
 group = 'me.totalfreedom'
-version = '7.0.0'
+version = project.property('project.pluginVersion')
 description = 'TotalFreedomMod'
 java.sourceCompatibility = JavaVersion.VERSION_16
 archivesBaseName = 'TotalFreedomMod-donotuse'
@@ -96,7 +96,7 @@ archivesBaseName = 'TotalFreedomMod-donotuse'
 bukkit {
     main = 'me.totalfreedom.totalfreedommod.TotalFreedomMod'
     apiVersion = '1.17'
-    version = '7.0.0'
+    version = project.property('project.pluginVersion')
     description = 'Plugin for the Total Freedom server.'
     authors = ['Madgeek1450', 'Prozza']
     softDepend = ['BukkitTelnet', 'Essentials', 'CoreProtect', 'LibsDisguises', 'WorldEdit',
@@ -120,11 +120,14 @@ task buildProperties(type: WriteProperties) {
     // I know I'm supposed to use {project.rootDir} but I have no idea how to make it work
     outputFile = file('/src/main/resources/build.properties')
     property 'buildDate', getDate()
-    // make it not reset to unknown every time
-    property 'buildAuthor', 'unknown'
-    property 'buildCodeName', 'Ember'
+    property 'buildAuthor', project.property('project.buildAuthor')
+    property 'buildCodeName', project.property('project.buildCodeName')
     property 'buildHead', getGitHash()
     // buildNumber
+}
+
+jar {
+    include('/src/main/resources/build.properties')
 }
 
 shadowJar {
@@ -150,16 +153,8 @@ shadowJar {
     configurations = [project.configurations.compileClasspath]
 }
 
-processResources {
-    filesMatching('**/gradle.properties') {
-        filter {
-            it.replace('version', { version })
-        }
-    }
-}
-
-tasks.build.dependsOn tasks.shadowJar
 tasks.build.dependsOn tasks.buildProperties
+tasks.build.dependsOn tasks.shadowJar
 
 publishing {
     publications {
