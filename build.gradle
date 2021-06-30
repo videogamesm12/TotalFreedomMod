@@ -117,7 +117,31 @@ bukkit {
     description = 'Plugin for the Total Freedom server.'
     authors = ['Madgeek1450', 'Prozza']
     softDepend = ['BukkitTelnet', 'Essentials', 'CoreProtect', 'LibsDisguises', 'WorldEdit',
-    'WorldGuard', 'WorldGuardExtraFlags', 'TFGuilds', 'JDA', 'Votifier']
+                  'WorldGuard', 'WorldGuardExtraFlags', 'TFGuilds', 'JDA', 'Votifier']
+}
+
+static def getDate() {
+    return new Date().format('MM/dd/yyyy HH:mm')
+}
+
+def getGitHash() {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+task buildProperties(type: WriteProperties) {
+    // I know I'm supposed to use {project.rootDir} but I have no idea how to make it work
+    outputFile = file('/src/main/resources/build.properties')
+    property 'buildDate', getDate()
+    // make it not reset to unknown every time
+    property 'buildAuthor', 'Ember'
+    property 'buildCodeName', 'Ember'
+    property 'buildHead', getGitHash()
+    // buildNumber
 }
 
 shadowJar {
@@ -146,12 +170,13 @@ shadowJar {
 processResources {
     filesMatching('**/gradle.properties') {
         filter {
-            it.replace('version', {version})
+            it.replace('version', { version })
         }
     }
 }
 
 tasks.build.dependsOn tasks.shadowJar
+tasks.build.dependsOn tasks.buildProperties
 
 publishing {
     publications {
