@@ -16,7 +16,7 @@ public class Module_activitylog extends HTTPDModule
     @Override
     public NanoHTTPD.Response getResponse()
     {
-        final String remoteAddress = socket.getRemoteSocketAddress().toString();
+        final String remoteAddress = socket.getInetAddress().getHostAddress();
 
         if (!isAuthorized(remoteAddress))
         {

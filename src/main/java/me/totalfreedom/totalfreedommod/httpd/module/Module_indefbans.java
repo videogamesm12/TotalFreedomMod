@@ -18,7 +18,7 @@ public class Module_indefbans extends HTTPDModule
     {
         File indefbanFile = new File(plugin.getDataFolder(), IndefiniteBanList.CONFIG_FILENAME);
 
-        final String remoteAddress = socket.getRemoteSocketAddress().toString();
+        final String remoteAddress = socket.getInetAddress().getHostAddress();
         if (!isAuthorized(remoteAddress))
         {
             return new NanoHTTPD.Response(NanoHTTPD.Response.Status.NOT_FOUND, NanoHTTPD.MIME_PLAINTEXT,

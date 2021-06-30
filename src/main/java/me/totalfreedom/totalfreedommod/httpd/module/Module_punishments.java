@@ -20,7 +20,7 @@ public class Module_punishments extends HTTPDModule
         File punishmentFile = new File(plugin.getDataFolder(), PunishmentList.CONFIG_FILENAME);
         if (punishmentFile.exists())
         {
-            final String remoteAddress = socket.getRemoteSocketAddress().toString();
+            final String remoteAddress = socket.getInetAddress().getHostAddress();
             if (!isAuthorized(remoteAddress))
             {
                 return new NanoHTTPD.Response(NanoHTTPD.Response.Status.NOT_FOUND, NanoHTTPD.MIME_PLAINTEXT,

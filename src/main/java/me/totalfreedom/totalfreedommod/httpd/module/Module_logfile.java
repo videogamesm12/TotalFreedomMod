@@ -65,7 +65,7 @@ public class Module_logfile extends HTTPDModule
         }
 
         final StringBuilder out = new StringBuilder();
-        final String remoteAddress = socket.getRemoteSocketAddress().toString();
+        final String remoteAddress = socket.getInetAddress().getHostAddress();
         final String[] args = StringUtils.split(uri, "/");
         final ModuleMode mode = ModuleMode.getMode(getArg(args));
 
