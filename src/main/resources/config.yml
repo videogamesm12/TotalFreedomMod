@@ -751,7 +751,11 @@ service_checker_url: http://status.mojang.com/check
 httpd:
   enabled: true
   host: play.totalfreedom.me
+  # Leave this at false unless you know what you're doing. This will change the HTTPD server to use HTTPS
+  reverse_proxy: false
   port: 28966
+  # Does not change anything unless the reverse proxy option is set to true
+  reverse_proxy_port: 28967
   public_folder: ./public_html
 
 # Inactivity Auto-Kick (Requires Essentials)

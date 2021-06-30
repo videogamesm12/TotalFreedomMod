@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import me.totalfreedom.totalfreedommod.player.FPlayer;
 import me.totalfreedom.totalfreedommod.rank.Rank;
 import me.totalfreedom.totalfreedommod.util.FUtil;
@@ -19,7 +20,6 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Place a cage around someone with certain blocks, or someone's player head.", usage = "/<command> <purge | <partialname> [head | block] [playername | blockname]")
 public class Command_cage extends FreedomCommand
 {
-
     public boolean run(final CommandSender sender, final Player playerSender, final Command cmd, final String commandLabel, final String[] args, final boolean senderIsConsole)
     {
         if (args.length == 0)
@@ -60,28 +60,38 @@ public class Command_cage extends FreedomCommand
             final String s = args[1];
             switch (s)
             {
-                case "head":
-                {
+                case "head" -> {
                     outerMaterial = Material.PLAYER_HEAD;
                     if (args.length >= 3)
                     {
+                        if (!FUtil.isValidUsername(args[2]))
+                        {
+                            msg("That is an invalid player name!", ChatColor.RED);
+                            return true;
+                        }
                         skullName = args[2];
                     }
                     else
                     {
                         outerMaterial = Material.SKELETON_SKULL;
                     }
-                    break;
                 }
-                case "block":
-                {
-                    if (Material.matchMaterial(args[2]) != null)
+                case "block" -> {
+                    if (args.length == 3)
                     {
-                        outerMaterial = Material.matchMaterial(args[2]);
-                        break;
+                        String block = args[2].toUpperCase();
+                        if (Material.matchMaterial(block) != null && Objects.requireNonNull(Material.getMaterial(block)).isBlock())
+                        {
+                            outerMaterial = Material.matchMaterial(block);
+                            break;
+                        }
+                        msg("The block you specified is invalid.", ChatColor.RED);
                     }
-                    msg("Invalid block!", ChatColor.RED);
-                    break;
+                    else
+                    {
+                        msg("You must specify a block.", ChatColor.RED);
+                    }
+                    return true;
                 }
             }
         }
@@ -97,7 +107,7 @@ public class Command_cage extends FreedomCommand
             fPlayer.getCageData().cage(location, outerMaterial, innerMaterial);
         }
 
-        player.setGameMode(GameMode.SURVIVAL);
+        player.setGameMode(GameMode.ADVENTURE);
 
         if (outerMaterial == Material.PLAYER_HEAD)
         {

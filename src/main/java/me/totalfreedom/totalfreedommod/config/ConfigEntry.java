@@ -47,6 +47,8 @@ public enum ConfigEntry
     //
     HTTPD_ENABLED(Boolean.class, "httpd.enabled"),
     HTTPD_HOST(String.class, "httpd.host"),
+    HTTPD_REVERSE_PROXY(Boolean.class, "httpd.reverse_proxy"),
+    HTTPD_REVERSE_PROXY_PORT(Integer.class, "httpd.reverse_proxy_port"),
     HTTPD_PORT(Integer.class, "httpd.port"),
     HTTPD_PUBLIC_FOLDER(String.class, "httpd.public_folder"),
     //
