@@ -117,10 +117,20 @@ def getGitHash() {
     return stdout.toString().trim()
 }
 
+def getBuildNumber()
+{
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-list', 'HEAD', '--count'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 task buildProperties {
     ant.propertyfile(file: "$project.rootDir/src/main/resources/build.properties") {
         entry(key: "buildAuthor", default: "unknown")
-        entry(key: "buildNumber", default: "0")
+        entry(key: "buildNumber", value: getBuildNumber())
         entry(key: "buildDate", value: getDate())
         entry(key: "buildCodeName", value: project.property('project.buildCodeName'))
         entry(key: "buildHead", value: getGitHash())
