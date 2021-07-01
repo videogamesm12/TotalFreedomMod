@@ -64,15 +64,15 @@ repositories {
 }
 
 dependencies {
-    compileClasspath('commons-io:commons-io:2.8.0')
-    compileClasspath('org.apache.commons:commons-lang3:3.11')
-    compileClasspath('commons-codec:commons-codec:1.15')
-    compileClasspath('com.github.speedxx:Mojangson:1957eef8d6')
-    compileClasspath('io.papermc:paperlib:1.0.6')
-    compileClasspath('org.reflections:reflections:0.9.12')
-    compileClasspath('org.javassist:javassist:3.28.0-GA')
-    compileClasspath('org.jetbrains:annotations:21.0.1')
-    compileClasspath('com.mattmalec:Pterodactyl4J:2.BETA_49')
+    implementation('commons-io:commons-io:2.8.0')
+    implementation('org.apache.commons:commons-lang3:3.11')
+    implementation('commons-codec:commons-codec:1.15')
+    implementation('com.github.speedxx:Mojangson:1957eef8d6')
+    implementation('io.papermc:paperlib:1.0.6')
+    implementation('org.reflections:reflections:0.9.12')
+    implementation('org.javassist:javassist:3.28.0-GA')
+    implementation('org.jetbrains:annotations:21.0.1')
+    implementation('com.mattmalec:Pterodactyl4J:2.BETA_49')
     implementation('org.junit.jupiter:junit-jupiter:5.7.2')
     implementation('org.projectlombok:lombok:1.18.20')
     compileOnly('org.spigotmc:spigot:1.17-R0.1-SNAPSHOT')
@@ -118,9 +118,9 @@ def getGitHash() {
 }
 
 task buildProperties(type: WriteProperties) {
-    // I know I'm supposed to use {project.rootDir} but I have no idea how to make it work
+    dependsOn('processResources')
     outputFile = file('/src/main/resources/build.properties')
-    property('buildAuthor', project.property('project.buildAuthor'))
+    property 'buildAuthor', buildProperties.getProperties().getOrDefault('buildAuthor', 'unknown')
     property('buildDate', getDate())
     property('buildCodeName', project.property('project.buildCodeName'))
     property('buildHead', getGitHash())
@@ -147,7 +147,6 @@ shadowJar {
     }
     relocate 'org.bstats', 'me.totalfreedom.totalfreedommod'
     relocate 'io.papermc.lib', 'me.totalfreedom.totalfreedommod.paperlib'
-    configurations = [project.configurations.compileClasspath]
 }
 
 tasks.compileJava.finalizedBy tasks.buildProperties
