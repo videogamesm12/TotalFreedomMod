@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'idea'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
     id 'net.minecrell.plugin-yml.bukkit' version '0.4.0'
 }
@@ -70,10 +71,10 @@ dependencies {
     compileClasspath('io.papermc:paperlib:1.0.6')
     compileClasspath('org.reflections:reflections:0.9.12')
     compileClasspath('org.javassist:javassist:3.28.0-GA')
-    implementation('org.projectlombok:lombok:1.18.20')
     compileClasspath('org.jetbrains:annotations:21.0.1')
-    implementation('org.junit.jupiter:junit-jupiter:5.7.2')
     compileClasspath('com.mattmalec:Pterodactyl4J:2.BETA_49')
+    implementation('org.junit.jupiter:junit-jupiter:5.7.2')
+    implementation('org.projectlombok:lombok:1.18.20')
     compileOnly('org.spigotmc:spigot:1.17-R0.1-SNAPSHOT')
     compileOnly('com.github.TotalFreedomMC:BukkitTelnet:541e9fdb84')
     compileOnly('com.github.TotalFreedomMC:TF-LibsDisguises:48f01cf2fe')
@@ -119,15 +120,11 @@ def getGitHash() {
 task buildProperties(type: WriteProperties) {
     // I know I'm supposed to use {project.rootDir} but I have no idea how to make it work
     outputFile = file('/src/main/resources/build.properties')
-    property 'buildDate', getDate()
-    property 'buildAuthor', project.property('project.buildAuthor')
-    property 'buildCodeName', project.property('project.buildCodeName')
-    property 'buildHead', getGitHash()
+    property('buildAuthor', project.property('project.buildAuthor'))
+    property('buildDate', getDate())
+    property('buildCodeName', project.property('project.buildCodeName'))
+    property('buildHead', getGitHash())
     // buildNumber
-}
-
-jar {
-    include('/src/main/resources/build.properties')
 }
 
 shadowJar {
@@ -153,7 +150,7 @@ shadowJar {
     configurations = [project.configurations.compileClasspath]
 }
 
-tasks.build.dependsOn tasks.buildProperties
+tasks.compileJava.finalizedBy tasks.buildProperties
 tasks.build.dependsOn tasks.shadowJar
 
 publishing {
