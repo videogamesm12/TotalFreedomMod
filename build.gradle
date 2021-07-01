@@ -117,14 +117,14 @@ def getGitHash() {
     return stdout.toString().trim()
 }
 
-task buildProperties(type: WriteProperties) {
-    dependsOn('processResources')
-    outputFile = file('/src/main/resources/build.properties')
-    property 'buildAuthor', buildProperties.getProperties().getOrDefault('buildAuthor', 'unknown')
-    property('buildDate', getDate())
-    property('buildCodeName', project.property('project.buildCodeName'))
-    property('buildHead', getGitHash())
-    // buildNumber
+task buildProperties {
+    ant.propertyfile(file: "$project.rootDir/src/main/resources/build.properties") {
+        entry(key: "buildAuthor", default: "unknown")
+        entry(key: "buildNumber", default: "0")
+        entry(key: "buildDate", value: getDate())
+        entry(key: "buildCodeName", value: project.property('project.buildCodeName'))
+        entry(key: "buildHead", value: getGitHash())
+    }
 }
 
 shadowJar {
