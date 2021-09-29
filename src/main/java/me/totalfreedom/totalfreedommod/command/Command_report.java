@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Report a player for all admins to see.", usage = "/<command> <player> <reason>")
 public class Command_report extends FreedomCommand
 {
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {

@@ -48,7 +48,6 @@ import me.totalfreedom.totalfreedommod.util.MethodTimer;
 import me.totalfreedom.totalfreedommod.world.CleanroomChunkGenerator;
 import me.totalfreedom.totalfreedommod.world.WorldManager;
 import me.totalfreedom.totalfreedommod.world.WorldRestrictions;
-import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
@@ -266,7 +265,7 @@ public class TotalFreedomMod extends JavaPlugin
                 number = props.getProperty("buildNumber", "1");
                 date = props.getProperty("buildDate", "unknown");
                 // Need to do this or it will display ${git.commit.id.abbrev}
-                head = props.getProperty("buildHead", "unknown").replace("${git.commit.id.abbrev}", "unknown");
+                head = props.getProperty("buildHead", "unknown");
             }
             catch (Exception ex)
             {

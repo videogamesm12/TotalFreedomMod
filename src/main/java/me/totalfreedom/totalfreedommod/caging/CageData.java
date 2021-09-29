@@ -3,6 +3,7 @@ package me.totalfreedom.totalfreedommod.caging;
 import java.util.ArrayList;
 import java.util.List;
 import me.totalfreedom.totalfreedommod.player.FPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -89,8 +90,7 @@ public class CageData
                             try
                             {
                                 Skull skull = (Skull)block.getState();
-                                // This may or may not work in future versions of spigot
-                                skull.setOwner(input);
+                                skull.setOwningPlayer(Bukkit.getOfflinePlayer(input));
                                 skull.update();
                             }
                             catch (ClassCastException ignored)

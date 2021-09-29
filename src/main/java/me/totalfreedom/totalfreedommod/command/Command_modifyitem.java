@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.SplittableRandom;
 import me.totalfreedom.totalfreedommod.rank.Rank;
 import me.totalfreedom.totalfreedommod.util.FUtil;
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
-import net.minecraft.server.v1_16_R3.NBTTagList;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,7 +23,6 @@ import org.bukkit.potion.PotionEffectType;
 @CommandParameters(description = "Modify the current item you are holding.", usage = "/<command> <name <message> | lore <message> | enchant <enchantment> <level> | potion <effect> <duration> <amplifier> | attribute <name> <amount> | clear>", aliases = "mi")
 public class Command_modifyitem extends FreedomCommand
 {
-
     @SuppressWarnings("deprecation")
     @Override
     public boolean run(final CommandSender sender, final Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
@@ -151,7 +150,7 @@ public class Command_modifyitem extends FreedomCommand
                 {
                     return false;
                 }
-                net.minecraft.server.v1_16_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+                net.minecraft.world.item.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
                 NBTTagCompound compound = (nmsStack.hasTag()) ? nmsStack.getTag() : new NBTTagCompound();
                 NBTTagList modifiers = getAttributeList(nmsStack);
                 NBTTagCompound cmpnd = new NBTTagCompound();
@@ -202,7 +201,7 @@ public class Command_modifyitem extends FreedomCommand
         return true;
     }
 
-    private NBTTagList getAttributeList(net.minecraft.server.v1_16_R3.ItemStack stack)
+    private NBTTagList getAttributeList(net.minecraft.world.item.ItemStack stack)
     {
         if (stack.getTag() == null)
         {

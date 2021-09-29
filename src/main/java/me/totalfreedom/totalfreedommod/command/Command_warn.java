@@ -1,9 +1,6 @@
 package me.totalfreedom.totalfreedommod.command;
 
-import me.totalfreedom.totalfreedommod.punishments.Punishment;
-import me.totalfreedom.totalfreedommod.punishments.PunishmentType;
 import me.totalfreedom.totalfreedommod.rank.Rank;
-import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -56,28 +53,25 @@ public class Command_warn extends FreedomCommand
 
         String warnReason = StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " ");
         player.sendTitle(ChatColor.RED + "You've been warned.", ChatColor.YELLOW + "Reason: " + warnReason, 20, 100, 60);
-        msg(player, ChatColor.RED + "[WARNING] You received a warning from " + sender.getName() + ": " + warnReason);
-        plugin.pl.getPlayer(player).incrementWarnings(quiet);
-        plugin.pul.logPunishment(new Punishment(player.getName(), FUtil.getIp(player), sender.getName(), PunishmentType.WARN, warnReason));
+        msg(ChatColor.GREEN + "You have successfully warned " + player.getName());
 
         if (quiet)
         {
-            msg("You have successfully warned " + player.getName() + " quietly.");
+            msg("Warned " + player.getName() + " quietly");
+            return true;
         }
-        else
-        {
-            String adminNotice = ChatColor.RED +
-                    sender.getName() +
-                    " - " +
-                    "Warning: " +
-                    player.getName() +
-                    " - Reason: " +
-                    ChatColor.YELLOW +
-                    warnReason;
-            plugin.al.messageAllAdmins(adminNotice);
 
-            msg("You have successfully warned " + player.getName() + ".");
-        }
+        msg(player, ChatColor.RED + "[WARNING] You received a warning from " + sender.getName() + ": " + warnReason);
+        String adminNotice = ChatColor.RED +
+                sender.getName() +
+                " - " +
+                "Warning: " +
+                player.getName() +
+                " - Reason: " +
+                ChatColor.YELLOW +
+                warnReason;
+        plugin.al.messageAllAdmins(adminNotice);
+        plugin.pl.getPlayer(player).incrementWarnings();
         return true;
     }
 }

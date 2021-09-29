@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Freeze/Unfreeze a specified player, or all non-admins on the server.", usage = "/<command> [target | purge]", aliases = "fr")
 public class Command_freeze extends FreedomCommand
 {
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
@@ -22,12 +23,12 @@ public class Command_freeze extends FreedomCommand
 
             if (!gFreeze)
             {
-                FUtil.adminAction(sender.getName(), "Unfreezing all players", false);
+                FUtil.adminAction(sender.getName(), "Disabling global player freeze", false);
                 msg("Players are now free to move.");
                 return true;
             }
 
-            FUtil.adminAction(sender.getName(), "Freezing all players", false);
+            FUtil.adminAction(sender.getName(), "Enabling global player freeze", false);
             for (Player player : server.getOnlinePlayers())
             {
                 if (!isAdmin(player))

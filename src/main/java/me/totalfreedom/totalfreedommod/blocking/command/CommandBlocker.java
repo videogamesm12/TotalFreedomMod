@@ -24,6 +24,7 @@ import org.bukkit.plugin.SimplePluginManager;
 
 public class CommandBlocker extends FreedomService
 {
+
     private final Pattern flagPattern = Pattern.compile("(:([0-9]){5,})");
     //
     private final Map<String, CommandBlockerEntry> entryList = Maps.newHashMap();

@@ -1,0 +1,175 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'idea'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'net.minecrell.plugin-yml.bukkit' version '0.4.0'
+}
+
+repositories {
+    mavenLocal()
+    gradlePluginPortal()
+
+    maven {
+        url = uri('https://jitpack.io')
+    }
+
+    maven {
+        url = uri('https://repo.codemc.org/repository/maven-public/')
+    }
+
+    maven {
+        url = uri('https://repo.codemc.org/repository/nms/')
+    }
+
+    maven {
+        url = uri('https://hub.spigotmc.org/nexus/content/repositories/snapshots/')
+    }
+
+    maven {
+        url = uri('https://maven.enginehub.org/repo/')
+    }
+
+    maven {
+        url = uri('https://maven.elmakers.com/repository/')
+    }
+
+    maven {
+        url = uri('https://m2.dv8tion.net/releases/')
+    }
+
+    maven {
+        url = uri('https://maven.playpro.com/')
+    }
+
+    maven {
+        url = uri('https://repo.md-5.net/content/groups/public/')
+    }
+
+    maven {
+        url = uri('https://repo.dmulloy2.net/nexus/repository/public/')
+    }
+
+    maven {
+        url = uri('https://papermc.io/repo/repository/maven-public/')
+    }
+
+    maven {
+        url = uri('https://ci.ender.zone/plugin/repository/everything/')
+    }
+
+    maven {
+        url = uri('https://repo.mattmalec.com/repository/releases')
+    }
+}
+
+dependencies {
+    implementation('commons-io:commons-io:2.8.0')
+    implementation('org.apache.commons:commons-lang3:3.11')
+    implementation('commons-codec:commons-codec:1.15')
+    implementation('com.github.speedxx:Mojangson:1957eef8d6')
+    implementation('io.papermc:paperlib:1.0.6')
+    implementation('org.reflections:reflections:0.9.12')
+    implementation('org.javassist:javassist:3.28.0-GA')
+    implementation('org.jetbrains:annotations:21.0.1')
+    implementation('com.mattmalec:Pterodactyl4J:2.BETA_49')
+    implementation('org.junit.jupiter:junit-jupiter:5.7.2')
+    implementation('org.projectlombok:lombok:1.18.20')
+    compileOnly('org.spigotmc:spigot:1.17-R0.1-SNAPSHOT')
+    compileOnly('com.github.TotalFreedomMC:BukkitTelnet:541e9fdb84')
+    compileOnly('com.github.TotalFreedomMC:TF-LibsDisguises:48f01cf2fe')
+    compileOnly('com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT')
+    compileOnly('net.ess3:EssentialsX:2.18.2')
+    compileOnly('net.dv8tion:JDA:4.3.0_277')
+    compileOnly('net.coreprotect:coreprotect:19.5')
+    compileOnly('com.sk89q.worldguard:worldguard-bukkit:7.0.5')
+    compileOnly('com.github.vexsoftware:votifier:v1.9')
+    compileOnly('net.goldtreeservers:worldguardextraflags:4.0.0')
+    compileOnly('com.github.AtlasMediaGroup:TFGuilds:master-SNAPSHOT')
+}
+
+group = 'me.totalfreedom'
+version = project.property('project.pluginVersion')
+description = 'TotalFreedomMod'
+java.sourceCompatibility = JavaVersion.VERSION_16
+archivesBaseName = 'TotalFreedomMod-donotuse'
+
+bukkit {
+    main = 'me.totalfreedom.totalfreedommod.TotalFreedomMod'
+    apiVersion = '1.17'
+    version = project.property('project.pluginVersion')
+    description = 'Plugin for the Total Freedom server.'
+    authors = ['Madgeek1450', 'Prozza']
+    softDepend = ['BukkitTelnet', 'Essentials', 'CoreProtect', 'LibsDisguises', 'WorldEdit',
+                  'WorldGuard', 'WorldGuardExtraFlags', 'TFGuilds', 'JDA', 'Votifier']
+}
+
+static def getDate() {
+    return new Date().format('MM/dd/yyyy HH:mm')
+}
+
+def getGitHash() {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+def getBuildNumber()
+{
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-list', 'HEAD', '--count'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+task buildProperties {
+    ant.propertyfile(file: "$project.rootDir/src/main/resources/build.properties") {
+        entry(key: "buildAuthor", default: "unknown")
+        entry(key: "buildNumber", value: getBuildNumber())
+        entry(key: "buildDate", value: getDate())
+        entry(key: "buildCodeName", value: project.property('project.buildCodeName'))
+        entry(key: "buildHead", value: getGitHash())
+    }
+}
+
+shadowJar {
+    shadowJar {
+        archiveBaseName.set('TotalFreedomMod')
+        archiveClassifier.set('')
+        archiveVersion.set('')
+    }
+    minimize()
+    dependencies {
+        include(dependency('commons-io:commons-io'))
+        include(dependency('org.apache.commons:commons-lang3'))
+        include(dependency('commons-codec:commons-codec'))
+        include(dependency('org.javassist:javassist'))
+        include(dependency('io.papermc:paperlib'))
+        include(dependency('org.reflections:reflections'))
+        include(dependency('com.github.speedxx:Mojangson'))
+        include(dependency('org.jetbrains:annotations'))
+        include(dependency('com.mattmalec:Pterodactyl4J'))
+    }
+    relocate 'org.bstats', 'me.totalfreedom.totalfreedommod'
+    relocate 'io.papermc.lib', 'me.totalfreedom.totalfreedommod.paperlib'
+}
+
+tasks.compileJava.finalizedBy tasks.buildProperties
+tasks.build.dependsOn tasks.shadowJar
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}

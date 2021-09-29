@@ -42,10 +42,10 @@ public class Module_index extends HTTPDModule
 
             // <a href="http://localhost:28966/index">index</a>
             sb.append("<ul><li>");
-            sb.append("<a href=\"http://")
+            sb.append(ConfigEntry.HTTPD_REVERSE_PROXY.getBoolean() ? "<a href=\"https://" : "<a href=\"http://")
                     .append(ConfigEntry.HTTPD_HOST.getString())
                     .append(":")
-                    .append(ConfigEntry.HTTPD_PORT.getInteger())
+                    .append(ConfigEntry.HTTPD_REVERSE_PROXY.getBoolean() ? ConfigEntry.HTTPD_REVERSE_PROXY_PORT : ConfigEntry.HTTPD_PORT)
                     .append("/")
                     .append(name)
                     .append("\">")

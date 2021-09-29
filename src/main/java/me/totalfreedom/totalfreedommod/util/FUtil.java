@@ -1,5 +1,32 @@
 package me.totalfreedom.totalfreedommod.util;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.SplittableRandom;
+import java.util.TimeZone;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import me.totalfreedom.totalfreedommod.TotalFreedomMod;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import org.apache.commons.io.FileUtils;
@@ -20,18 +47,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.json.simple.JSONArray;
-
-import java.io.*;
-import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static org.bukkit.Bukkit.getServer;
 
 public class FUtil
@@ -49,7 +64,6 @@ public class FUtil
             "604cbb51-842d-4b43-8b0a-d1d7c6cd2869", // Wild1145
             "e67d77c4-fff9-4cea-94cc-9f1f1ab7806b", // aggelosQQ
             "0061326b-8b3d-44c8-830a-5f2d59f5dc1b", // scripthead
-            "78408086-1991-4c33-a571-d8fa325465b2", // Telesphoreo
             "67ce0e28-3d6b-469c-ab71-304eec81b614", // CoolJWB
             "03b41e15-d03f-4025-86f5-f1812df200fa", // elmon_
             "d018f2b8-ce60-4672-a45f-e580e0331299", // speednt
@@ -388,6 +402,10 @@ public class FUtil
         add("m");
         add("s");
     }};
+
+    public static boolean isValidUsername(String s) {
+        return s != null && s.matches("^[a-zA-Z0-9_]*$");
+    }
 
     private static long a(String parse)
     {

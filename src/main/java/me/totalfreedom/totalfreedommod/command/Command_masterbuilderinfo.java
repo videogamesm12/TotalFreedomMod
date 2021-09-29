@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Information on how to apply for Master Builder.", usage = "/<command>", aliases = "mbi")
 public class Command_masterbuilderinfo extends FreedomCommand
 {
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
@@ -21,7 +22,7 @@ public class Command_masterbuilderinfo extends FreedomCommand
 
         if (masterBuilderInfo.isEmpty())
         {
-            msg("The master builder information section in the config.yml file has not been configured.", ChatColor.RED);
+            msg("The master builder information section of the config.yml file has not been configured.", ChatColor.RED);
         }
         else
         {

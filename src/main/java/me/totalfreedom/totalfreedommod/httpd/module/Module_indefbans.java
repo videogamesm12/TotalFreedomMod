@@ -8,7 +8,6 @@ import me.totalfreedom.totalfreedommod.httpd.NanoHTTPD;
 
 public class Module_indefbans extends HTTPDModule
 {
-
     public Module_indefbans(NanoHTTPD.HTTPSession session)
     {
         super(session);
@@ -17,7 +16,7 @@ public class Module_indefbans extends HTTPDModule
     @Override
     public NanoHTTPD.Response getResponse()
     {
-        File permbanFile = new File(plugin.getDataFolder(), IndefiniteBanList.CONFIG_FILENAME);
+        File indefbanFile = new File(plugin.getDataFolder(), IndefiniteBanList.CONFIG_FILENAME);
 
         final String remoteAddress = socket.getInetAddress().getHostAddress();
         if (!isAuthorized(remoteAddress))
@@ -25,7 +24,7 @@ public class Module_indefbans extends HTTPDModule
             return new NanoHTTPD.Response(NanoHTTPD.Response.Status.NOT_FOUND, NanoHTTPD.MIME_PLAINTEXT,
                     "You may not view the indefinite ban list. Your IP, " + remoteAddress + ", is not registered to an admin on the server.");
         }
-        if (permbanFile.exists())
+        if (indefbanFile.exists())
         {
             return HTTPDaemon.serveFileBasic(new File(plugin.getDataFolder(), IndefiniteBanList.CONFIG_FILENAME));
         }

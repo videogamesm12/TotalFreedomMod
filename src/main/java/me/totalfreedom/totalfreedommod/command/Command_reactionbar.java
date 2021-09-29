@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Forcefully start a reaction", usage = "/<command>")
 public class Command_reactionbar extends FreedomCommand
 {
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {

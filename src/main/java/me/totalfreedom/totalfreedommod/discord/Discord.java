@@ -473,9 +473,9 @@ public class Discord extends FreedomService
         if (bot != null)
         {
             messageChatChannel("**Server has stopped**");
+            bot.shutdown();
+            FLog.info("Discord verification bot has successfully shutdown.");
         }
-
-        FLog.info("Discord verification bot has successfully shutdown.");
     }
 
     public String deformat(String input)

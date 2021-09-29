@@ -94,4 +94,5 @@ public class SavedFlags extends FreedomService
             FLog.severe(ex);
         }
     }
+
 }

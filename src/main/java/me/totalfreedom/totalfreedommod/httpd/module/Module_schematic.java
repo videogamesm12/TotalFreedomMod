@@ -27,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 
 public class Module_schematic extends HTTPDModule
 {
-
     private static final File SCHEMATIC_FOLDER = new File("./plugins/WorldEdit/schematics/");
     private static final String REQUEST_FORM_FILE_ELEMENT_NAME = "schematicFile";
     private static final Pattern SCHEMATIC_FILENAME_LC = Pattern.compile("^[a-z0-9_'!,\\-]*\\.(schem|schematic)$");
@@ -162,16 +161,16 @@ public class Module_schematic extends HTTPDModule
             {
                 out.append(HTMLGenerationTools.heading("Schematic Submodules", 1));
                 out.append("<ul><li>");
-                out.append("<a href=\"http://")
+                out.append(ConfigEntry.HTTPD_REVERSE_PROXY.getBoolean() ? "<a href=\"https://" : "<a href=\"http://")
                         .append(ConfigEntry.HTTPD_HOST.getString())
                         .append(":")
-                        .append(ConfigEntry.HTTPD_PORT.getInteger())
+                        .append(ConfigEntry.HTTPD_REVERSE_PROXY.getBoolean() ? ConfigEntry.HTTPD_REVERSE_PROXY_PORT : ConfigEntry.HTTPD_PORT)
                         .append("/schematic/list")
                         .append("\">Schematic List</a></li>")
-                        .append("<li><a href=\"http://")
+                        .append(ConfigEntry.HTTPD_REVERSE_PROXY.getBoolean() ? "<a href=\"https://" : "<a href=\"http://")
                         .append(ConfigEntry.HTTPD_HOST.getString())
                         .append(":")
-                        .append(ConfigEntry.HTTPD_PORT.getInteger())
+                        .append(ConfigEntry.HTTPD_REVERSE_PROXY.getBoolean() ? ConfigEntry.HTTPD_REVERSE_PROXY_PORT : ConfigEntry.HTTPD_PORT)
                         .append("/schematic/upload")
                         .append("\">Upload Schematics</a></li></ul>");
                 break;

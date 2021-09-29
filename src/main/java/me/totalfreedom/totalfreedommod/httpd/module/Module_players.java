@@ -11,7 +11,6 @@ import org.json.simple.JSONObject;
 
 public class Module_players extends HTTPDModule
 {
-
     public Module_players(NanoHTTPD.HTTPSession session)
     {
         super(session);
@@ -51,20 +50,11 @@ public class Module_players extends HTTPDModule
             switch (admin.getRank())
             {
                 case ADMIN:
-                {
                     admins.add(username);
                     break;
-                }
                 case SENIOR_ADMIN:
-                {
                     senioradmins.add(username);
                     break;
-                }
-                default:
-                {
-                    // Do nothing
-                    break;
-                }
             }
         }
 

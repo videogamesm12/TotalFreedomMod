@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Sends a verification code to the player, or the player can input the sent code. Admins can manually verify a player impostor.", usage = "/<command> <code | <playername>>")
 public class Command_verify extends FreedomCommand
 {
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {

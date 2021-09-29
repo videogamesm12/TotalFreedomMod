@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import me.totalfreedom.totalfreedommod.player.FPlayer;
-import me.totalfreedom.totalfreedommod.punishments.Punishment;
-import me.totalfreedom.totalfreedommod.punishments.PunishmentType;
 import me.totalfreedom.totalfreedommod.rank.Rank;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.bukkit.ChatColor;
@@ -21,7 +20,6 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Place a cage around someone with certain blocks, or someone's player head.", usage = "/<command> <purge | <partialname> [head | block] [playername | blockname]")
 public class Command_cage extends FreedomCommand
 {
-
     public boolean run(final CommandSender sender, final Player playerSender, final Command cmd, final String commandLabel, final String[] args, final boolean senderIsConsole)
     {
         if (args.length == 0)
@@ -62,56 +60,40 @@ public class Command_cage extends FreedomCommand
             final String s = args[1];
             switch (s)
             {
-                case "head":
-                {
+                case "head" -> {
                     outerMaterial = Material.PLAYER_HEAD;
                     if (args.length >= 3)
                     {
+                        if (!FUtil.isValidUsername(args[2]))
+                        {
+                            msg("That is an invalid player name!", ChatColor.RED);
+                            return true;
+                        }
                         skullName = args[2];
                     }
                     else
                     {
                         outerMaterial = Material.SKELETON_SKULL;
                     }
-                    break;
                 }
-                case "block":
-                {
-                    if (args.length >= 3)
+                case "block" -> {
+                    if (args.length == 3)
                     {
-                        // Checks the validity of the Material and checks if it's a block.
-                        // This is incredibly inefficient, as Spigot's isBlock() method in Material is an actual
-                        // nightmare of switch-cases.
-                        if (Material.matchMaterial(args[2]) != null && Material.matchMaterial(args[2]).isBlock())
+                        String block = args[2].toUpperCase();
+                        if (Material.matchMaterial(block) != null && Objects.requireNonNull(Material.getMaterial(block)).isBlock())
                         {
-                            outerMaterial = Material.matchMaterial(args[2]);
+                            outerMaterial = Material.matchMaterial(block);
                             break;
                         }
-                        else
-                        {
-                            msg("Invalid block!", ChatColor.RED);
-                            return true;
-                        }
+                        msg("The block you specified is invalid.", ChatColor.RED);
                     }
                     else
                     {
-                        return false;
+                        msg("You must specify a block.", ChatColor.RED);
                     }
-                }
-                default:
-                {
-                    return false;
+                    return true;
                 }
             }
-        }
-
-        if (outerMaterial == Material.PLAYER_HEAD)
-        {
-            FUtil.adminAction(sender.getName(), "Caging " + player.getName() + " in " + skullName, true);
-        }
-        else
-        {
-            FUtil.adminAction(sender.getName(), "Caging " + player.getName(), true);
         }
 
         Location location = player.getLocation().clone().add(0.0, 1.0, 0.0);
@@ -124,9 +106,17 @@ public class Command_cage extends FreedomCommand
         {
             fPlayer.getCageData().cage(location, outerMaterial, innerMaterial);
         }
-        player.setGameMode(GameMode.SURVIVAL);
 
-        plugin.pul.logPunishment(new Punishment(player.getName(), FUtil.getIp(player), sender.getName(), PunishmentType.CAGE, null));
+        player.setGameMode(GameMode.ADVENTURE);
+
+        if (outerMaterial == Material.PLAYER_HEAD)
+        {
+            FUtil.adminAction(sender.getName(), "Caging " + player.getName() + " in " + skullName, true);
+        }
+        else
+        {
+            FUtil.adminAction(sender.getName(), "Caging " + player.getName(), true);
+        }
         return true;
     }
 

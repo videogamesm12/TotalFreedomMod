@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class ActivityLog extends FreedomService
 {
+
     public static final String FILENAME = "activitylog.yml";
 
     private final Map<String, ActivityLogEntry> allActivityLogs = Maps.newHashMap();

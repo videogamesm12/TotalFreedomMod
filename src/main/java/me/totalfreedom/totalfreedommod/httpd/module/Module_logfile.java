@@ -71,8 +71,7 @@ public class Module_logfile extends HTTPDModule
 
         switch (mode)
         {
-            case LIST:
-            {
+            case LIST -> {
                 if (isAuthorized(remoteAddress))
                 {
 
@@ -100,10 +99,8 @@ public class Module_logfile extends HTTPDModule
                             .append(StringUtils.join(LogFilesFormatted, "\r\n"))
                             .append("</ul>");
                 }
-                break;
             }
-            case DOWNLOAD:
-            {
+            case DOWNLOAD -> {
                 if (isAuthorized(remoteAddress))
                 {
                     out.append(HTMLGenerationTools.paragraph("Log files access denied: Your IP, " + remoteAddress + ", is not registered to an admin on this server."));
@@ -121,25 +118,22 @@ public class Module_logfile extends HTTPDModule
                         out.append(HTMLGenerationTools.paragraph("Error downloading logfile: " + ex.getMessage()));
                     }
                 }
-                break;
             }
-            default:
-            {
+            default -> {
                 out.append(HTMLGenerationTools.heading("Logfile Submodules", 1));
                 out.append("<ul><li>");
-                out.append("<a href=\"http://")
+                out.append("<a href=\"https://")
                         .append(ConfigEntry.HTTPD_HOST.getString())
                         .append(":")
-                        .append(ConfigEntry.HTTPD_PORT.getInteger())
+                        .append("28966")
                         .append("/logfile/list")
                         .append("\">Logfile List</a></li>")
-                        .append("<li><a href=\"http://")
+                        .append("<li><a href=\"https://")
                         .append(ConfigEntry.HTTPD_HOST.getString())
                         .append(":")
-                        .append(ConfigEntry.HTTPD_PORT.getInteger())
+                        .append("28966")
                         .append("/logfile/download")
                         .append("\">Download Specified Logfile</a></li></ul>");
-                break;
             }
         }
         return out.toString();
@@ -210,7 +204,6 @@ public class Module_logfile extends HTTPDModule
 
     private static class ResponseOverrideException extends Exception
     {
-
         private final Response response;
 
         public ResponseOverrideException(Response response)

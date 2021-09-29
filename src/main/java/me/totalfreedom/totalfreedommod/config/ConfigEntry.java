@@ -47,6 +47,8 @@ public enum ConfigEntry
     //
     HTTPD_ENABLED(Boolean.class, "httpd.enabled"),
     HTTPD_HOST(String.class, "httpd.host"),
+    HTTPD_REVERSE_PROXY(Boolean.class, "httpd.reverse_proxy"),
+    HTTPD_REVERSE_PROXY_PORT(Integer.class, "httpd.reverse_proxy_port"),
     HTTPD_PORT(Integer.class, "httpd.port"),
     HTTPD_PUBLIC_FOLDER(String.class, "httpd.public_folder"),
     //
@@ -76,6 +78,7 @@ public enum ConfigEntry
     DISCORD_REPORT_CHANNEL_ID(String.class, "discord.report_channel_id"),
     DISCORD_CHAT_CHANNEL_ID(String.class, "discord.chat_channel_id"),
     DISCORD_ADMINCHAT_CHANNEL_ID(String.class, "discord.adminchat_channel_id"),
+
     DISCORD_ROLE_SYNC(Boolean.class, "discord.role_sync"),
     DISCORD_SERVER_ID(String.class, "discord.server_id"),
     DISCORD_MASTER_BUILDER_ROLE_ID(String.class, "discord.master_builder_role_id"),
@@ -126,12 +129,17 @@ public enum ConfigEntry
     ENABLE_PREPROCESS_LOG(Boolean.class, "preprocess_log"),
     ENABLE_PET_PROTECT(Boolean.class, "petprotect.enabled"),
     //
+    LANDMINES_ENABLED(Boolean.class, "landmines_enabled"),
+    TOSSMOB_ENABLED(Boolean.class, "tossmob_enabled"),
+    AUTOKICK_ENABLED(Boolean.class, "autokick.enabled"),
+    MP44_ENABLED(Boolean.class, "mp44_enabled"),
+    FOURCHAN_ENABLED(Boolean.class, "4chan_enabled"),
+    //
     NUKE_MONITOR_ENABLED(Boolean.class, "nukemonitor.enabled"),
     NUKE_MONITOR_COUNT_BREAK(Integer.class, "nukemonitor.count_break"),
     NUKE_MONITOR_COUNT_PLACE(Integer.class, "nukemonitor.count_place"),
     NUKE_MONITOR_RANGE(Double.class, "nukemonitor.range"),
     //
-    AUTOKICK_ENABLED(Boolean.class, "autokick.enabled"),
     AUTOKICK_THRESHOLD(Double.class, "autokick.threshold"),
     AUTOKICK_TIME(Integer.class, "autokick.time"),
     //

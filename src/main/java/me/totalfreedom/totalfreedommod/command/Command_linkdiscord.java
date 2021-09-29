@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Link your Discord account to your Minecraft account", usage = "/<command> [<name> <id>]")
 public class Command_linkdiscord extends FreedomCommand
 {
-
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
@@ -32,7 +31,7 @@ public class Command_linkdiscord extends FreedomCommand
             }
 
             playerData.setDiscordID(args[1]);
-            msg("Linked " + args[0] + "'s discord account.", ChatColor.GREEN);
+            msg("Linked " + args[0] + "'s Discord account.", ChatColor.GREEN);
             return true;
         }
 

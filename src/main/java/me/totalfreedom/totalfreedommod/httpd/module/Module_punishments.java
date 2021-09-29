@@ -17,8 +17,8 @@ public class Module_punishments extends HTTPDModule
     @Override
     public NanoHTTPD.Response getResponse()
     {
-        File adminFile = new File(plugin.getDataFolder(), PunishmentList.CONFIG_FILENAME);
-        if (adminFile.exists())
+        File punishmentFile = new File(plugin.getDataFolder(), PunishmentList.CONFIG_FILENAME);
+        if (punishmentFile.exists())
         {
             final String remoteAddress = socket.getInetAddress().getHostAddress();
             if (!isAuthorized(remoteAddress))

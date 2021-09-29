@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Obtain a stacking potato", usage = "/<command>")
 public class Command_stackingpotato extends FreedomCommand
 {
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {

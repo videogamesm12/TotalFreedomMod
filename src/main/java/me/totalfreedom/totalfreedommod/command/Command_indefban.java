@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Reload the indefinite ban list.", usage = "/<command> <reload>", aliases = "ib")
 public class Command_indefban extends FreedomCommand
 {
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {

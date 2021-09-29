@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 @CommandParameters(description = "Stops all sounds or a specified sound.", usage = "/<command> [sound]")
 public class Command_stopsound extends FreedomCommand
 {
+
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {

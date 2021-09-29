@@ -8,7 +8,6 @@ import me.totalfreedom.totalfreedommod.httpd.NanoHTTPD;
 
 public class Module_activitylog extends HTTPDModule
 {
-
     public Module_activitylog(NanoHTTPD.HTTPSession session)
     {
         super(session);

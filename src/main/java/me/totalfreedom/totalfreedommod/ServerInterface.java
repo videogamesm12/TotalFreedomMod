@@ -1,17 +1,16 @@
 package me.totalfreedom.totalfreedommod;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import me.totalfreedom.totalfreedommod.util.FLog;
 import me.totalfreedom.totalfreedommod.util.FUtil;
-import net.minecraft.server.v1_16_R3.EntityPlayer;
-import net.minecraft.server.v1_16_R3.MinecraftServer;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_16_R3.CraftServer;
+import org.bukkit.OfflinePlayer;
 
 public class ServerInterface extends FreedomService
 {
-    public static final String COMPILE_NMS_VERSION = "v1_16_R3";
+    public static final String COMPILE_NMS_VERSION = "v1_17_R1";
 
     public static void warnVersion()
     {
@@ -34,23 +33,18 @@ public class ServerInterface extends FreedomService
     {
     }
 
-    public void setOnlineMode(boolean mode)
-    {
-        getServer().setOnlineMode(mode);
-    }
-
     public int purgeWhitelist()
     {
-        String[] whitelisted = getServer().getPlayerList().getWhitelisted();
-        int size = whitelisted.length;
-        for (EntityPlayer player : getServer().getPlayerList().players)
+        Set<OfflinePlayer> whitelisted = Bukkit.getWhitelistedPlayers();
+        int size = whitelisted.size();
+        for (OfflinePlayer player : Bukkit.getWhitelistedPlayers())
         {
-            getServer().getPlayerList().getWhitelist().remove(player.getProfile());
+            Bukkit.getServer().getWhitelistedPlayers().remove(player);
         }
 
         try
         {
-            getServer().getPlayerList().getWhitelist().save();
+            Bukkit.reloadWhitelist();
         }
         catch (Exception ex)
         {
@@ -62,22 +56,16 @@ public class ServerInterface extends FreedomService
 
     public boolean isWhitelisted()
     {
-        return getServer().getPlayerList().getHasWhitelist();
+        return Bukkit.getServer().hasWhitelist();
     }
 
     public List<?> getWhitelisted()
     {
-        return Arrays.asList(getServer().getPlayerList().getWhitelisted());
+        return Collections.singletonList(Bukkit.getWhitelistedPlayers());
     }
 
     public String getVersion()
     {
-        return getServer().getVersion();
+        return Bukkit.getVersion();
     }
-
-    private MinecraftServer getServer()
-    {
-        return ((CraftServer)Bukkit.getServer()).getServer();
-    }
-
 }

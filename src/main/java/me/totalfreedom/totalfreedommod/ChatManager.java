@@ -156,7 +156,7 @@ public class ChatManager extends FreedomService
     public void adminChat(CommandSender sender, String message)
     {
         Displayable display = plugin.rm.getDisplay(sender);
-        FLog.info("[ADMIN] " + sender.getName() + " " + display.getTag() + ": " + message, true);
+        FLog.info("[" + ChatColor.AQUA + "ADMIN" + ChatColor.WHITE + "] " + ChatColor.DARK_RED + sender.getName() + ChatColor.DARK_GRAY + " [" + getColoredTag(display) + ChatColor.DARK_GRAY + "]" + ChatColor.WHITE + ": " + ChatColor.GOLD + FUtil.colorize(message));
         plugin.dc.messageAdminChatChannel(sender.getName() + " \u00BB " + message);
 
         server.getOnlinePlayers().stream().filter(player -> plugin.al.isAdmin(player)).forEach(player ->

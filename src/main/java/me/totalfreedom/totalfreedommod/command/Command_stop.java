@@ -20,7 +20,6 @@ public class Command_stop extends FreedomCommand
     @Override
     public boolean run(CommandSender sender, Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
-
         String reason = "Server is going offline, come back in about 20 seconds.";
 
         if (args.length != 0)
