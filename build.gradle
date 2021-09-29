@@ -61,13 +61,16 @@ repositories {
     maven {
         url = uri('https://repo.mattmalec.com/repository/releases')
     }
+
+    maven {
+        url = uri('https://repo.essentialsx.net/releases/')
+    }
 }
 
 dependencies {
     implementation('commons-io:commons-io:2.8.0')
     implementation('org.apache.commons:commons-lang3:3.11')
     implementation('commons-codec:commons-codec:1.15')
-    implementation('com.github.speedxx:Mojangson:1957eef8d6')
     implementation('io.papermc:paperlib:1.0.6')
     implementation('org.reflections:reflections:0.9.12')
     implementation('org.javassist:javassist:3.28.0-GA')
@@ -75,14 +78,14 @@ dependencies {
     implementation('com.mattmalec:Pterodactyl4J:2.BETA_49')
     implementation('org.junit.jupiter:junit-jupiter:5.7.2')
     implementation('org.projectlombok:lombok:1.18.20')
-    compileOnly('org.spigotmc:spigot:1.17-R0.1-SNAPSHOT')
+    compileOnly('org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT')
     compileOnly('com.github.TotalFreedomMC:BukkitTelnet:541e9fdb84')
     compileOnly('com.github.TotalFreedomMC:TF-LibsDisguises:48f01cf2fe')
     compileOnly('com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT')
-    compileOnly('net.ess3:EssentialsX:2.18.2')
+    compileOnly('net.essentialsx:EssentialsX:2.19.0')
     compileOnly('net.dv8tion:JDA:4.3.0_277')
-    compileOnly('net.coreprotect:coreprotect:19.5')
-    compileOnly('com.sk89q.worldguard:worldguard-bukkit:7.0.5')
+    compileOnly('net.coreprotect:coreprotect:20.0')
+    compileOnly('com.sk89q.worldguard:worldguard-bukkit:7.0.6')
     compileOnly('com.github.vexsoftware:votifier:v1.9')
     compileOnly('net.goldtreeservers:worldguardextraflags:4.0.0')
     compileOnly('com.github.AtlasMediaGroup:TFGuilds:master-SNAPSHOT')
@@ -151,7 +154,6 @@ shadowJar {
         include(dependency('org.javassist:javassist'))
         include(dependency('io.papermc:paperlib'))
         include(dependency('org.reflections:reflections'))
-        include(dependency('com.github.speedxx:Mojangson'))
         include(dependency('org.jetbrains:annotations'))
         include(dependency('com.mattmalec:Pterodactyl4J'))
     }
