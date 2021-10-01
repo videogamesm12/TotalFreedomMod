@@ -39,6 +39,7 @@ repositories {
             includeGroup('org.bukkit')
             includeGroup('net.goldtreeservers')
             includeGroup('de.bananaco')
+            includeGroup('net.ess3')
         }
     }
 
@@ -71,6 +72,9 @@ repositories {
 
     maven {
         url = uri('https://nexus.telesphoreo.me/repository/totalfreedom/')
+        content {
+            includeGroup('me.totalfreedom')
+        }
     }
 
     maven {
