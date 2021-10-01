@@ -7,10 +7,14 @@
     <property name="severity" value="warning"/>
     <property name="fileExtensions" value="java, properties, xml"/>
     <module name="SuppressionFilter">
-        <property name="file" value="supressions.xml"/>
+        <property name="file" value="${config_loc}/suppressions.xml"/>
     </module>
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
+    </module>
+    <module name="LineLength">
+        <property name="max" value="200"/>
+        <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
     </module>
     <module name="TreeWalker">
         <module name="OuterTypeFilename"/>
@@ -19,10 +23,6 @@
             <property name="format"
                       value="\\u00(08|09|0(a|A)|0(c|C)|0(d|D)|22|27|5(C|c))|\\(0(10|11|12|14|15|42|47)|134)"/>
             <property name="message" value="Avoid using corresponding octal or Unicode escape."/>
-        </module>
-        <module name="LineLength">
-            <property name="max" value="200"/>
-            <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
         </module>
         <module name="AvoidStarImport"/>
         <module name="OneTopLevelClass"/>

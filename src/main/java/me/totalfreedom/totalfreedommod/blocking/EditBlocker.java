@@ -10,23 +10,29 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class EditBlocker extends FreedomService {
+public class EditBlocker extends FreedomService
+{
     @Override
-    public void onStart() {
+    public void onStart()
+    {
     }
 
     @Override
-    public void onStop() {
+    public void onStop()
+    {
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onBlockPlace(BlockPlaceEvent event) {
+    public void onBlockPlace(BlockPlaceEvent event)
+    {
         FPlayer fPlayer = plugin.pl.getPlayerSync(event.getPlayer());
-        if (!fPlayer.isEditBlocked()) {
+        if (!fPlayer.isEditBlocked())
+        {
             return;
         }
 
-        if (plugin.al.isAdminSync(event.getPlayer())) {
+        if (plugin.al.isAdminSync(event.getPlayer()))
+        {
             fPlayer.setEditBlocked(false);
             return;
         }
@@ -36,13 +42,16 @@ public class EditBlocker extends FreedomService {
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onBlockBreak(BlockBreakEvent event) {
+    public void onBlockBreak(BlockBreakEvent event)
+    {
         FPlayer fPlayer = plugin.pl.getPlayerSync(event.getPlayer());
-        if (!fPlayer.isEditBlocked()) {
+        if (!fPlayer.isEditBlocked())
+        {
             return;
         }
 
-        if (plugin.al.isAdminSync(event.getPlayer())) {
+        if (plugin.al.isAdminSync(event.getPlayer()))
+        {
             fPlayer.setEditBlocked(false);
             return;
         }

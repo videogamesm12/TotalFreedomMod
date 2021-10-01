@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'idea'
+    id 'checkstyle'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
     id 'net.minecrell.plugin-yml.bukkit' version '0.5.0'
 }
@@ -102,6 +103,7 @@ dependencies {
     implementation('com.mattmalec:Pterodactyl4J:2.BETA_80')
     implementation('org.junit.jupiter:junit-jupiter:5.8.1')
     implementation('org.projectlombok:lombok:1.18.20')
+    implementation('org.bstats:bstats-bukkit:2.2.1')
     compileOnly('org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT')
     compileOnly('me.totalfreedom:bukkittelnet:4.6')
     compileOnly('me.totalfreedom:TF-LibsDisguises:10.0.26-SNAPSHOT')
@@ -144,14 +146,21 @@ def getGitHash() {
     return stdout.toString().trim()
 }
 
-def getBuildNumber()
-{
+def getBuildNumber() {
     def stdout = new ByteArrayOutputStream()
     exec {
         commandLine 'git', 'rev-list', 'HEAD', '--count'
         standardOutput = stdout
     }
     return stdout.toString().trim()
+}
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.required = false
+        html.required = true
+        html.stylesheet resources.text.fromFile('config/xsl/checkstyle-custom.xsl')
+    }
 }
 
 task buildProperties {

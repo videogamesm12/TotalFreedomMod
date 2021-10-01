@@ -12,11 +12,13 @@ public enum TimeUnit
 
     private final long time;
 
-    TimeUnit(long time) {
+    TimeUnit(long time)
+    {
         this.time = time;
     }
 
-    public long get() {
+    public long get()
+    {
         return time;
     }
 }

@@ -162,7 +162,8 @@ public class ChatManager extends FreedomService
         server.getOnlinePlayers().stream().filter(player -> plugin.al.isAdmin(player)).forEach(player ->
         {
             Admin admin = plugin.al.getAdmin(player);
-            if (!Strings.isNullOrEmpty(admin.getAcFormat())) {
+            if (!Strings.isNullOrEmpty(admin.getAcFormat()))
+            {
                 String format = admin.getAcFormat();
                 ChatColor color = getColor(display);
                 String msg = format.replace("%name%", sender.getName()).replace("%rank%", display.getAbbr()).replace("%rankcolor%", color.toString()).replace("%msg%", message);

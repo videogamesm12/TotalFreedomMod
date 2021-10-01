@@ -146,7 +146,7 @@ public class HTTPDaemon extends FreedomService
         {
             super(port);
         }
-        
+
         @Override
         public Response serve(HTTPSession session)
         {

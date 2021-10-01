@@ -48,6 +48,7 @@ import me.totalfreedom.totalfreedommod.util.MethodTimer;
 import me.totalfreedom.totalfreedommod.world.CleanroomChunkGenerator;
 import me.totalfreedom.totalfreedommod.world.WorldManager;
 import me.totalfreedom.totalfreedommod.world.WorldRestrictions;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
@@ -214,7 +215,7 @@ public class TotalFreedomMod extends JavaPlugin
         FLog.info("Version " + pluginVersion + " for " + ServerInterface.COMPILE_NMS_VERSION + " enabled in " + timer.getTotal() + "ms");
 
         // Metrics @ https://bstats.org/plugin/bukkit/TotalFreedomMod/2966
-        new Metrics(this, 2966);
+        Metrics metrics = new Metrics(this, 2966);
 
         // little workaround to stop spigot from autorestarting - causing AMP to detach from process.
         SpigotConfig.config.set("settings.restart-on-crash", false);

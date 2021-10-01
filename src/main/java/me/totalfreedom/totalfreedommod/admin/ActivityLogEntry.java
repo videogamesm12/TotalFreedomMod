@@ -74,10 +74,11 @@ public class ActivityLogEntry implements IConfig
     {
         // Fix of Array index out of bonds issue: FS-131
         String lastLoginString;
-        if(timestamps.size() > 1)
+        if (timestamps.size() > 1)
         {
             lastLoginString = timestamps.get(timestamps.size() - 1);
-        }else
+        }
+        else
         {
             lastLoginString = timestamps.get(0);
         }

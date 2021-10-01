@@ -37,7 +37,7 @@ server:
   executives: [ ]
 
   # All players who show up as assistant executive
-  assistant_executives: []
+  assistant_executives: [ ]
 
   # All those who can manage the master builder list
   master_builder_management: [ ]
@@ -194,7 +194,7 @@ social_links:
   Forum: 'https://forum.totalfreedom.me'
   Website: 'https://totalfreedom.me'
   Discord: 'https://discord.com/invite/PW4savJR9a'
-#  Reddit: 'https://reddit.com/r/TotalFreedom'
+  #  Reddit: 'https://reddit.com/r/TotalFreedom'
   Twitter: 'https://twitter.com/TotalFreedomMC'
   Facebook: 'https://facebook.com/TotalFreedomMC'
 #  Tumblr: 'https://totalfreedom.tumblr.com'
@@ -556,7 +556,7 @@ announcer:
     - 'Join our Discord server! https://discord.com/invite/PW4savJR9a'
     - 'Remember to save your hotbar, otherwise you may lose your items!'
     - 'Link your discord account with &6/linkdiscord for extra features!'
- #   - 'Check out our reddit at &6https://www.reddit.com/r/TotalFreedom/ &byou can even link your account!'
+    #   - 'Check out our reddit at &6https://www.reddit.com/r/TotalFreedom/ &byou can even link your account!'
     - 'Want to see cool builds? Check out our Master Builder World with &6/mbworld'
     - 'Be sure to follow our twitter for all the latest updates. &6https://twitter.com/totalfreedommc'
 
@@ -573,7 +573,7 @@ admininfo:
 votinginfo:
   - '&bVoting Links:'
   - ' &2- https://minecraft-mp.com/server/228386/vote/'
-#  - ' &2- https://minecraft-server-list.com/server/443272/vote/'
+  #  - ' &2- https://minecraft-server-list.com/server/443272/vote/'
   - ' &6- https://topg.org/Minecraft/in-599712'
   - ' &2- https://minecraftlist.org/vote/18975'
   - ' &6- https://minecraftservers.org/vote/595721'

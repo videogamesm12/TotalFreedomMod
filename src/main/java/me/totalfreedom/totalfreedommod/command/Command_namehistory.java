@@ -8,10 +8,13 @@ import org.bukkit.entity.Player;
 
 @CommandPermissions(level = Rank.OP, source = SourceType.BOTH)
 @CommandParameters(description = "Check the name history of a specified player.", usage = "/<command> <username>", aliases = "nh")
-public class Command_namehistory extends FreedomCommand {
+public class Command_namehistory extends FreedomCommand
+{
     @Override
-    public boolean run(final CommandSender sender, final Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole) {
-        if (args.length != 1) {
+    public boolean run(final CommandSender sender, final Player playerSender, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
+    {
+        if (args.length != 1)
+        {
             return false;
         }
         History.reportHistory(sender, args[0]);

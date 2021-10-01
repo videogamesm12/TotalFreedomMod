@@ -48,7 +48,7 @@ public class DiscordToAdminChatListener extends ListenerAdapter
 
             if (!msg.getAttachments().isEmpty())
             {
-                
+
                 logmessage.append(mediamessage); // Actually for logging...
 
             }

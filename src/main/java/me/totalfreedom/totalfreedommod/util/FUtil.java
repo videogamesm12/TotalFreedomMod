@@ -275,7 +275,7 @@ public class FUtil
     public static Response sendRequest(String endpoint, String method, List<String> headers, String body) throws IOException
     {
         URL url = new URL(endpoint);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
         connection.setRequestMethod(method);
 
@@ -405,7 +405,8 @@ public class FUtil
         add("s");
     }};
 
-    public static boolean isValidUsername(String s) {
+    public static boolean isValidUsername(String s)
+    {
         return s != null && s.matches("^[a-zA-Z0-9_]*$");
     }
 
@@ -413,7 +414,8 @@ public class FUtil
     {
         StringBuilder sb = new StringBuilder();
 
-        regxList.forEach(obj -> {
+        regxList.forEach(obj ->
+        {
             if (parse.endsWith(obj))
             {
                 sb.append(parse.split(obj)[0]);
@@ -572,7 +574,7 @@ public class FUtil
             {
                 Field field = checkClass.getDeclaredField(name);
                 field.setAccessible(true);
-                return (T) field.get(from);
+                return (T)field.get(from);
 
             }
             catch (NoSuchFieldException | IllegalAccessException ignored)
@@ -654,7 +656,7 @@ public class FUtil
     public static int randomInteger(int min, int max)
     {
         int range = max - min + 1;
-        return (int) (Math.random() * range) + min;
+        return (int)(Math.random() * range) + min;
     }
 
     public static String randomString(int length)
@@ -792,7 +794,7 @@ public class FUtil
         {
             c1values[i] = Math.round(c1values[i] + factor * (c2values[i] - c1values[i]));
         }
-        return Color.fromRGB((int) c1values[0], (int) c1values[1], (int) c1values[2]);
+        return Color.fromRGB((int)c1values[0], (int)c1values[1], (int)c1values[2]);
     }
 
     public static boolean isValidIPv4(String ip)
@@ -890,7 +892,7 @@ public class FUtil
 
         public int getPageCount()
         {
-            return (int) Math.ceil((double) size() / (double) epp);
+            return (int)Math.ceil((double)size() / (double)epp);
         }
 
         public List<T> getPage(int page)

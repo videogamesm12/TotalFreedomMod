@@ -81,8 +81,8 @@ public class AntiSpam extends FreedomService
             playerdata.setMuted(true, time);
 
             FSync.bcastMsg(String.format("%s has automatically been muted for %d minutes for spamming chat.",
-                    player.getName(),
-                    time),
+                            player.getName(),
+                            time),
                     ChatColor.RED);
 
             playerdata.resetMsgCount();
