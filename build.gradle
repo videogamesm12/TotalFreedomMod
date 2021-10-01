@@ -39,7 +39,6 @@ repositories {
             includeGroup('org.bukkit')
             includeGroup('net.goldtreeservers')
             includeGroup('de.bananaco')
-            includeGroup('net.ess3')
         }
     }
 
@@ -89,6 +88,7 @@ repositories {
         content {
             content {
                 includeGroup('net.essentialsx')
+                includeGroup('net.ess3')
             }
         }
     }
