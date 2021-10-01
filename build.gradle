@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
     id 'idea'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
-    id 'net.minecrell.plugin-yml.bukkit' version '0.4.0'
+    id 'net.minecrell.plugin-yml.bukkit' version '0.5.0'
 }
 
 repositories {
@@ -20,6 +20,9 @@ repositories {
 
     maven {
         url = uri('https://repo.codemc.org/repository/nms/')
+        content {
+            includeGroup('org.spigotmc')
+        }
     }
 
     maven {
@@ -32,6 +35,11 @@ repositories {
 
     maven {
         url = uri('https://maven.elmakers.com/repository/')
+        content {
+            includeGroup('org.bukkit')
+            includeGroup('net.goldtreeservers')
+            includeGroup('de.bananaco')
+        }
     }
 
     maven {
@@ -40,6 +48,9 @@ repositories {
 
     maven {
         url = uri('https://maven.playpro.com/')
+        content {
+            includeGroup('net.coreprotect')
+        }
     }
 
     maven {
@@ -59,12 +70,25 @@ repositories {
     }
 
     maven {
+        url = uri('https://nexus.telesphoreo.me/repository/totalfreedom/')
+    }
+
+    maven {
         url = uri('https://repo.mattmalec.com/repository/releases')
+        content {
+            includeGroup('com.mattmalec')
+        }
     }
 
     maven {
         url = uri('https://repo.essentialsx.net/releases/')
+        content {
+            content {
+                includeGroup('net.essentialsx')
+            }
+        }
     }
+    mavenCentral()
 }
 
 dependencies {
@@ -74,13 +98,13 @@ dependencies {
     implementation('io.papermc:paperlib:1.0.6')
     implementation('org.reflections:reflections:0.9.12')
     implementation('org.javassist:javassist:3.28.0-GA')
-    implementation('org.jetbrains:annotations:21.0.1')
+    implementation('org.jetbrains:annotations:22.0.0')
     implementation('com.mattmalec:Pterodactyl4J:2.BETA_80')
     implementation('org.junit.jupiter:junit-jupiter:5.8.1')
     implementation('org.projectlombok:lombok:1.18.20')
     compileOnly('org.spigotmc:spigot:1.17.1-R0.1-SNAPSHOT')
-    compileOnly('com.github.TotalFreedomMC:BukkitTelnet:541e9fdb84')
-    compileOnly('com.github.TotalFreedomMC:TF-LibsDisguises:48f01cf2fe')
+    compileOnly('me.totalfreedom:bukkittelnet:4.6')
+    compileOnly('me.totalfreedom:TF-LibsDisguises:10.0.26-SNAPSHOT')
     compileOnly('com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT')
     compileOnly('net.essentialsx:EssentialsX:2.19.0')
     compileOnly('net.dv8tion:JDA:4.3.0_277')
@@ -88,7 +112,7 @@ dependencies {
     compileOnly('com.sk89q.worldguard:worldguard-bukkit:7.0.6')
     compileOnly('com.github.vexsoftware:votifier:v1.9')
     compileOnly('net.goldtreeservers:worldguardextraflags:4.0.0')
-    compileOnly('com.github.AtlasMediaGroup:TFGuilds:master-SNAPSHOT')
+    compileOnly('me.totalfreedom:TFGuilds:2021.06-RC3')
 }
 
 group = 'me.totalfreedom'

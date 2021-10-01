@@ -102,14 +102,14 @@ public class Pterodactyl extends FreedomService
     public void restartServer()
     {
         ClientServer server = clientAPI.retrieveServerByIdentifier(IDENTIFIER).execute();
-        clientAPI.setPower(server, PowerAction.RESTART).execute();
+        server.setPower(PowerAction.RESTART).execute();
     }
 
     public void fionnTheServer()
     {
         ClientServer server = clientAPI.retrieveServerByIdentifier(IDENTIFIER).execute();
         clientAPI.setPower(server, PowerAction.STOP).execute();
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> clientAPI.setPower(server, PowerAction.KILL).execute(), 0, 60);
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> server.setPower(PowerAction.KILL).execute(), 0, 60);
     }
 
     public String getURL()
