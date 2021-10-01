@@ -215,7 +215,7 @@ public class TotalFreedomMod extends JavaPlugin
         FLog.info("Version " + pluginVersion + " for " + ServerInterface.COMPILE_NMS_VERSION + " enabled in " + timer.getTotal() + "ms");
 
         // Metrics @ https://bstats.org/plugin/bukkit/TotalFreedomMod/2966
-        Metrics metrics = new Metrics(this, 2966);
+        new Metrics(this, 2966);
 
         // little workaround to stop spigot from autorestarting - causing AMP to detach from process.
         SpigotConfig.config.set("settings.restart-on-crash", false);
