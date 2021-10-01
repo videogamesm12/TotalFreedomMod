@@ -1,5 +1,7 @@
 package me.totalfreedom.totalfreedommod;
 
+import java.util.HashMap;
+import java.util.Map;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.player.FPlayer;
 import me.totalfreedom.totalfreedommod.util.FSync;
@@ -13,9 +15,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class AntiSpam extends FreedomService
 {
 
@@ -23,7 +22,7 @@ public class AntiSpam extends FreedomService
     public static final int TICKS_PER_CYCLE = 2 * 10;
     //
     public BukkitTask cycleTask = null;
-    private Map<Player, Integer> muteCounts = new HashMap<>();
+    private final Map<Player, Integer> muteCounts = new HashMap<>();
 
     @Override
     public void onStart()

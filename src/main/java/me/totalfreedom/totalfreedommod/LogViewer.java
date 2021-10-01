@@ -5,6 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
@@ -158,14 +159,7 @@ public class LogViewer extends FreedomService
             List<String> pairs = new ArrayList<>();
             for (Map.Entry<String, String> pair : queryStringMap.entrySet())
             {
-                try
-                {
-                    pairs.add(URLEncoder.encode(pair.getKey(), "UTF-8") + "=" + URLEncoder.encode(pair.getValue(), "UTF-8"));
-                }
-                catch (UnsupportedEncodingException ex)
-                {
-                    FLog.severe(ex);
-                }
+                pairs.add(URLEncoder.encode(pair.getKey(), StandardCharsets.UTF_8) + "=" + URLEncoder.encode(pair.getValue(), StandardCharsets.UTF_8));
             }
 
             return new URL(requestPath + "?" + StringUtils.join(pairs, "&"));

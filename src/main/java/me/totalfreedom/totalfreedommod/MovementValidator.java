@@ -2,7 +2,6 @@ package me.totalfreedom.totalfreedommod;
 
 import com.google.common.collect.Multimap;
 import io.papermc.lib.PaperLib;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;

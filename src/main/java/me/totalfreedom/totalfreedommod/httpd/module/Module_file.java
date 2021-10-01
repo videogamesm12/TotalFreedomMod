@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -84,13 +85,7 @@ public class Module_file extends HTTPDModule
             }
             else
             {
-                try
-                {
-                    newUri.append(URLEncoder.encode(tok, "UTF-8"));
-                }
-                catch (UnsupportedEncodingException ignored)
-                {
-                }
+                newUri.append(URLEncoder.encode(tok, StandardCharsets.UTF_8));
             }
         }
         return newUri.toString();

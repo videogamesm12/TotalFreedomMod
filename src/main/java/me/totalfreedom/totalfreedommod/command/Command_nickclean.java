@@ -145,7 +145,7 @@ public class Command_nickclean extends FreedomCommand
 
         if (nickChanged)
         {
-            msg(ChatColor.RESET + playerName + ": \"" + nickName + ChatColor.RESET + "\" -> \"" + newNick.toString() + ChatColor.RESET + "\".");
+            msg(ChatColor.RESET + playerName + ": \"" + nickName + ChatColor.RESET + "\" -> \"" + newNick + ChatColor.RESET + "\".");
         }
         plugin.esb.setNickname(playerName, newNick.toString());
     }

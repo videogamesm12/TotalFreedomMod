@@ -108,7 +108,7 @@ public class Command_tossmob extends FreedomCommand
 
         playerData.enableMobThrower(type, speed);
         msg("MobThrower is enabled. Mob: " + type + " - Speed: " + speed + ".", ChatColor.GREEN);
-        msg("Right click while holding a " + Material.BONE.toString() + " to throw mobs!", ChatColor.GREEN);
+        msg("Right click while holding a " + Material.BONE + " to throw mobs!", ChatColor.GREEN);
         msg("Type '/tossmob off' to disable. -By Madgeek1450", ChatColor.GREEN);
 
         Objects.requireNonNull(playerSender.getEquipment()).setItemInMainHand(new ItemStack(Material.BONE, 1));

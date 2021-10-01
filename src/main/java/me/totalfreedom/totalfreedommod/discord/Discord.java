@@ -332,7 +332,7 @@ public class Discord extends FreedomService
         }
         catch (IOException e)
         {
-            FLog.severe("Failed to generate backup codes file: " + e.toString());
+            FLog.severe("Failed to generate backup codes file: " + e);
             return null;
         }
         return new File(fileUrl);

@@ -1,10 +1,9 @@
 package me.totalfreedom.totalfreedommod.command;
 
+import com.earth2me.essentials.User;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
-
-import com.earth2me.essentials.User;
 import me.totalfreedom.totalfreedommod.banning.Ban;
 import me.totalfreedom.totalfreedommod.player.PlayerData;
 import me.totalfreedom.totalfreedommod.punishments.Punishment;

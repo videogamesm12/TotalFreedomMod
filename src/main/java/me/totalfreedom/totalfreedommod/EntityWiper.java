@@ -2,7 +2,6 @@ package me.totalfreedom.totalfreedommod;
 
 import java.util.Arrays;
 import java.util.List;
-
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.util.Groups;
 import org.bukkit.Bukkit;

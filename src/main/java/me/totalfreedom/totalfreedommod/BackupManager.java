@@ -1,5 +1,6 @@
 package me.totalfreedom.totalfreedommod;
 
+import java.io.File;
 import me.totalfreedom.totalfreedommod.banning.IndefiniteBanList;
 import me.totalfreedom.totalfreedommod.config.YamlConfig;
 import me.totalfreedom.totalfreedommod.permissions.PermissionConfig;
@@ -7,8 +8,6 @@ import me.totalfreedom.totalfreedommod.punishments.PunishmentList;
 import me.totalfreedom.totalfreedommod.util.FLog;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.bukkit.util.FileUtil;
-
-import java.io.File;
 
 public class BackupManager extends FreedomService
 {

@@ -19,12 +19,7 @@ public class Command_undisguiseall extends FreedomCommand
             return true;
         }
 
-        boolean admins = false;
-
-        if (args.length > 0 && args[0].equalsIgnoreCase("-a"))
-        {
-            admins = true;
-        }
+        boolean admins = args.length > 0 && args[0].equalsIgnoreCase("-a");
 
         FUtil.adminAction(sender.getName(), "Undisguising all " + (admins ? "players" : "non-admins"), true);
 

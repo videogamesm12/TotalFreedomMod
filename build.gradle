@@ -36,12 +36,6 @@ repositories {
 
     maven {
         url = uri('https://maven.elmakers.com/repository/')
-        content {
-            includeGroup('org.bukkit')
-            includeGroup('net.goldtreeservers')
-            includeGroup('de.bananaco')
-            includeGroup('net.ess3')
-        }
     }
 
     maven {

@@ -1,7 +1,6 @@
 package me.totalfreedom.totalfreedommod.command;
 
 import java.util.List;
-
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.player.FPlayer;
 import me.totalfreedom.totalfreedommod.player.PlayerData;

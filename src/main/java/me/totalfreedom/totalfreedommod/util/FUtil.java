@@ -28,6 +28,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import me.totalfreedom.totalfreedommod.TotalFreedomMod;
+import me.totalfreedom.totalfreedommod.admin.AdminList;
 import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -266,7 +267,7 @@ public class FUtil
         }
         catch (Exception e)
         {
-            FLog.severe("Failed to convert name to UUID:\n" + e.toString());
+            FLog.severe("Failed to convert name to UUID:\n" + e);
         }
         return null;
     }
@@ -858,8 +859,8 @@ public class FUtil
 
     public static int getFakePlayerCount()
     {
-        int i = TotalFreedomMod.getPlugin().al.vanished.size();
-        for (String name : TotalFreedomMod.getPlugin().al.vanished)
+        int i = AdminList.vanished.size();
+        for (String name : AdminList.vanished)
         {
             if (Bukkit.getPlayer(name) == null)
             {

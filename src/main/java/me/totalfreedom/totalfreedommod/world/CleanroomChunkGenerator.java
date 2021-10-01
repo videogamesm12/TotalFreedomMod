@@ -111,7 +111,7 @@ public class CleanroomChunkGenerator extends ChunkGenerator
             }
             catch (Exception e)
             {
-                log.severe("[CleanroomGenerator] Error parsing CleanroomGenerator ID '" + id + "'. using defaults '64,1': " + e.toString());
+                log.severe("[CleanroomGenerator] Error parsing CleanroomGenerator ID '" + id + "'. using defaults '64,1': " + e);
                 e.printStackTrace();
 
                 materials = new Material[65];
