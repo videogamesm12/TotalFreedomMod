@@ -123,7 +123,6 @@ public class TotalFreedomMod extends JavaPlugin
     public WorldRestrictions wr;
     public SignBlocker snp;
     public EntityWiper ew;
-    public Sitter st;
     public VanishHandler vh;
     public Pterodactyl ptero;
     //
@@ -328,7 +327,6 @@ public class TotalFreedomMod extends JavaPlugin
             gr = new GameRuleHandler();
             snp = new SignBlocker();
             ew = new EntityWiper();
-            st = new Sitter();
             vh = new VanishHandler();
             ptero = new Pterodactyl();
         }

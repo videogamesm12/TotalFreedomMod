@@ -2,6 +2,8 @@ package me.totalfreedom.totalfreedommod;
 
 import java.util.Arrays;
 import java.util.List;
+
+import me.totalfreedom.totalfreedommod.config.ConfigEntry;
 import me.totalfreedom.totalfreedommod.util.Groups;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -24,6 +26,8 @@ public class EntityWiper extends FreedomService
     );
     private BukkitTask wiper;
 
+    private static final boolean enabled = ConfigEntry.AUTO_ENTITY_WIPE.getBoolean();
+
     @Override
     public void onStart()
     {
@@ -33,7 +37,10 @@ public class EntityWiper extends FreedomService
             @Override
             public void run()
             {
-                wipeEntities(false);
+                if (enabled)
+                {
+                    wipeEntities(false);
+                }
             }
         }.runTaskTimer(plugin, 600L, 600L); // 30 second delay after startup + run every 30 seconds
     }

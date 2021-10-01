@@ -7,5 +7,11 @@ public enum PunishmentType
     KICK,
     TEMPBAN,
     BAN,
+    WARN,
+    CAGE,
+    BLOCKEDIT,
+    BLOCKPVP,
+    BLOCKCMD,
+    ORBIT,
     DOOM
 }

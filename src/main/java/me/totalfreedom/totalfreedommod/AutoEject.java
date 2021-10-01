@@ -94,6 +94,10 @@ public class AutoEject extends FreedomService
                 player.kickPlayer(kickMessage);
                 break;
             }
+            default:
+            {
+                FLog.warning("Unrecognized EjectMethod " + method.name() + " found, defaulting to STRIKE_THREE");
+            }
         }
     }
 

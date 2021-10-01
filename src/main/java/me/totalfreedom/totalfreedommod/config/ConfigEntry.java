@@ -131,7 +131,6 @@ public enum ConfigEntry
     //
     LANDMINES_ENABLED(Boolean.class, "landmines_enabled"),
     TOSSMOB_ENABLED(Boolean.class, "tossmob_enabled"),
-    AUTOKICK_ENABLED(Boolean.class, "autokick.enabled"),
     MP44_ENABLED(Boolean.class, "mp44_enabled"),
     FOURCHAN_ENABLED(Boolean.class, "4chan_enabled"),
     //
@@ -140,6 +139,7 @@ public enum ConfigEntry
     NUKE_MONITOR_COUNT_PLACE(Integer.class, "nukemonitor.count_place"),
     NUKE_MONITOR_RANGE(Double.class, "nukemonitor.range"),
     //
+    AUTOKICK_ENABLED(Boolean.class, "autokick.enabled"),
     AUTOKICK_THRESHOLD(Double.class, "autokick.threshold"),
     AUTOKICK_TIME(Integer.class, "autokick.time"),
     //

@@ -1,6 +1,8 @@
 package me.totalfreedom.totalfreedommod.command;
 
 import me.totalfreedom.totalfreedommod.player.FPlayer;
+import me.totalfreedom.totalfreedommod.punishments.Punishment;
+import me.totalfreedom.totalfreedommod.punishments.PunishmentType;
 import me.totalfreedom.totalfreedommod.rank.Rank;
 import me.totalfreedom.totalfreedommod.util.FUtil;
 import org.apache.commons.lang3.ArrayUtils;
@@ -128,6 +130,7 @@ public class Command_blockpvp extends FreedomCommand
 
             msg(p, "Your PVP has been disabled.", ChatColor.RED);
             msg("Disabled PVP for " + p.getName());
+            plugin.pul.logPunishment(new Punishment(p.getName(), FUtil.getIp(p), sender.getName(), PunishmentType.BLOCKPVP, null));
         }
         return true;
     }
